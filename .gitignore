@@ -1,8 +1,13 @@
-# dafault
+# remove git 
+.*~
 *~
+/.emacs.d/*
 
-# .emacs ignore files
-.emacs/undohist/
-.emacs/session*/
-.emacs/auto-save-list/
-.emacs/backups/
+# in git
+!/.emacs/init.el
+!/.emacs/elpa
+!/.emacs/el-get
+!/.emacs/elisp
+!/.emacs/eshell
+!/.emacs/snippets
+!/.emacs/template
