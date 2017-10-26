@@ -1,8 +1,0 @@
-# dafault
-*~
-
-# .emacs ignore files
-.emacs/undohist
-.emacs/session*
-.emacs/auto-save-list
-.emacs/backups

@@ -1,1 +1,0 @@
-# Emacs setting files
