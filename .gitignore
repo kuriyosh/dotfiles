@@ -1,7 +1,7 @@
 # .emacs.d
 .emacs.d/*
-!init.el
-!snippets
-!template
-!elpa
-!elisp
+!.emacs.d/init.el
+!.emacs.d/snippets
+!.emacs.d/template
+!.emacs.d/elpa
+!.emacs.d/elisp
