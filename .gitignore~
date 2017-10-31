@@ -1,5 +1,0 @@
-# .emacs.d
-/.emacs.d/*
-!/.emacs.d/elisp
-!/.emacs.d/elpa
-!/.emacs.d/init.el
