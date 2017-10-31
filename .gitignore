@@ -1,7 +1,6 @@
+# default
+*~
 # .emacs.d
-.emacs.d/*
-!.emacs.d/init.el
-!.emacs.d/snippets
-!.emacs.d/template
-!.emacs.d/elpa
-!.emacs.d/elisp
+/.emacs.d/*
+*.elc
+!/.emacs.d/init.el
