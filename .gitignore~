@@ -3,4 +3,4 @@
 # .emacs.d
 /.emacs.d/*
 *.elc
-!/.emacs.d/init.el
+!init.el
