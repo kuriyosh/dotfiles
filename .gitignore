@@ -1,13 +1,7 @@
-# remove git 
-.*~
-*~
-/.emacs.d/*
-
-# in git
-!/.emacs/init.el
-!/.emacs/elpa
-!/.emacs/el-get
-!/.emacs/elisp
-!/.emacs/eshell
-!/.emacs/snippets
-!/.emacs/template
+# .emacs.d
+.emacs.d/*
+!init.el
+!snippets
+!template
+!elpa
+!elisp
