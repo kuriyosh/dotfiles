@@ -1,1 +1,1 @@
-# Emacs setting files
+# dotfiles
