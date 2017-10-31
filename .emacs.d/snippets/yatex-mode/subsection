@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: use
+# key: use
+# --
+\usepackage{$0}

@@ -1,6 +1,5 @@
-# default
-*~
 # .emacs.d
 /.emacs.d/*
-*.elc
-!init.el
+!/.emacs.d/elisp
+!/.emacs.d/elpa
+!/.emacs.d/init.el

@@ -1,0 +1,7 @@
+#+TITLE: %file%
+#+AUTHOR: Kurihara Yoshiki
+#+LANGUAGE: ja
+#+EMAIL: y-kurihara@ist.osaka-u.ac.jp
+
+
+* Section
