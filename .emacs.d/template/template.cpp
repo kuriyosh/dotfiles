@@ -1,5 +1,7 @@
 /*
- * %file%
+ * FILE NAME:%file%
+ * DATE:%time%
+ * AUTHOR:Yoshiki Kurihara <y-kurihara@ist.osaka-u.ac.jp>
  */
 
 //include files

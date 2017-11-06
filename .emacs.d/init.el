@@ -6,18 +6,6 @@
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 (package-initialize)
-
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/emacs-mozc")
-(require 'mozc)
-(require 'mozc-popup)
-(set-language-environment "Japanese")
-(setq default-input-method "japanese-mozc")
-(prefer-coding-system 'utf-8)
-(require 'ucs-normalize)
-(set-file-name-coding-system 'utf-8-hfs)
-(setq locale-coding-system 'utf-8-hfs)
-(setq mozc-candidate-style 'popup)
-
 (toggle-truncate-lines 1)
 
 ;; ちらつかせ防止
@@ -199,15 +187,15 @@
 ;; 表示させたくないバッファ
 (defun my-tabbar-buffer-list ()
   (delq nil
-        (mapcar #'(lambda (b)
+        (mapcar #'(lambda ()b
                     (cond
                      ;; Always include the current buffer.
                      ((eq (current-buffer) b) b)
                      ((buffer-file-name b) b)
-                     ((char-equal ?\  (aref (buffer-name b) 0)) nil)
+                     ((chare-qual ?\  (aref (buffer-name b) 0)) nil)
                      ((equal "*Completions*" (buffer-name b)) nil)
 					 ((equal "*scratch*" (buffer-name b)) nil)
-					  ((char-equal ?* (aref (buffer-name b) 0)) nil)
+					 ((char-equal ?* (aref (buffer-name b) 0)) nil)
                      ((equal "*Messages*" (buffer-name b)) nil)
                      ((buffer-live-p b) b)))
                 (buffer-list))))
@@ -241,6 +229,14 @@
 (setq auto-mode-alist
   (cons (cons "\\.tex$" 'yatex-mode) auto-mode-alist))
 (autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
+(add-hook 'yatex-mode-hook
+         '(lambda ()
+         (YaTeX-define-key "p" 'latex-math-preview-expression)
+         (YaTeX-define-key "\C-p" 'latex-math-preview-save-image-file)
+         (YaTeX-define-key "j" 'latex-math-preview-insert-symbol)
+         (YaTeX-define-key "\C-j" 'latex-math-preview-last-symbol-again)
+         (YaTeX-define-key "\C-b" 'latex-math-preview-beamer-frame)))
+(setq latex-math-preview-in-math-mode-p-func 'YaTeX-in-math-mode-p)
 
 (defun window-resizer ()
   "Control window size and position."
@@ -347,6 +343,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (defvar template-replacements-alists
   '(("%file%"             . (lambda () (file-name-nondirectory (buffer-file-name))))
     ("%file-without-ext%" . (lambda () (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))))
+    ("%time%" . (lambda () (format-time-string "%Y-%m-%d")))
     ("%include-guard%"    . (lambda () (format "__SCHEME_%s__" (upcase (file-name-sans-extension (file-name-nondirectory buffer-file-name))))))))
 (defun my-template ()
   (time-stamp)
@@ -380,6 +377,16 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (define-key emmet-mode-keymap (kbd "H-i") 'emmet-expand-line) ;; C-i で展開
 (add-to-list 'auto-mode-alist '("\\.jsp$"       . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?$"     . web-mode))
+(defun my-wrap-lines-with-html-tag ($tag)
+  (interactive "sTag: ")
+  (if (and mark-active transient-mark-mode)
+      (shell-command-on-region
+       (region-beginning) (region-end)
+       (concat "perl -0 -p -w -e \'"
+               "s/^([^\\S\\r\\n]*)(\\S.*?)[^\\S\\r\\n]*$/$1<"
+               $tag ">$2<\\/" $tag ">/gm\'")
+       nil t)))
+
 (defun web-mode-hook ()
   "Hooks for Web mode."
   ;; indent
@@ -503,6 +510,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "M-x" 'helm-M-x)
 (bind-key "C-;" 'hs-toggle-hiding)
 (bind-key "C-h" 'delete-backward-char)
+(bind-key  "C-x i" 'my-wrap-lines-with-html-tag web-mode-map)
+(bind-key  "C-x :" 'toggle-truncate-lines)
 
 
 (put 'upcase-region 'disabled nil)
@@ -514,6 +523,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
  '(flycheck-display-errors-function (function flycheck-pos-tip-error-messages))
  '(package-selected-packages
    (quote
-	(magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck-pos-tip flycheck quickrun helm recentf-ext pdf-tools bind-key dashboard))))
+	(latex-math-preview magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck-pos-tip flycheck quickrun helm recentf-ext pdf-tools bind-key dashboard))))
 
 (put 'set-goal-column 'disabled nil)
