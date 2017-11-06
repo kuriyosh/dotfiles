@@ -6,8 +6,6 @@
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 (package-initialize)
-<<<<<<< HEAD
-=======
 
 ;;C-xC-f の find-file のdefault directoryを "~/" にする
 (setq default-directory "~/")
@@ -26,7 +24,6 @@
 (setq locale-coding-system 'utf-8-hfs)
 (setq mozc-candidate-style 'popup)
 
->>>>>>> 9daf51ea43aa63fbb5ff2d7c6ddbc16c5ef02e7b
 (toggle-truncate-lines 1)
 
 ;; mac用ちらつかせ防止
@@ -155,9 +152,6 @@
 (require 'tabbar)
 (tabbar-mode 1)
 
-;;twittering-modeの設定
-(require 'twittering-mode)
-
 
 ;; Disable grouping
 (setq tabbar-buffer-groups-function nil)
@@ -202,12 +196,12 @@
 ;; 表示させたくないバッファ
 (defun my-tabbar-buffer-list ()
   (delq nil
-        (mapcar #'(lambda ()b
+        (mapcar #'(lambda (b)
                     (cond
                      ;; Always include the current buffer.
                      ((eq (current-buffer) b) b)
                      ((buffer-file-name b) b)
-                     ((chare-qual ?\  (aref (buffer-name b) 0)) nil)
+                     ((char-equal ?\  (aref (buffer-name b) 0)) nil)
                      ((equal "*Completions*" (buffer-name b)) nil)
 					 ((equal "*scratch*" (buffer-name b)) nil)
 					 ((char-equal ?* (aref (buffer-name b) 0)) nil)
