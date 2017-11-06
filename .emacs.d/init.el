@@ -7,12 +7,18 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/emacs-mozc")
-(require 'mozc)
-(require 'mozc-popup)
-(set-language-environment "Japanese")
-(setq default-input-method "japanese-mozc")
-(prefer-coding-system 'utf-8)
+;;C-xC-f の find-file のdefault directoryを "~/" にする
+(setq default-directory "~/")
+(setq command-line-default-directory "~/")
+
+;; この辺よくわからんからコメントアウト
+;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/emacs-mozc")ふぁ
+;; (require 'mozc)
+;; (require 'mozc-popup)
+;; (set-language-environment "Japanese")
+;; (setq default-input-method "japanese-mozc")
+;; (prefer-coding-system 'utf-8)
+
 (require 'ucs-normalize)
 (set-file-name-coding-system 'utf-8-hfs)
 (setq locale-coding-system 'utf-8-hfs)
@@ -20,7 +26,7 @@
 
 (toggle-truncate-lines 1)
 
-;; ちらつかせ防止
+;; mac用ちらつかせ防止
 (setq redisplay-dont-pause nil)
 
 (defun add-to-load-path (&rest paths)
@@ -34,7 +40,6 @@
 ;;elispをPATHに設定
 (add-to-load-path "elisp")
 (add-to-load-path "elpa")
-(add-to-load-path "el-get")
 
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -61,11 +66,6 @@
 
 ;;自動インデントモード
 (setq c-tab-always-indent nil)
-
-;;C-xC-f の find-file のdefault directoryを "~/" にする
- 
-(setq default-directory "~/")
-(setq command-line-default-directory "~/")
 
 ;;起動時のメッセージを非表示にする
 (setq inhibit-startup-message t)
@@ -420,10 +420,10 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;; org-captureで2種類のメモを扱うようにする
 (setq org-capture-templates
       '(("t" "New TODO" entry
-         (file+headline "/home/yosyos/Dropbox/org/todo.org" "予定")
+         (file+headline "~/Dropbox/org/todo.org" "予定")
          "* TODO %?\n\n")
         ("m" "Memo" entry
-         (file+headline "/home/yosyos/Dropbox/org/memo.org" "メモ")
+         (file+headline "~/Dropbox/org/memo.org" "メモ")
          "* %U%?\n%i\n%a")))
 ;; org-agendaでaを押したら予定表とTODOリストを表示
 (setq org-agenda-custom-commands
@@ -432,7 +432,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
           (alltodo "")))))
 ;; org-agendaで扱うファイルは複数可だが、
 ;; TODO・予定用のファイルのみ指定
-(setq org-agenda-files '("/home/y-kurihara/Dropbox/org/todo.org"))
+(setq org-agenda-files '("~/Dropbox/org/todo.org"))
 ;; TODOリストに日付つきTODOを表示しない
 (setq org-agenda-todo-ignore-with-date t)
 ;; 今日から予定を表示させる
