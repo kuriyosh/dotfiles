@@ -15,14 +15,14 @@
 ;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/emacs-mozc")ふぁ
 ;; (require 'mozc)
 ;; (require 'mozc-popup)
-;; (set-language-environment "Japanese")
 ;; (setq default-input-method "japanese-mozc")
-;; (prefer-coding-system 'utf-8)
+;; (setq mozc-candidate-style 'popup)
+(set-language-environment "Japanese")
+(prefer-coding-system 'utf-8)
 
 (require 'ucs-normalize)
 (set-file-name-coding-system 'utf-8-hfs)
 (setq locale-coding-system 'utf-8-hfs)
-(setq mozc-candidate-style 'popup)
 
 (toggle-truncate-lines 1)
 
@@ -71,7 +71,11 @@
 (setq inhibit-startup-message t)
 
 ;; スクリーンの最大化
-(set-frame-parameter nil 'fullscreen 'fullboth)
+(when (eq system-type 'darwin) ; Mac OS
+  (set-frame-parameter nil 'fullscreen 'fullboth))
+(when (eq system-type 'gnu/linux) ; Linux OS
+  (set-frame-parameter nil 'fullscreen 'maximized)
+  (add-to-list 'default-frame-alist '(font . "ricty-13.5")))
 
 ;; 行番号を表示
 (global-linum-mode t)
