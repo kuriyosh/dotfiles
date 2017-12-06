@@ -457,6 +457,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;; 今日から予定を表示させる
 (setq org-agenda-start-on-weekday nil)
 
+
 ;;flycheckの設定
 (add-hook 'after-init-hook #'global-flycheck-mode)
 ;;flycheck-pop-tips
@@ -535,6 +536,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
  '(flycheck-display-errors-function (function flycheck-pos-tip-error-messages))
  '(package-selected-packages
    (quote
-	(exec-path-from-shell latex-math-preview magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck-pos-tip flycheck quickrun helm recentf-ext pdf-tools bind-key dashboard))))
+	(markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck-pos-tip flycheck quickrun helm recentf-ext pdf-tools bind-key dashboard))))
 
 (put 'set-goal-column 'disabled nil)

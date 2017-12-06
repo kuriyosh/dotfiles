@@ -4,7 +4,7 @@
 (add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
 
 ;;;### (autoloads nil "latex-math-preview" "latex-math-preview.el"
-;;;;;;  (23032 20551 0 0))
+;;;;;;  (23060 53162 0 0))
 ;;; Generated autoloads from latex-math-preview.el
 
 (let ((loads (get 'latex-math-preview 'custom-loads))) (if (member '"latex-math-preview" loads) nil (put 'latex-math-preview 'custom-loads (cons '"latex-math-preview" loads))))
