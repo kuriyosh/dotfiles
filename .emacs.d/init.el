@@ -11,12 +11,6 @@
 (setq default-directory "~/")
 (setq command-line-default-directory "~/")
 
-;; この辺よくわからんからコメントアウト
-;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/emacs-mozc")ふぁ
-;; (require 'mozc)
-;; (require 'mozc-popup)
-;; (setq default-input-method "japanese-mozc")
-;; (setq mozc-candidate-style 'popup)
 (set-language-environment "Japanese")
 (prefer-coding-system 'utf-8)
 
@@ -51,6 +45,7 @@
 	(add-to-list 'load-path default-directory)
 	(if (fboundp 'normal-top-level-add-subdirs-to-load-path)
 	    (normal-top-level-add-subdirs-to-load-path))))))
+
 ;;elispをPATHに設定
 (add-to-load-path "elisp")
 (add-to-load-path "elpa")
@@ -60,8 +55,9 @@
         ("melpa" . "http://melpa.org/packages/")
         ("org" . "http://orgmode.org/elpa/")))
 
-;;dashboardの設定(OFF推奨)
-;;(dashboard-setup-startup-hook)
+;; smartparensの設定
+(require 'smartparens-config)
+(smartparens-global-mode t)
 
 ;;終了時の確認
 (setq confirm-kill-emacs 'y-or-n-p)
@@ -107,7 +103,8 @@
 (setq-default tab-width 4)
 
 ;;カラーテーマの設定
-(load-theme 'manoj-dark)
+;; (load-theme 'manoj-dark)
+(load-theme 'dracula t)
 
 ;;日本語フォントをメイリオに
 (set-fontset-font
@@ -166,67 +163,65 @@
                 (cons "Input your LDAP UID !"
                       (base64-encode-string "LOGIN:PASSWORD")))))
 
-;;tabbarの設定
-(require 'tabbar)
-(tabbar-mode 1)
+;; ;;tabbarの設定
+;; (require 'tabbar)
+;; (tabbar-mode 1)
 
 
-;; Disable grouping
-(setq tabbar-buffer-groups-function nil)
+;; ;; Disable grouping
+;; (setq tabbar-buffer-groups-function nil)
 
-;; Not use images
-(setq tabbar-use-images nil)
+;; ;; Not use images
+;; (setq tabbar-use-images nil)
 
-;; Disable button
-(dolist (btn '(tabbar-buffer-home-button
-               tabbar-scroll-left-button
-	       tabbar-scroll-right-button))
-  (set btn (cons (cons "" nil)
-                 (cons "" nil))))
-;; Color setting
-(set-face-attribute  ; バー自体の色
- 'tabbar-default nil
- :family "Consolas"
- :height 1.0
- )
-(set-face-attribute  ; 非アクティブなタブ
- 'tabbar-unselected nil
- :background "#00bfff"
- :foreground "#2F3744"
- :box nil
- )
+;; ;; Disable button
+;; (dolist (btn '(tabbar-buffer-home-button
+;;                tabbar-scroll-left-button
+;; 	       tabbar-scroll-right-button))
+;;   (set btn (cons (cons "" nil)
+;;                  (cons "" nil))))
+;; ;; Color setting
+;; (set-face-attribute  ; バー自体の色
+;;  'tabbar-default nil
+;;  :family "Consolas"
+;;  :height 1.0
+;;  )
+;; (set-face-attribute  ; 非アクティブなタブ
+;;  'tabbar-unselected nil
+;;  :background "#DB0000"
+;;  :foreground "#2F3744"
+;;  :box nil
+;;  )
 
-;; Disable mouse wheel on tabbar
-(tabbar-mwheel-mode -1)
+;; ;; Disable mouse wheel on tabbar
+;; (tabbar-mwheel-mode -1)
 
-;; Space between tabs
-(setq tabbar-separator '(0.2))
+;; ;; Space between tabs
+;; (setq tabbar-separator '(0.2))
 
-(set-face-attribute
- 'tabbar-button nil
- :box nil)
+;; (set-face-attribute
+;;  'tabbar-button nil
+;;  :box nil)
 
-(set-face-attribute
- 'tabbar-separator nil
- :background "#2F3744"
- :height 1.0)
+;; (set-face-attribute
+;;  'tabbar-separator nil
+;;  :background "#2F3744"
+;;  :height 1.0)
 
-;; 表示させたくないバッファ
-(defun my-tabbar-buffer-list ()
-  (delq nil
-        (mapcar #'(lambda (b)
-                    (cond
-                     ;; Always include the current buffer.
-                     ((eq (current-buffer) b) b)
-                     ((buffer-file-name b) b)
-                     ((char-equal ?\  (aref (buffer-name b) 0)) nil)
-                     ((equal "*Completions*" (buffer-name b)) nil)
-					 ((equal "*scratch*" (buffer-name b)) nil)
-					 ((char-equal ?* (aref (buffer-name b) 0)) nil)
-                     ((equal "*Messages*" (buffer-name b)) nil)
-                     ((buffer-live-p b) b)))
-                (buffer-list))))
-(setq tabbar-buffer-list-function 'my-tabbar-buffer-list)
+;; ;; 表示させたくないバッファ
+;; (defun my-tabbar-buffer-list ()
+;;   (delq nil
+;;         (mapcar #'(lambda (b)
+;;                     (cond
+;;                      ;; Always include the current buffer.
+;;                      ((eq (current-buffer) b) b)
+;;                      ((buffer-file-name b) b)
+;;                      ((char-equal ?\  (aref (buffer-name b) 0)) nil)
+;; 					 ((equal "todo.org" (buffer-name b)) nil)
+;; 					 ((char-equal ?* (aref (buffer-name b) 0)) nil)
+;;                      ((buffer-live-p b) b)))
+;;                 (buffer-list))))
+;; (setq tabbar-buffer-list-function 'my-tabbar-buffer-lis)
 
 ;;auto-completeの設定
 (require 'auto-complete)
@@ -246,11 +241,38 @@
   (setq recentf-auto-cleanup 10)
   (setq recentf-auto-save-timer (run-with-idle-timer 30 t 'recentf-save-list))
   (recentf-mode 1))
-;; 起動画面で recentf を開く
-(add-hook 'after-init-hook (lambda()
-    (recentf-open-files)))
 
+;; bmの設定
+(setq-default bm-buffer-persistence)
+(setq bm-restore-repository-on-load t)
+(require 'bm)
+(add-hook 'find-file-hook 'bm-buffer-restore)
+(add-hook 'kill-buffer-hook 'bm-buffer-save)
+(add-hook 'after-save-hook 'bm-buffer-save)
+(add-hook 'after-revert-hook 'bm-buffer-restore)
+(add-hook 'vc-before-checkin-hook 'bm-buffer-save)
+(add-hook 'kill-emacs-hook '(lambda nil
+                              (bm-buffer-save-all)
+                              (bm-repository-save)))
+(global-set-key (kbd "M-SPC") 'bm-toggle)
+(global-set-key (kbd "M-[") 'bm-previous)
+(global-set-key (kbd "M-]") 'bm-next)
 
+;; helm-bm.el設定
+(require 'helm-bm)
+;; annotationはあまり使わないので仕切り線で表示件数減るの嫌
+(setq helm-source-bm (delete '(multiline) helm-source-bm))
+
+(defun bm-toggle-or-helm ()
+  "2回連続で起動したらhelm-bmを実行させる"
+  (interactive)
+  (bm-toggle)
+  (when (eq last-command 'bm-toggle-or-helm)
+    (helm-bm)))
+(global-set-key (kbd "M-SPC") 'bm-toggle-or-helm)
+
+;;; これがないとemacs -Qでエラーになる。おそらくバグ。
+(require 'compile)
 
 ;;yatexの設定
 (setq auto-mode-alist
@@ -319,37 +341,57 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (setq popwin:popup-window-position 'bottom)
 (setq display-buffer-function 'popwin:display-buffer)
 
-;;google-translateの設定
-(require 'google-translate)
-(require 'google-translate-default-ui)
-(push '(*Google Translate*) popwin:special-display-config)
+;; ;;google-translateの設定
+;; (require 'google-translate)
+;; (require 'google-translate-default-ui)
+;; (push '(*Google Translate*) popwin:special-display-config)
 
-(defvar google-translate-english-chars "[:ascii:]"
-  "これらの文字が含まれているときは英語とみなす")
-(defun google-translate-enja-or-jaen (&optional string)
-  "regionか現在位置の単語を翻訳する。C-u付きでquery指定も可能"
-  (interactive)
-  (setq string
-        (cond ((stringp string) string)
-              (current-prefix-arg
-               (read-string "Google Translate: "))
-              ((use-region-p)
-               (buffer-substring (region-beginning) (region-end)))
-              (t
-               (thing-at-point 'word))))
-  (let* ((asciip (string-match
-                  (format "\\`[%s]+\\'" google-translate-english-chars)
-                  string)))
-    (run-at-time 0.1 nil 'deactivate-mark)
-    (google-translate-translate
-     (if asciip "en" "ja")
-     (if asciip "ja" "en")
-     string)))
+;; (defvar google-translate-english-chars "[:ascii:]"
+;;   "これらの文字が含まれているときは英語とみなす")
+;; (defun google-translate-enja-or-jaen (&optional string)
+;;   "regionか現在位置の単語を翻訳する。C-u付きでquery指定も可能"
+;;   (interactive)
+;;   (setq string
+;;         (cond ((stringp string) string)
+;;               (current-prefix-arg
+;;                (read-string "Google Translate: "))
+;;               ((use-region-p)
+;;                (buffer-substring (region-beginning) (region-end)))
+;;               (t
+;;                (thing-at-point 'word))))
+;;   (let* ((asciip (string-match
+;;                   (format "\\`[%s]+\\'" google-translate-english-chars)
+;;                   string)))
+;;     (run-at-time 0.1 nil 'deactivate-mark)
+;;     (google-translate-translate
+;;      (if asciip "en" "ja")
+;;      (if asciip "ja" "en")
+;;      string)))
 
-(push '("\*Google Translate\*" :height 0.5 :stick t) popwin:special-display-config)
-(global-set-key (kbd "C-c t") 'google-translate-enja-or-jaen)
+;; (push '("\*Google Translate\*" :height 0.5 :stick t) popwin:special-display-config)
+;; (global-set-key (kbd "C-c t") 'google-translate-enja-or-jaen)
+;; dict.py is from http://sakito.jp/mac/dictionary.html
+;; (defun dictionary ()
+;;   "dictionary.app"
+;;   (interactive)
+;;   (let ((word (if (and transient-mark-mode mark-active)
+;;                   (buffer-substring-no-properties (region-beginning) (region-end))
+;;                 (read-string "Dictionary: ")))
+;;         (cur-buffer (current-buffer))
+;;         (tmpbuf " * dict-process *"))
+;;     (set-buffer (get-buffer-create tmpbuf))
+;;     (erase-buffer)
+;;     (insert word "\n")
+;;     (let ((coding-system-for-read 'utf-8-mac)
+;;           (coding-system-for-write 'utf-8-mac))
+;;       (call-process "~/.scripts/dict.py" nil tmpbuf nil word) ;; specify full pass of dict.py
+;;       (let ( (str (buffer-substring (point-min) (- (point-max) 2))))
+;;         (set-buffer cur-buffer)
+;;         (popup-tip str :scroll-bar t))	
+;;       ))))
 
-;;shellの設定
+
+;;Shellの設定
 ;; shellの文字化けを回避
 (add-hook 'shell-mode-hook
           (lambda ()
@@ -400,8 +442,11 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (add-hook 'emmet-mode-hook (lambda () (setq emmet-indentation 2))) ;; indent はスペース2個
 (eval-after-load "emmet-mode"
   '(define-key emmet-mode-keymap (kbd "C-j") nil)) ;; C-j は newline のままにしておく
-(keyboard-translate ?\C-i ?\H-i) ;;C-i と Tabの被りを回避
-(define-key emmet-mode-keymap (kbd "H-i") 'emmet-expand-line) ;; C-i で展開
+(eval-after-load "emmet-mode"
+  '(define-key emmet-mode-keymap (kbd "TAB") nil))
+(eval-after-load "emmet-mode"
+  '(define-key emmet-mode-keymap (kbd "TAB") 'indent-for-tab-command))
+(define-key emmet-mode-keymap (kbd "C-i") 'emmet-expand-line) ;; C-i で展開
 (add-to-list 'auto-mode-alist '("\\.jsp$"       . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?$"     . web-mode))
 (defun my-wrap-lines-with-html-tag ($tag)
@@ -451,6 +496,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (setq org-startup-with-inline-images t)
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-c a") 'org-agenda)
+(setq org-agenda-files '("~/Dropbox/org/todo.org"))
 ;; org-captureで2種類のメモを扱うようにする
 (setq org-capture-templates
       '(("t" "New TODO" entry
@@ -464,14 +510,15 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
       '(("a" "Agenda and TODO"
          ((agenda "")
           (alltodo "")))))
-;; org-agendaで扱うファイルは複数可だが、
 ;; TODO・予定用のファイルのみ指定
-(setq org-agenda-files '("~/Dropbox/org/todo.org"))
 ;; TODOリストに日付つきTODOを表示しない
-(setq org-agenda-todo-ignore-with-date t)
+;; (setq org-agenda-todo-ignore-with-date t)
 ;; 今日から予定を表示させる
 (setq org-agenda-start-on-weekday nil)
 
+
+(require 'dashboard)
+(dashboard-setup-startup-hook)
 
 ;;flycheckの設定
 (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -522,8 +569,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "C-z" 'undo)
 (bind-key* "C-/" 'undo-tree-redo)
 (bind-key "C-t" 'other-window)
-(bind-key* "C-." 'tabbar-forward-tab)
-(bind-key* "C-," 'tabbar-backward-tab)
 (bind-key "M-n" (kbd "C-u 5 C-n"))
 (bind-key "M-p" (kbd "C-u 5 C-p"))
 (bind-key "M-h" 'backward-kill-word)
@@ -551,6 +596,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
  '(flycheck-display-errors-function (function flycheck-pos-tip-error-messages))
  '(package-selected-packages
    (quote
-	(markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck-pos-tip flycheck quickrun helm recentf-ext pdf-tools bind-key dashboard))))
+	(smartparens elscreen dracula-theme bm cyberpunk-theme madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck-pos-tip flycheck quickrun helm recentf-ext pdf-tools bind-key dashboard))))
 
 (put 'set-goal-column 'disabled nil)
