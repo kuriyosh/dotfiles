@@ -1,5 +1,5 @@
 #! /bin/bash
 
-cd ~
-ln -s ./.emacs.d .emacs.d
+ln -s ./.emacs.d ~/.emacs.d
+ln -s ./.tmux.conf ~/.tmux.conf
 
