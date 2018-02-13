@@ -258,6 +258,10 @@
 (global-set-key (kbd "M-[") 'bm-previous)
 (global-set-key (kbd "M-]") 'bm-next)
 
+(require 'goto-chg)
+(global-set-key (kbd "C-,") 'goto-last-change)
+(global-set-key (kbd "C-.") 'goto-last-change-reverse)
+
 ;; helm-bm.el設定
 (require 'helm-bm)
 ;; annotationはあまり使わないので仕切り線で表示件数減るの嫌
@@ -429,10 +433,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (require 'undohist)
 (undohist-initialize)
 
-;;undotreeの設定
-(require 'undo-tree)
-(global-undo-tree-mode t)
-
 ;;web-modeの設定
 (require 'web-mode)
 (require 'emmet-mode)
@@ -536,6 +536,12 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (eval-after-load 'flycheck
   '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
 
+;; redo+の設定
+(require 'redo+)
+(setq undo-no-redo t)
+(global-set-key (kbd "C-/") 'redo)
+
+
 (require 'yasnippet)
 (require 'helm-c-yasnippet)
 (setq helm-yas-space-match-any-greedy t)
@@ -567,7 +573,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;;Key-bind (necessary bind-key.el)
 (require 'bind-key)
 (bind-key "C-z" 'undo)
-(bind-key* "C-/" 'undo-tree-redo)
 (bind-key "C-t" 'other-window)
 (bind-key "M-n" (kbd "C-u 5 C-n"))
 (bind-key "M-p" (kbd "C-u 5 C-p"))
@@ -596,6 +601,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
  '(flycheck-display-errors-function (function flycheck-pos-tip-error-messages))
  '(package-selected-packages
    (quote
-	(smartparens elscreen dracula-theme bm cyberpunk-theme madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck-pos-tip flycheck quickrun helm recentf-ext pdf-tools bind-key dashboard))))
+	(goto-chg js-doc smartparens elscreen dracula-theme bm cyberpunk-theme madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck-pos-tip flycheck quickrun helm recentf-ext pdf-tools bind-key dashboard))))
 
 (put 'set-goal-column 'disabled nil)
+(put 'narrow-to-region 'disabled nil)

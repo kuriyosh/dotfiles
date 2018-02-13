@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: sw
+# key: sw
+# --
+swith ($1) {
+	  case $2:
+	  	   $3
+	  break;
+	  $0
+}	  
