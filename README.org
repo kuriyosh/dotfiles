@@ -1,0 +1,8 @@
+#+TITLE: dotfiles
+#+AUTHOR: Kurihara Yoshiki
+#+DATE: 2018-02-14
+#+LANGUAGE: ja
+#+EMAIL: y-kurihara@ist.osaka-u.ac.jp
+
+
+* Section
