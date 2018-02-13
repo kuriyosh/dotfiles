@@ -5,4 +5,10 @@
 #+EMAIL: y-kurihara@ist.osaka-u.ac.jp
 
 
-* Section
+* How to install
+You should type this command.
+#+BEGIN_SRC bash
+git clone https://github.com/torith/dotfiles.git
+cd dotfiles
+./install.sh
+#+END_SRC
