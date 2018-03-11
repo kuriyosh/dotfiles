@@ -67,12 +67,12 @@
    `(info-string ((,class (:foreground ,str))))
    `(lazy-highlight ((,class (:foreground ,fg2 :background ,bg3))))
    `(link ((,class (:foreground ,const :underline t))))
-   `(linum ((,class (:slant italic :foreground ,bg4 :background ,bg1))))
+   `(linum ((,class (:slant italic :foreground ,fg3 :background ,md-na)))) ;customised
    `(minibuffer-prompt ((,class (:bold t :foreground ,keyword))))
    `(region ((,class (:background ,str :foreground ,bg1))))
    `(show-paren-match-face ((,class (:background ,warning))))
    `(trailing-whitespace ((,class :foreground nil :background ,warning)))
-   `(vertical-border ((,class (:foreground ,bg2))))
+   `(vertical-border ((,class (:foreground ,md-na))))
    `(warning ((,class (:foreground ,warning))))
    `(whitespace-trailing ((,class :inherit trailing-whitespace)))
    ;; syntax

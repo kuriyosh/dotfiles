@@ -68,6 +68,8 @@
 ;;ツールバーを消す
 (tool-bar-mode 0)
 
+;;スクロールバーを消す
+(scroll-bar-mode 0)
 ;;起動時のメッセージを消す
 (setq ihibit-startup-message t)
 
@@ -111,16 +113,17 @@
  nil 'japanese-jisx0208
  (font-spec :family "メイリオ"))
 
-;;現在行のハイライトの設定
-(defface my-hl-line-face
-  '((((class color) (background dark))
-	(:background "NavyBlue" t))
-   (((class color) (background light))
-	(:background "LightGoldenodYellow" t))
-   (t (:bold t)))
-  "hl-line's my face")
-(setq hl-line-face 'my-hl-line-face)
-;;ハイライトのON/OFF
+(require 'hl-line)
+;;; hl-lineを無効にするメジャーモードを指定する
+(defvar global-hl-line-timer-exclude-modes '(todotxt-mode))
+(defun global-hl-line-timer-function ()
+  (unless (memq major-mode global-hl-line-timer-exclude-modes)
+    (global-hl-line-unhighlight-all)
+    (let ((global-hl-line-mode t))
+      (global-hl-line-highlight))))
+(setq global-hl-line-timer
+      (run-with-idle-timer 0.03 t 'global-hl-line-timer-function))
+;; (cancel-timer global-hl-line-timer)
 (global-hl-line-mode t)
 
 ;;対応する括弧を強調して表示する
@@ -226,12 +229,12 @@
 ;;auto-completeの設定
 (require 'auto-complete)
 (require 'auto-complete-config)
-(add-to-list 'ac-modes 'org-mode)
-(add-to-list 'ac-modes 'text-mode)
-(add-to-list 'ac-modes 'yatex-mode)
+;; (add-to-list 'ac-modes 'org-mode)
+;; (add-to-list 'ac-modes 'text-mode)
+;; (add-to-list 'ac-modes 'yatex-mode)
 (setq ac-use-menu-map t)
 (setq ac-use-fuzzy t)
-;;(global-auto-complete-mode t)
+(global-auto-complete-mode t)
 
 ;;recentf-extの設定
 (require 'recentf-ext)
@@ -259,8 +262,6 @@
 (global-set-key (kbd "M-]") 'bm-next)
 
 (require 'goto-chg)
-(global-set-key (kbd "C-,") 'goto-last-change)
-(global-set-key (kbd "C-.") 'goto-last-change-reverse)
 
 ;; helm-bm.el設定
 (require 'helm-bm)
@@ -516,9 +517,31 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;; 今日から予定を表示させる
 (setq org-agenda-start-on-weekday nil)
 
+;; ネタ用の起動画面
+(defvar my-startup-display-message "\nHello Torith!!\nHappy Hacking (^o^)/\n")
 
+(defun my-startup-display-mode ()
+  "Sets a fixed width (monospace) font in current buffer"
+  (setq buffer-face-mode-face '(:height 800))
+  (buffer-face-mode))
+
+(defun my-startup-display ()
+  "Display startup message on buffer"
+  (interactive)
+  (let ((temp-buffer-show-function 'switch-to-buffer))
+    (with-output-to-temp-buffer "*MyStartUpMessage*"  
+      (princ my-startup-display-message)))
+  (my-startup-display-mode))
+
+;; 起動時の画面分割
+(split-window-horizontally)
 (require 'dashboard)
 (dashboard-setup-startup-hook)
+(other-window 1)
+(split-window-vertically)
+(add-hook 'after-init-hook (lambda() (other-window 2)
+							 (my-startup-display)))
+
 
 ;;flycheckの設定
 (add-hook 'after-init-hook #'global-flycheck-mode)
@@ -569,11 +592,19 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
           '(lambda ()
              (hs-minor-mode 1)))
 
+(require 'py-autopep8)
+(add-hook 'before-save-hook 'py-autopep8-before-save)
+
+(defun prev-window ()
+  (interactive)
+  (other-window -1))
 
 ;;Key-bind (necessary bind-key.el)
 (require 'bind-key)
 (bind-key "C-z" 'undo)
-(bind-key "C-t" 'other-window)
+(bind-key* "C-t" 'other-window)
+(bind-key* "C-<tab>" 'other-window)
+(bind-key* "C-S-<tab>" 'prev-window)
 (bind-key "M-n" (kbd "C-u 5 C-n"))
 (bind-key "M-p" (kbd "C-u 5 C-p"))
 (bind-key "M-h" 'backward-kill-word)
@@ -590,6 +621,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "C-h" 'delete-backward-char)
 (bind-key  "C-x i" 'my-wrap-lines-with-html-tag web-mode-map)
 (bind-key  "C-x :" 'toggle-truncate-lines)
+(bind-key*  "M-h" 'backward-kill-word)
+(bind-key* "C-," 'goto-last-change)
+(bind-key* "C-." 'goto-last-change-reverse)
 
 
 (put 'upcase-region 'disabled nil)
@@ -599,6 +633,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(flycheck-display-errors-function (function flycheck-pos-tip-error-messages))
+ '(org-agenda-files
+   (quote
+	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")))
  '(package-selected-packages
    (quote
 	(goto-chg js-doc smartparens elscreen dracula-theme bm cyberpunk-theme madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck-pos-tip flycheck quickrun helm recentf-ext pdf-tools bind-key dashboard))))
