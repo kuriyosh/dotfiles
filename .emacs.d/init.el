@@ -1,13 +1,9 @@
-;;Loadund-pathを追加する関数を定義
-;;load-path:サブディレクトリを含めディレクトリをPATHに設定する関数
-
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 (package-initialize)
 
-;;C-xC-f の find-file のdefault directoryを "~/" にする
 (setq default-directory "~/")
 (setq command-line-default-directory "~/")
 
@@ -161,10 +157,10 @@
 (add-hook 'emacs-lisp-mode-hook 'elisp-mode-hooks)
 
 ;;プロキシの設定
-(setq url-http-proxy-basic-auth-storage
-    (list (list "proxy.com:8080"
-                (cons "Input your LDAP UID !"
-                      (base64-encode-string "LOGIN:PASSWORD")))))
+;; (setq url-http-proxy-basic-auth-storage
+;;     (list (list "proxy.com:8080"
+;;                 (cons "Input your LDAP UID !"
+;;                       (base64-encode-string "LOGIN:PASSWORD")))))
 
 ;; ;;tabbarの設定
 ;; (require 'tabbar)
@@ -598,6 +594,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (defun prev-window ()
   (interactive)
   (other-window -1))
+
+(require 'ag)
 
 ;;Key-bind (necessary bind-key.el)
 (require 'bind-key)
