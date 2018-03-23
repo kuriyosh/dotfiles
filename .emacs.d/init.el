@@ -605,7 +605,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-S-<tab>" 'prev-window)
 (bind-key "M-n" (kbd "C-u 5 C-n"))
 (bind-key "M-p" (kbd "C-u 5 C-p"))
-(bind-key "M-h" 'backward-kill-word)
 (bind-key "M-g" 'goto-line)
 (bind-key "C-m" 'newline-and-indent)
 (bind-key "C-x C-r" 'helm-mini)
