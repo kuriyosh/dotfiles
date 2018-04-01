@@ -6,4 +6,5 @@
 !/.emacs.d/elisp
 !/.emacs.d/elpa
 !/.emacs.d/init.el
+!/.emacs.d/cli.el
 !/.emacs.d/snippets
