@@ -110,17 +110,23 @@
  (font-spec :family "メイリオ"))
 
 (require 'hl-line)
-;;; hl-lineを無効にするメジャーモードを指定する
-(defvar global-hl-line-timer-exclude-modes '(todotxt-mode))
 (defun global-hl-line-timer-function ()
-  (unless (memq major-mode global-hl-line-timer-exclude-modes)
-    (global-hl-line-unhighlight-all)
-    (let ((global-hl-line-mode t))
-      (global-hl-line-highlight))))
+  (global-hl-line-unhighlight-all)
+  (let ((global-hl-line-mode t))
+    (global-hl-line-highlight)))
 (setq global-hl-line-timer
-      (run-with-idle-timer 0.03 t 'global-hl-line-timer-function))
+      (run-with-idle-timer 0.1 t 'global-hl-line-timer-function))
 ;; (cancel-timer global-hl-line-timer)
-(global-hl-line-mode t)
+;; hl-lineを無効にするメジャーモードを指定する
+;; (defvar global-hl-line-timer-exclude-modes '(todotxt-mode))
+;; (defun global-hl-line-timer-function ()
+;;   (unless (memq major-mode global-hl-line-timer-exclude-modes)
+;;     (global-hl-line-unhighlight-all)
+;;     (let ((global-hl-line-mode t))
+;;       (global-hl-line-highlight))))
+;; (setq global-hl-line-timer
+;;       (run-with-idle-timer 0.03 t 'global-hl-line-timer-function))
+;; (cancel-timer global-hl-line-timer)
 
 ;;対応する括弧を強調して表示する
 (setq show-paren-delay 0) ;表示までの秒数
@@ -414,6 +420,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   '(("%file%"             . (lambda () (file-name-nondirectory (buffer-file-name))))
     ("%file-without-ext%" . (lambda () (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))))
     ("%time%" . (lambda () (format-time-string "%Y-%m-%d")))
+	("%mtg-timeformat%" . (lambda () (format-time-string "%m%d")))
     ("%include-guard%"    . (lambda () (format "__SCHEME_%s__" (upcase (file-name-sans-extension (file-name-nondirectory buffer-file-name))))))))
 (defun my-template ()
   (time-stamp)
@@ -441,8 +448,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   '(define-key emmet-mode-keymap (kbd "C-j") nil)) ;; C-j は newline のままにしておく
 (eval-after-load "emmet-mode"
   '(define-key emmet-mode-keymap (kbd "TAB") nil))
-(eval-after-load "emmet-mode"
-  '(define-key emmet-mode-keymap (kbd "TAB") 'indent-for-tab-command))
 (define-key emmet-mode-keymap (kbd "C-i") 'emmet-expand-line) ;; C-i で展開
 (add-to-list 'auto-mode-alist '("\\.jsp$"       . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?$"     . web-mode))
