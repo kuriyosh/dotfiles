@@ -534,16 +534,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
       (princ my-startup-display-message)))
   (my-startup-display-mode))
 
-;; 起動時の画面分割
-(split-window-horizontally)
-(require 'dashboard)
-(dashboard-setup-startup-hook)
-(other-window 1)
-(split-window-vertically)
-(add-hook 'after-init-hook (lambda() (other-window 2)
-							 (my-startup-display)))
-
-
 ;;flycheckの設定
 (add-hook 'after-init-hook #'global-flycheck-mode)
 ;;flycheck-pop-tips
@@ -616,7 +606,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "C-x C-f" 'helm-find-files)
 (bind-key "M-w" 'easy-kill)
 (bind-key "M-y" 'helm-show-kill-ring)
-(bind-key* "C-j" 'toggle-input-method)
+;; (bind-key* "C-j" 'toggle-input-method)
 (bind-key "C-x j" 'open-junk-file)
 (bind-key "M-x" 'helm-M-x)
 (bind-key "C-;" 'hs-toggle-hiding)
