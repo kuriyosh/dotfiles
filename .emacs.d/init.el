@@ -116,17 +116,6 @@
     (global-hl-line-highlight)))
 (setq global-hl-line-timer
       (run-with-idle-timer 0.1 t 'global-hl-line-timer-function))
-;; (cancel-timer global-hl-line-timer)
-;; hl-lineを無効にするメジャーモードを指定する
-;; (defvar global-hl-line-timer-exclude-modes '(todotxt-mode))
-;; (defun global-hl-line-timer-function ()
-;;   (unless (memq major-mode global-hl-line-timer-exclude-modes)
-;;     (global-hl-line-unhighlight-all)
-;;     (let ((global-hl-line-mode t))
-;;       (global-hl-line-highlight))))
-;; (setq global-hl-line-timer
-;;       (run-with-idle-timer 0.03 t 'global-hl-line-timer-function))
-;; (cancel-timer global-hl-line-timer)
 
 ;;対応する括弧を強調して表示する
 (setq show-paren-delay 0) ;表示までの秒数
@@ -162,81 +151,6 @@
 ;;elisp-mode-hookのON/OFF
 (add-hook 'emacs-lisp-mode-hook 'elisp-mode-hooks)
 
-;;プロキシの設定
-;; (setq url-http-proxy-basic-auth-storage
-;;     (list (list "proxy.com:8080"
-;;                 (cons "Input your LDAP UID !"
-;;                       (base64-encode-string "LOGIN:PASSWORD")))))
-
-;; ;;tabbarの設定
-;; (require 'tabbar)
-;; (tabbar-mode 1)
-
-
-;; ;; Disable grouping
-;; (setq tabbar-buffer-groups-function nil)
-
-;; ;; Not use images
-;; (setq tabbar-use-images nil)
-
-;; ;; Disable button
-;; (dolist (btn '(tabbar-buffer-home-button
-;;                tabbar-scroll-left-button
-;; 	       tabbar-scroll-right-button))
-;;   (set btn (cons (cons "" nil)
-;;                  (cons "" nil))))
-;; ;; Color setting
-;; (set-face-attribute  ; バー自体の色
-;;  'tabbar-default nil
-;;  :family "Consolas"
-;;  :height 1.0
-;;  )
-;; (set-face-attribute  ; 非アクティブなタブ
-;;  'tabbar-unselected nil
-;;  :background "#DB0000"
-;;  :foreground "#2F3744"
-;;  :box nil
-;;  )
-
-;; ;; Disable mouse wheel on tabbar
-;; (tabbar-mwheel-mode -1)
-
-;; ;; Space between tabs
-;; (setq tabbar-separator '(0.2))
-
-;; (set-face-attribute
-;;  'tabbar-button nil
-;;  :box nil)
-
-;; (set-face-attribute
-;;  'tabbar-separator nil
-;;  :background "#2F3744"
-;;  :height 1.0)
-
-;; ;; 表示させたくないバッファ
-;; (defun my-tabbar-buffer-list ()
-;;   (delq nil
-;;         (mapcar #'(lambda (b)
-;;                     (cond
-;;                      ;; Always include the current buffer.
-;;                      ((eq (current-buffer) b) b)
-;;                      ((buffer-file-name b) b)
-;;                      ((char-equal ?\  (aref (buffer-name b) 0)) nil)
-;; 					 ((equal "todo.org" (buffer-name b)) nil)
-;; 					 ((char-equal ?* (aref (buffer-name b) 0)) nil)
-;;                      ((buffer-live-p b) b)))
-;;                 (buffer-list))))
-;; (setq tabbar-buffer-list-function 'my-tabbar-buffer-lis)
-
-;;auto-completeの設定  :test: companyを試すためにauto-completeをコメントアウト
-;; (require 'auto-complete)
-;; (require 'auto-complete-config)
-;; ;; (add-to-list 'ac-modes 'org-mode)
-;; ;; (add-to-list 'ac-modes 'text-mode)
-;; ;; (add-to-list 'ac-modes 'yatex-mode)
-;; (setq ac-use-menu-map t)
-;; (setq ac-use-fuzzy t)
-;; (global-auto-complete-mode t)
 
 (require 'company)
 (global-company-mode) ; 全バッファで有効にする 
