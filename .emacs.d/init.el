@@ -228,15 +228,27 @@
 ;;                 (buffer-list))))
 ;; (setq tabbar-buffer-list-function 'my-tabbar-buffer-lis)
 
-;;auto-completeの設定
-(require 'auto-complete)
-(require 'auto-complete-config)
-;; (add-to-list 'ac-modes 'org-mode)
-;; (add-to-list 'ac-modes 'text-mode)
-;; (add-to-list 'ac-modes 'yatex-mode)
-(setq ac-use-menu-map t)
-(setq ac-use-fuzzy t)
-(global-auto-complete-mode t)
+;;auto-completeの設定  :test: companyを試すためにauto-completeをコメントアウト
+;; (require 'auto-complete)
+;; (require 'auto-complete-config)
+;; ;; (add-to-list 'ac-modes 'org-mode)
+;; ;; (add-to-list 'ac-modes 'text-mode)
+;; ;; (add-to-list 'ac-modes 'yatex-mode)
+;; (setq ac-use-menu-map t)
+;; (setq ac-use-fuzzy t)
+;; (global-auto-complete-mode t)
+
+(require 'company)
+(global-company-mode) ; 全バッファで有効にする 
+(setq company-idle-delay 0) ; デフォルトは0.5
+(setq company-minimum-prefix-length 1) ; デフォルトは4
+(setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
+(define-key company-active-map (kbd "M-n") nil)
+(define-key company-active-map (kbd "M-p") nil)
+(define-key company-active-map (kbd "C-n") 'company-select-next)
+(define-key company-active-map (kbd "C-p") 'company-select-previous)
+(define-key company-active-map (kbd "C-h") nil)
+(define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
 
 ;;recentf-extの設定
 (require 'recentf-ext)
@@ -633,7 +645,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")))
  '(package-selected-packages
    (quote
-	(goto-chg js-doc smartparens elscreen dracula-theme bm cyberpunk-theme madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck-pos-tip flycheck quickrun helm recentf-ext pdf-tools bind-key dashboard))))
+	(company goto-chg js-doc smartparens elscreen dracula-theme bm cyberpunk-theme madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck-pos-tip flycheck quickrun helm recentf-ext pdf-tools bind-key dashboard))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
