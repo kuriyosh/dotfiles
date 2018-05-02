@@ -372,9 +372,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (add-hook 'emmet-mode-hook (lambda () (setq emmet-indentation 2))) ;; indent はスペース2個
 (eval-after-load "emmet-mode"
   '(define-key emmet-mode-keymap (kbd "C-j") nil)) ;; C-j は newline のままにしておく
-(eval-after-load "emmet-mode"
-  '(define-key emmet-mode-keymap (kbd "TAB") nil))
-(define-key emmet-mode-keymap (kbd "C-i") 'emmet-expand-line) ;; C-i で展開
 (add-to-list 'auto-mode-alist '("\\.jsp$"       . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?$"     . web-mode))
 (defun my-wrap-lines-with-html-tag ($tag)
@@ -545,6 +542,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key*  "M-h" 'backward-kill-word)
 (bind-key* "C-," 'goto-last-change)
 (bind-key* "C-." 'goto-last-change-reverse)
+(bind-key "<tab>" 'indent-for-tab-command emmet-mode-keymap)
+(bind-key "C-i" 'emmet-expand-line emmet-mode-keymap)
 
 
 (put 'upcase-region 'disabled nil)
