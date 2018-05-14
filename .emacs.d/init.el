@@ -128,9 +128,6 @@
                     :underline "#ffff00" :weight 'extra-bold)
 
 
-;;括弧の対応付け
-(electric-pair-mode 1)
-
 ;;バックアップファイルとオートセーブファイルを~/.emacs.d/backupsへ集める
 (add-to-list 'backup-directory-alist
 			 (cons "." "~/.emacs.d/backups/"))
@@ -157,12 +154,17 @@
 (setq company-idle-delay 0) ; デフォルトは0.5
 (setq company-minimum-prefix-length 1) ; デフォルトは4
 (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
-(define-key company-active-map (kbd "M-n") nil)
-(define-key company-active-map (kbd "M-p") nil)
-(define-key company-active-map (kbd "C-n") 'company-select-next)
-(define-key company-active-map (kbd "C-p") 'company-select-previous)
-(define-key company-active-map (kbd "C-h") nil)
-(define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
+(defun edit-category-table-for-company-dabbrev (&optional table)
+  (define-category ?s "word constituents for company-dabbrev" table)
+  (let ((i 0))
+    (while (< i 128)
+      (if (equal ?w (char-syntax i))
+      (modify-category-entry i ?s table)
+    (modify-category-entry i ?s table t))
+      (setq i (1+ i)))))
+(edit-category-table-for-company-dabbrev)
+;; (add-hook 'TeX-mode-hook 'edit-category-table-for-company-dabbrev) ; 下の追記参照
+(setq company-dabbrev-char-regexp "\\cs")
 
 ;;recentf-extの設定
 (require 'recentf-ext)
@@ -544,7 +546,12 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-." 'goto-last-change-reverse)
 (bind-key "<tab>" 'indent-for-tab-command emmet-mode-keymap)
 (bind-key "C-i" 'emmet-expand-line emmet-mode-keymap)
-
+(define-key company-active-map (kbd "M-n") nil)
+(define-key company-active-map (kbd "M-p") nil)
+(define-key company-active-map (kbd "C-n") 'company-select-next)
+(define-key company-active-map (kbd "C-p") 'company-select-previous)
+(define-key company-active-map (kbd "C-h") nil)
+(define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
 
 (put 'upcase-region 'disabled nil)
 (custom-set-variables
