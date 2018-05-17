@@ -54,6 +54,8 @@
 ;; smartparensの設定
 (require 'smartparens-config)
 (smartparens-global-mode t)
+(sp-pair "「" "」")
+(sp-pair "'" "'")
 
 ;;終了時の確認
 (setq confirm-kill-emacs 'y-or-n-p)
