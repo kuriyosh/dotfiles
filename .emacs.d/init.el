@@ -111,13 +111,16 @@
  nil 'japanese-jisx0208
  (font-spec :family "メイリオ"))
 
-(require 'hl-line)
-(defun global-hl-line-timer-function ()
-  (global-hl-line-unhighlight-all)
-  (let ((global-hl-line-mode t))
-    (global-hl-line-highlight)))
-(setq global-hl-line-timer
-      (run-with-idle-timer 0.1 t 'global-hl-line-timer-function))
+;; (require 'hl-line)
+;; (defun global-hl-line-timer-function ()
+;;   (global-hl-line-unhighlight-all)
+;;   (let ((global-hl-line-mode t))
+;;     (global-hl-line-highlight)))
+;; (setq global-hl-line-timer
+;;       (run-with-idle-timer 0.1 t 'global-hl-line-timer-function))
+(require 'hl-line+)
+(toggle-hl-line-when-idle)
+(setq hl-line-idle-interval 3)
 
 ;;対応する括弧を強調して表示する
 (setq show-paren-delay 0) ;表示までの秒数
