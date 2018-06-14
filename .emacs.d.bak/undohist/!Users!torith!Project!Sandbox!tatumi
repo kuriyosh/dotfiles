@@ -1,0 +1,28 @@
+
+((digest . "ae3cdf97883d7aefbbc8b4ab446cf07a") (undo-list nil ("
+" . -17) ((marker . 17) . -1) ((marker) . -1) ((marker) . -1) ((marker . 17) . -1) ((marker . 17) . -1) ((marker . 17) . -1) ((marker . 17) . -1) ((marker . 17) . -1) ((marker . 17) . -1) ((marker . 17) . -1) ((marker . 17) . -1) ((marker . 17) . -1) ((marker . 17) . -1) ((marker) . -1) ((marker) . -1) ((marker) . -1) ((marker) . -1) ((marker . 17) . -1) ((marker . 17) . -1) ((marker . 17) . -1) ((marker . 17) . -1) 18 nil ("print (<*>)[2];" . 18) ((marker . 17) . -6) ((marker . 17) . -10) ((marker . 17) . -10) ((marker . 17) . -5) ((marker . 17) . -6) ((marker* . 17) . 1) ((marker . 17) . -11) ((marker . 17) . -11) ((marker . 17) . -11) ((marker . 17) . -11) ((marker . 17) . -11) ((marker . 17) . -12) ((marker) . -15) ((marker) . -15) ((marker . 17) . -15) ((marker . 17) . -15) ((marker) . -15) nil (30 . 31) nil ("0" . -30) ((marker . 17) . -1) 31 (t 23315 18248 0 0) nil (30 . 31) (29 . 31) ("[" . -29) ((marker . 17) . -1) ((marker . 17) . -1) (28 . 30) ("(" . 25) ((marker) . -1) (24 . 25) (24 . 25) ("(" . -27) (27 . 28) (t 23315 18241 0 0) nil (27 . 28) nil (":" . -27) ((marker) . -1) ((marker . 17) . -1) ((marker . 17) . -1) ((marker . 17) . -1) ((marker . 17) . -1) (";" . -28) ((marker . 17) . -1) 29 nil (28 . 29) nil (27 . 28) nil (23 . 24) nil (23 . 26) nil (18 . 23) nil (17 . 18) nil ("p" . -29) ((marker . 42) . -1) 30 nil (29 . 30) nil ("
+" . -105) ((marker . 42) . -1) ((marker . 17) . -1) 106 (t 23315 18134 0 0) nil (104 . 106) nil (";" . -104) ((marker . 17) . -1) ((marker . 42) . -1) ((marker . 42) . -1) ("
+" . -105) ((marker . 17) . -1) ((marker) . -1) ((marker) . -1) ((marker . 42) . -1) ((marker . 42) . -1) ((marker . 17) . -1) 106 nil ("	print $dir;" . 106) ((marker . 17) . -7) ((marker . 42) . -12) ((marker) . -12) nil ("x" . -118) ((marker . 42) . -1) 119 nil (118 . 119) (t 23315 18093 0 0) nil (117 . 118) (t 23315 18092 0 0) nil (nil rear-nonsticky nil 116 . 117) (113 . 117) nil (107 . 113) nil (105 . 107) nil ("
+" . -30) ((marker . 42) . -1) ((marker . 42) . -1) ((marker . 17) . -1) 31 nil ("print @file[0];" . 31) nil ("q" . -31) ((marker . 42) . -1) 32 nil (31 . 32) (t 23315 17980 0 0) nil (45 . 46) nil (43 . 44) (42 . 44) ("[" . -42) (40 . 43) nil ("e" . -40) ((marker . 42) . -1) 41 nil (36 . 41) nil (31 . 36) nil (30 . 31) nil ("
+" . -30) ((marker . 42) . -1) ((marker . 17) . -1) ("
+" . -31) ((marker . 42) . -1) ((marker . 17) . -1) 32 nil (30 . 32) (t 23315 17912 0 0) nil ("
+" . -30) ((marker . 42) . -1) ((marker . 17) . -1) 31 nil ("print @file;" . 31) nil (42 . 43) nil (38 . 42) ("fil" . -38) ((marker . 42) . -3) 41 nil (37 . 41) nil ("#" . -37) ((marker . 42) . -1) 38 nil (37 . 38) nil ("<" . -37) ((marker . 42) . -1) 38 nil (35 . 38) nil ("r" . -35) ((marker . 42) . -1) 36 nil (33 . 36) nil ("n" . -33) ((marker . 42) . -1) ("t" . -34) ((marker . 42) . -1) 35 nil (31 . 35) nil (30 . 31) nil (208 . 209) (" " . -208) (175 . 177) ("	 " . -175) ((marker . 175) . -2) (165 . 166) (" " . -165) (124 . 126) (" " . -124) (106 . 107) (" " . -106) (83 . 84) (" " . -83) (47 . 48) (" " . -47) 1 nil (174 . 176) (" " . -174) nil (" " . 174) (" " . 174) (" " . 174) (" " . 174) (" " . 174) (" " . 174) (" " . 174) (" " . 174) (" " . 174) (" " . 174) (" " . 174) (" " . 174) (" " . 174) (" " . 174) nil (" " . 124) nil (" " . 124) (" " . 124) (" " . 124) (" " . 124) (" " . 124) (" " . 124) (" " . 124) (" " . 124) (" " . 124) (" " . 124) (" " . 124) (" " . 124) (" " . 124) nil ("                           " . 234) ((marker . 42) . -27) ("                           " . 188) ("                           " . 178) ("                           " . 124) ("                           " . 106) ("                           " . 83) ("                           " . 47) 423 nil (1 . 428) nil ("#!/usr/bin/perl
+use strict;
+use warnings;
+
+print \"What is your name? \";
+my $name = <STDIN>;
+chomp($name);
+
+my @data = split(/\\s+/, $name);
+
+foreach my $target (@data) {    		 
+ if ( lc($target) eq \"tatsumi\" ) {
+ print \"Hello,long time no see! How are you?\", \"\\n\";
+} elsif ( lc($target) eq \"shishitani\" ) {
+ print \"Hello,long time no see! You look happy!\", \"\\n\";
+} else {
+ print \"Hello!\";
+}  	
+}  
+" . 1) ((marker . 17) . -397) ((marker) . -397) ((marker . 18) . -16) (t 23302 19306 0 0)))
