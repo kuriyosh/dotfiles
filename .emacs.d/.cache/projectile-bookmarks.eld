@@ -1,0 +1,1 @@
+("~/Project/dotfiles/" "~/Project/dotfiles/.emacs.d/")
