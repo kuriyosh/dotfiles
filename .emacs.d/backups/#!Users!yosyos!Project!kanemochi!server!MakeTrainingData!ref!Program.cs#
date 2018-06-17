@@ -1,0 +1,390 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using MathNet.Numerics.Statistics;
+
+namespace Gentestdata
+{
+  class Program
+  {
+	static int[,] months, days, hours, minutes;
+	static int[,] teacher;
+	static double[] opens, highs, lows, closes;
+	static int countRow;
+		
+	static void Main(string[] args)
+	{
+
+	  /* double[] x = { 1, 2, 3, 4 }; */
+	  /* bool b = checkRange(x, 1, 10, "over"); */
+	  /* Console.WriteLine(b); */
+		  
+	  /* csv読みこみ */
+	  string filepath = "USD_JPY_2014"; 
+	  ReadCsv(filepath);
+	  Console.WriteLine("Read");
+	  Calc_4();			/* 教師データ作成 */
+	  Console.WriteLine("Calculated");
+	  WriteCsv(filepath);
+            
+	}
+
+	static void ReadCsv(String filepath)
+	{
+	  try
+		{
+		  // csvファイルを開く
+		  using (var sr = new System.IO.StreamReader(filepath+".csv"))
+			{
+			  string[] lines = File.ReadAllLines(filepath + ".csv");
+			  countRow = lines.Length-1; /* 何行か読み込み */
+
+			  /* ワンホットラベル */
+ 			  months = new int[countRow, 12];
+			  days = new int[countRow, 31];
+			  hours = new int[countRow, 24];
+			  minutes = new int[countRow, 60];
+
+			  /* レートだから整数値じゃない */
+			  opens = new double[countRow];
+			  highs = new double[countRow];
+			  lows = new double[countRow];
+			  closes = new double[countRow];
+
+			  /* ヘッダ読み飛ばし */
+			  sr.ReadLine();
+			  int count = 0;
+
+			  while (!sr.EndOfStream)
+				{
+				  //if (count%1000 == 0) Console.WriteLine(count);
+				  // ファイルから一行読み込む
+				  var line = sr.ReadLine();
+				  // 読み込んだ一行をカンマ毎に分けて配列に格納する
+				  var values = line.Split(',');
+
+				  /* 月から読み出し */
+				  var month = Int32.Parse(values[1]);
+				  var month_label = onehot(month - 1, 12);
+				  /*  */
+				  from1Dto2D(month_label, months, count);
+
+				  var day = Int32.Parse(values[2]);
+				  var day_label = onehot(day - 1, 31);
+				  from1Dto2D(day_label, days, count);
+
+				  var hour = Int32.Parse(values[3]);
+				  var hour_label = onehot(hour, 24);
+				  from1Dto2D(hour_label, hours, count);
+
+				  var minute = Int32.Parse(values[4]);
+				  var minute_label = onehot(minute, 60);
+				  from1Dto2D(minute_label, minutes, count);
+
+				  int index = 7; /*  */
+				  var openBid = Double.Parse(values[index++]);
+				  var openAsk = Double.Parse(values[index++]);
+				  var highBid = Double.Parse(values[index++]);
+				  var highAsk = Double.Parse(values[index++]);
+				  var lowBid = Double.Parse(values[index++]);
+				  var lowAsk = Double.Parse(values[index++]);
+				  var closeBid = Double.Parse(values[index++]);
+				  var closeAsk = Double.Parse(values[index++]);
+
+				  var open = (openBid + openAsk) / 2;
+				  var high = (highBid + highAsk) / 2;
+				  var low = (lowBid + lowAsk) / 2;
+				  var close = (closeBid + closeAsk) / 2;
+
+				  /* count = 行番号 */
+				  opens[count] = open;
+				  highs[count] = high;
+				  lows[count] = low;
+				  closes[count] = close;
+
+				  count++;
+				}
+			}
+		}
+	  catch (System.Exception e)
+		{
+		  // ファイルを開くのに失敗したとき
+		  System.Console.WriteLine(e.Message);
+		}
+	}
+
+	static void Calc_1()
+	{
+	  int cate = 3;
+	  teacher = new int[countRow, cate];
+
+	  int len_predict = 60;
+	  for(int i = 0; i < countRow - len_predict; i++)
+		{
+		  var X = arrange(0, len_predict);
+		  var Y = CutArray(closes, i, i+len_predict);
+		  var ans = CalcSlopeIntercept(X, Y);
+		  var a = ans[0];
+		  var b = ans[1];
+		  var std = Y.PopulationStandardDeviation();
+		  //Console.WriteLine(std);
+		  if(a>0 && b-std >closes[i]) from1Dto2D(onehot(0, 3), teacher, i);
+		  else if (a < 0 && b + std < closes[i]) from1Dto2D(onehot(2, 3), teacher, i);
+		  else from1Dto2D(onehot(1, 3), teacher, i);
+		  //Console.WriteLine("a:{0}, b:{1}", a, b);
+		  /*
+			if (a > 0 && b > closes[i]) from1Dto2D(onehot(0, 4), teacher, i);
+			else if (a > 0 && b < closes[i]) from1Dto2D(onehot(1, 4), teacher, i);
+			else if (a <0 && b > closes[i]) from1Dto2D(onehot(2, 4), teacher, i);
+			else if (a < 0 && b < closes[i]) from1Dto2D(onehot(3, 4), teacher, i);
+		  */
+		}
+
+	}
+
+	static void Calc_2()
+	{
+	  int cate = 12;
+	  teacher = new int[countRow, cate];
+
+	  int len_predict = 60;
+	  for (int i = 0; i < countRow - len_predict; i++)
+		{
+		  var X = arrange(0, len_predict);
+		  var Y = CutArray(closes, i, i + len_predict);
+		  var ans = CalcSlopeIntercept(X, Y);
+		  var a = ans[0];
+		  var b = ans[1];
+		  var std = Y.PopulationStandardDeviation();
+		  //Console.WriteLine(std);
+
+		  /*
+			[up+2std, up+std, up+,up- up-std, up-2std,
+			down+2std, down+std, down+-std, down-std, down-2std
+		  */
+		  int p, q;
+		  if (a > 0) p = 0;
+		  else p = 1;
+
+		  if (b + 2 * std < closes[i]) q = 0;
+		  else if (b + std < closes[i]) q = 1;
+		  else if (b < closes[i]) q = 2;
+		  else if (b - std < closes[i]) q = 3;
+		  else if (b - 2 * std < closes[i]) q = 4;
+		  else q = 5;
+
+		  from1Dto2D(onehot(6 * p + q, cate), teacher, i);
+		}
+
+	}
+
+	static void Calc_3()
+	{
+	  int cate = 3;
+	  teacher = new int[countRow, cate];
+
+	  int len_predict1 = 30;
+	  int len_predict2 = 60;
+	  for (int i = 0; i < countRow - len_predict2; i++)
+		{
+		  var X1 = arrange(0, len_predict1);
+		  var Y1 = CutArray(closes, i, i + len_predict1);
+		  var X2 = arrange(0, len_predict2);
+		  var Y2 = CutArray(closes, i, i + len_predict2);
+
+		  var ans1 = CalcSlopeIntercept(X1, Y1);
+		  var ans2 = CalcSlopeIntercept(X2, Y2);
+		  var a1 = ans1[0];
+		  var a2 = ans2[0];
+
+		  int score = 0;
+
+		  if (a1 > 0 && a2 > 0) score = 0;
+		  if (a1 < 0 && a2 < 0) score = 2;
+		  if(a1>0 && a2 < 0)
+			{
+			  if (Math.Abs(a1) > Math.Abs(a2)) score = 0;
+			  else score = 1;
+			}
+		  else
+			{
+			  if (Math.Abs(a1) > Math.Abs(a2)) score = 2;
+			  else score = 1;
+			}
+		  //Console.WriteLine(std);
+		  from1Dto2D(onehot(score, 3), teacher, i);
+		}
+
+	}
+
+	static void Calc_4()
+	{
+	  int cate = 5;
+	  teacher = new int[countRow, cate];
+	  int len_predict = 60; /* 60分を見る */
+	  double pip = 0.01;
+	  int thr_1 = 5;
+	  int thr_2 = 15;
+	  for (int i = 0; i < countRow - len_predict;i++){
+
+		Console.WriteLine("{0} / {1}", i, countRow - len_predict);
+
+		var X = CutArray(closes, i, i + len_predict);
+		bool over_thr_1 = checkRange(X, closes[i], pip*thr_1, "over");
+		bool over_thr_2 = checkRange(X, closes[i], pip*thr_2, "over");
+		bool under_thr_1 = checkRange(X, closes[i], pip*thr_1, "under");
+		bool under_thr_2 = checkRange(X, closes[i], pip*thr_2, "under");
+
+		if(over_thr_2 && !under_thr_1) from1Dto2D(onehot(0, cate), teacher, i);
+		else if(over_thr_2 && under_thr_1 && !under_thr_2) from1Dto2D(onehot(1, cate), teacher, i);
+		else if(over_thr_1 && !under_thr_1) from1Dto2D(onehot(1, cate), teacher, i);
+		else if(under_thr_2 && !over_thr_1) from1Dto2D(onehot(4, cate), teacher, i);
+		else if(under_thr_2 && over_thr_1 && !over_thr_2) from1Dto2D(onehot(3, cate), teacher, i);
+		else if(under_thr_1 && !over_thr_1) from1Dto2D(onehot(3, cate), teacher, i);
+		else from1Dto2D(onehot(2, cate), teacher, i);
+
+	  }
+	  countRow = countRow - len_predict;
+
+	}
+
+	static bool checkRange(double[] data, double rate, double thr, string mode){
+	  /*
+		Console.WriteLine("{0}, {1}", rate+thr, rate-thr);
+		foreach (var i in data)
+		{
+		Console.WriteLine(i);
+		}
+	  */
+	  if (mode == "over"){
+		return data.Any(x => x > rate + thr);
+	  }else if (mode == "under"){
+		return data.Any(x => x < rate - thr);
+	  }else{
+		return false;
+	  }
+	}
+
+
+	static int[] onehot(int i, int classes)
+	{
+	  int[] result = new int[classes];
+	  for(int j = 0; j < classes; j++)
+		{
+		  if (j == i) result[j] = 1;
+		  else result[j] = 0;
+		}
+	  return result;
+	}
+
+	static void from1Dto2D(int[] a, int[,] b,int row)
+	{
+	  int len = a.Length;
+	  for(int i = 0; i < len; i++)
+		{
+		  b[row, i] = a[i];
+		}
+	}
+	static double[] CalcSlopeIntercept(int[] x, double[] y)
+	{
+	  double sumXY = 0;
+	  double sumX = 0;
+	  double sumY = 0;
+	  double sumX2 = 0;
+
+	  for (int i = 0; i < x.Length; i++)
+		{
+		  sumXY += x[i] * y[i];
+		  sumX += x[i];
+		  sumY += y[i];
+		  sumX2 += Math.Pow(x[i], 2);
+		}
+
+	  double Slope = (x.Length * sumXY - sumX * sumY) / (x.Length * sumX2 - Math.Pow(sumX, 2));
+	  double Intercept = (sumX2 * sumY - sumXY * sumX) / (x.Length * sumX2 - Math.Pow(sumX, 2));
+	  double[] answer = { Slope, Intercept };
+	  return answer;
+	}
+	static double[] ColumnTo1D(double[,] data, int column, int start, int end)
+	{
+	  double[] array = new double[end-start];
+	  for (int i = start; i < end; i++)
+		{
+		  array[i - start] = data[i, column];
+		}
+
+	  return array;
+	}
+
+	static double[] CutArray(double[] data, int start, int end)
+	{
+	  double[] array = new double[end - start];
+	  for (int i = start; i < end; i++)
+		{
+		  array[i - start] = data[i];
+		}
+	  return array;
+	}
+
+	static int[] arrange(int start, int end)
+	{
+	  int[] array = new int[end - start];
+	  for(int i = start; i < end; i++)
+		{
+		  array[i - start] = i;
+		}
+	  return array;
+	}
+
+	static void WriteCsv(string filepath)
+	{
+	  try
+		{
+		  // csvファイルを開く
+		  using (var sr = new System.IO.StreamWriter(@"X_"+filepath+".csv")) /* X＿が入力データの生成 */
+			{
+			  for(int i = 0; i < countRow; i++)
+				{
+				  String str = ToStr(months, i, 12) + ToStr(days, i, 31) + ToStr(hours, i, 24) + ToStr(minutes, i, 60) + opens[i].ToString() +","+ highs[i].ToString() + "," + lows[i].ToString() + "," + closes[i].ToString();
+				  sr.WriteLine(str);
+				}
+			}
+
+		  using (var sr = new System.IO.StreamWriter(@"T_"+filepath+".csv")) /* T_が教師データ */
+			{
+			  for (int i = 0; i < countRow; i++)
+				{
+				  String str = "";
+				  for(int j = 0; j < teacher.GetLength(1); j++)
+					{
+					  str += teacher[i, j].ToString();
+					  if (j != teacher.GetLength(1) - 1) str += ",";
+					}
+				  sr.WriteLine(str);
+				}
+			}
+
+		}
+	  catch (System.Exception e)
+		{
+		  // ファイルを開くのに失敗したとき
+		  System.Console.WriteLine(e.Message);
+		}
+	}
+
+	static String ToStr(int[,] data, int row, int length)
+	{
+	  String s = "";
+	  for (int i = 0; i < length; i++)
+		{
+		  s += data[row, i].ToString();
+		  s += ",";
+		}
+
+	  return s;
+	}
+  }
+}

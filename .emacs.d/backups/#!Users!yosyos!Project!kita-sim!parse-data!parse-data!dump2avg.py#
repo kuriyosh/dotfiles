@@ -1,0 +1,72 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# filename : check.py
+# date : 2018-04-29
+# author : Yoshiki Kurihara <y-kurihara@ist.osaka-u.ac.jp
+
+'''
+description
+main.pyで生成したexistanceファイルをプロット
+'''
+
+#import files
+import csv
+import pandas as pd
+import numpy as np
+import argparse
+
+#DEFINE CONSTANT
+
+#DEFINE METHOD
+
+if __name__ == '__main__' :
+    
+    parser = argparse.ArgumentParser(
+        prog='',
+        usage='',
+        description='30秒ごとの平均を出すためのプログラム',
+        epilog='end',
+        add_help=True,
+    )
+
+    parser.add_argument(
+        '-i', '--inputfileprefix',
+        help='input existance csv',
+        action='store',
+        required=True
+    )
+
+    parser.add_argument(
+        '-p', '--period',
+        help='input existance csv',
+        action='store',
+        required=True
+    )
+
+    time = 0
+    args = parser.parse_args()
+    input_file_prefix = args.inputfileprefix
+    period = args.period
+
+    np.set_printoptions(threshold=np.inf)
+    sum_cars = np.zeros(65536,dtype=int)
+
+    count = 0
+    for time in range(0, 88201, int(period)):
+        input_file = input_file_prefix + str(time) + '.csv'
+        csv_file = open(input_file, "r")
+        reader = csv.reader(csv_file)
+        for row in reader:
+            del row[len(row)-1]
+            row = [int(i) for i in row]
+            tmp = np.array(row, dtype=np.int32)
+            sum_cars += tmp
+            count += 1
+            if time % 1800 == 0:
+                print(count)
+                np.savetxt('test'+str(time)+'.csv', sum_cars, newline=',', fmt='%f')
+                output_file = './avg/Avg30_small_lust' + str(time) + '.csv'
+                sum_cars = sum_cars / 30
+                np.savetxt(output_file, sum_cars, newline=',', fmt='%f')
+                sum_cars = np.zeros(65536,dtype=int)

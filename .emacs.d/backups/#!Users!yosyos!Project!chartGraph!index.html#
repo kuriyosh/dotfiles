@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Navs</title>
+
+        <!-- Bootstrap -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div  class="container">
+			
+            <!-- Tabs --> 
+			<section>
+                <h1>Tabs</h1>
+                <div>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#">Messages</a></li>
+                    </ul>
+                </div>   
+            </section>
+
+			<!-- Pills --> 
+            <section>
+                <h1>Pills</h1>
+                <div>
+                    <ul class="nav nav-pills">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#">Messages</a></li>
+                    </ul>
+                </div>   
+            </section>
+
+            <!-- stacked --> 
+            <section>
+                <h1>stacked</h1>
+                <div>
+                    <ul class="nav nav-pills nav-stacked">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#">Messages</a></li>
+                    </ul>
+                </div>   
+            </section>
+
+            <!-- Justified-tab --> 
+            <section>
+                <h1>Justified-tab</h1>
+                <ul class="nav nav-tabs nav-justified">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#">Profile</a></li>
+                    <li><a href="#">Messages</a></li>
+                </ul>
+            </section>
+
+            <!-- Justified-pills -->            
+            <section>
+                <h1>Justified-pills</h1>
+                <ul class="nav nav-pills nav-justified">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#">Profile</a></li>
+                    <li><a href="#">Messages</a></li>
+                </ul>
+            </section>
+            
+            <!-- Justified-tab -->
+            <section>
+                <h1>Justified-tab</h1>            
+                <ul class="nav nav-pills">
+                    <li class=""><a href="#">Ennable link</a></li>
+                    <li class="disabled"><a href="#">Disabled link</a></li>
+                    <li class=""><a href="#">Ennable link</a></li>
+                </ul>
+            </section>
+			
+        </div>
+
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="js/bootstrap.min.js"></script>
+    </body>
+</html>

@@ -12,7 +12,6 @@
 
 (let ((envs '("PATH" "VIRTUAL_ENV" "GOROOT" "GOPATH")))
   (exec-path-from-shell-copy-envs envs))
-
 ;; shell の設定
 (defun skt:shell ()
   (or (executable-find "fish")

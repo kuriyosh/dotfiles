@@ -6,8 +6,9 @@
                          (or (file-name-directory #$) (car load-path))))
 
 
-;;;### (autoloads nil "ac-ispell" "ac-ispell.el" (0 0 0 0))
-;;; Generated autoloads from ac-ispell.el
+;;;### (autoloads nil "ac-ispell" "../../../../../.emacs.d/elpa/ac-ispell-20151031.1926/ac-ispell.el"
+;;;;;;  "7219375cc306e9cfbe378af6bb32e3fe")
+;;; Generated autoloads from ../../../../../.emacs.d/elpa/ac-ispell-20151031.1926/ac-ispell.el
 
 (autoload 'ac-ispell-ac-setup "ac-ispell" "\
 Add `ac-source-ispell' to `ac-sources' and enable `auto-complete' mode
@@ -18,8 +19,20 @@ Add `ac-source-ispell' to `ac-sources' and enable `auto-complete' mode
 Declare auto-complete source based on `ac-ispell-requires'
 
 \(fn)" t nil)
+
+;;;### (autoloads "actual autoloads are elsewhere" "ac-ispell" "../../../../../.emacs.d/elpa/ac-ispell-20151031.1926/ac-ispell.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../../../.emacs.d/elpa/ac-ispell-20151031.1926/ac-ispell.el
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "ac-ispell" '("ac-ispell-")))
+
+;;;***
+
+;;;***
+
+;;;### (autoloads nil nil ("../../../../../.emacs.d/elpa/ac-ispell-20151031.1926/ac-ispell-autoloads.el"
+;;;;;;  "../../../../../.emacs.d/elpa/ac-ispell-20151031.1926/ac-ispell.el")
+;;;;;;  (0 0 0 0))
 
 ;;;***
 

@@ -6,9 +6,9 @@
                          (or (file-name-directory #$) (car load-path))))
 
 
-;;;### (autoloads nil "auto-yasnippet" "auto-yasnippet.el" (0 0 0
-;;;;;;  0))
-;;; Generated autoloads from auto-yasnippet.el
+;;;### (autoloads nil "auto-yasnippet" "../../../../../.emacs.d/elpa/auto-yasnippet-20180503.1208/auto-yasnippet.el"
+;;;;;;  "dd69fc1c1050a72b44463415a4d0ed29")
+;;; Generated autoloads from ../../../../../.emacs.d/elpa/auto-yasnippet-20180503.1208/auto-yasnippet.el
 
 (autoload 'aya-create-one-line "auto-yasnippet" "\
 A simplistic `aya-create' to create only one mirror.
@@ -45,8 +45,21 @@ Insert current snippet at point.
 To save a snippet permanently, create an empty file and call this.
 
 \(fn)" t nil)
+
+;;;### (autoloads "actual autoloads are elsewhere" "auto-yasnippet"
+;;;;;;  "../../../../../.emacs.d/elpa/auto-yasnippet-20180503.1208/auto-yasnippet.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../../../.emacs.d/elpa/auto-yasnippet-20180503.1208/auto-yasnippet.el
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "auto-yasnippet" '("aya-")))
+
+;;;***
+
+;;;***
+
+;;;### (autoloads nil nil ("../../../../../.emacs.d/elpa/auto-yasnippet-20180503.1208/auto-yasnippet-autoloads.el"
+;;;;;;  "../../../../../.emacs.d/elpa/auto-yasnippet-20180503.1208/auto-yasnippet.el")
+;;;;;;  (0 0 0 0))
 
 ;;;***
 

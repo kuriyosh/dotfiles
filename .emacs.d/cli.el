@@ -1,0 +1,7 @@
+(global-set-key (kbd "C-z") 'undo)
+(global-set-key (kbd "C-h") 'delete-backward-char)
+(global-set-key (kbd "C-x :") 'toggle-truncate-lines)
+(global-set-key (kbd "M-n") (kbd "C-u 5 C-n"))
+(global-set-key (kbd "M-p") (kbd "C-u 5 C-p"))
+(global-set-key (kbd "M-g") 'goto-line)
+(global-set-key (kbd "M-h") 'backward-kill-word)

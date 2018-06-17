@@ -6,10 +6,17 @@
                          (or (file-name-directory #$) (car load-path))))
 
 
-;;;### (autoloads nil "fuzzy" "fuzzy.el" (0 0 0 0))
-;;; Generated autoloads from fuzzy.el
+;;;### (autoloads "actual autoloads are elsewhere" "fuzzy" "../../../../../.emacs.d/elpa/fuzzy-20150729.2037/fuzzy.el"
+;;;;;;  (0 0 0 0))
+;;; Generated autoloads from ../../../../../.emacs.d/elpa/fuzzy-20150729.2037/fuzzy.el
 
 (if (fboundp 'register-definition-prefixes) (register-definition-prefixes "fuzzy" '("fuzzy-" "turn-o")))
+
+;;;***
+
+;;;### (autoloads nil nil ("../../../../../.emacs.d/elpa/fuzzy-20150729.2037/fuzzy-autoloads.el"
+;;;;;;  "../../../../../.emacs.d/elpa/fuzzy-20150729.2037/fuzzy.el")
+;;;;;;  (0 0 0 0))
 
 ;;;***
 

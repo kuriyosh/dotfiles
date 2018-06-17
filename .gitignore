@@ -1,10 +1,15 @@
 # default
 *~
 
-# `.emacs.d
-# /.emacs.d/*
-# !/.emacs.d/elisp
-# !/.emacs.d/elpa
-# !/.emacs.d/init.el
-# !/.emacs.d/cli.el
-# !/.emacs.d/snippets
+# Back up Emacs.d
+/.emacs.d.bak/*
+!/.emacs.d.bak/elisp
+!/.emacs.d.bak/elpa
+!/.emacs.d.bak/init.el
+!/.emacs.d.bak/cli.el
+!/.emacs.d.bak/snippets
+
+# Spacemacs
+/.emacs.d.bak/backups
+/.emacs.d.bak/auto-save-list
+/.emacs.d.bak/undohist
