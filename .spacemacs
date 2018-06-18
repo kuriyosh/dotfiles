@@ -332,6 +332,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; ----------------------------------------------------------------------------------------------
   ;; Key-Binds
   ;; ----------------------------------------------------------------------------------------------
+
+  ;; global mode
   (bind-key "C-z" 'undo)
   (bind-key* "C-t h" 'windmove-left)
   (bind-key* "C-t j" 'windmove-down)
@@ -347,15 +349,14 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (bind-key*  "M-h" 'backward-kill-word)
   (bind-key* "C-," 'goto-last-change)
   (bind-key* "C-." 'goto-last-change-reverse)
-  (bind-key* "<tab>" web-mode 'indent-for-tab-command)
-  ;; (bind-key "C-z" helm-map 'helm-select-action)
   (bind-key  "C-x :" 'toggle-truncate-lines)
-  ;; (bind-key "<tab>" helm-find-files-map 'helm-execute-persistent-action)
-  ;; (bind-key "<tab>" helm-read-file-map 'helm-execute-persistent-action)
-  ;; (bind-key "C-n" company-active-map 'company-select-next)
-  ;; (bind-key "C-p" company-active-map 'company-select-previous)
-  ;; (bind-key "C-n" company-search-map 'company-select-next)
-  ;; (bind-key "C-p" company-search-map 'company-select-previous)
+  (bind-key "C-z" 'helm-select-action helm-map)
+  (bind-key "<tab>" 'helm-execute-persistent-action helm-find-files-map)
+  (bind-key "<tab>" 'helm-execute-persistent-action helm-read-file-map)
+  (bind-key "C-n" 'company-select-next company-active-map)
+  (bind-key "C-p" 'company-select-previous company-active-map)
+  (bind-key "C-n" 'company-select-next company-search-map)
+  (bind-key "C-p" 'company-select-previous company-search-map) 
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
