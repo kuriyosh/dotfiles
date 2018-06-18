@@ -1,0 +1,1 @@
+(nanowrimo :fetcher bitbucket :repo "gvol/nanowrimo.el")

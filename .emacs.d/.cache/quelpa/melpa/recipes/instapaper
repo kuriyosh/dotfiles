@@ -1,0 +1,3 @@
+(instapaper
+ :fetcher bitbucket
+ :repo "jfm/emacs-instapaper")
