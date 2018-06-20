@@ -330,11 +330,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq company-idle-delay 0) ; デフォルトは0.5
   (setq company-minimum-prefix-length 1) ; デフォルトは4
   (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
+
   ;; ----------------------------------------------------------------------------------------------
   ;; Key-Binds
   ;; ----------------------------------------------------------------------------------------------
-
-  ;; global mode
   (bind-key "C-z" 'undo)
   (bind-key* "C-t h" 'windmove-left)
   (bind-key* "C-t j" 'windmove-down)
@@ -357,7 +356,39 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (bind-key "C-n" 'company-select-next company-active-map)
   (bind-key "C-p" 'company-select-previous company-active-map)
   (bind-key "C-n" 'company-select-next company-search-map)
-  (bind-key "C-p" 'company-select-previous company-search-map) 
+  (bind-key "C-p" 'company-select-previous company-search-map)
+
+
+  ;; ----------------------------------------------------------------------------------------------
+  ;; Template
+  ;; ----------------------------------------------------------------------------------------------
+  (require 'autoinsert)
+  (setq auto-insert-directory "~/.emacs.d/template/")
+  (setq auto-insert-alist
+        (nconc '(
+                 ("\\.cpp$" . ["template.cpp" my-template])
+                 ("\\.py$"   . ["template.py" my-template])
+			     ("\\.org$"   . ["template.org" my-template])
+			     ("\\.tex$"   . ["template.tex" my-template])
+                 ) auto-insert-alist))
+  (require 'cl)
+  (defvar template-replacements-alists
+    '(("%file%"             . (lambda () (file-name-nondirectory (buffer-file-name))))
+      ("%file-without-ext%" . (lambda () (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))))
+      ("%time%" . (lambda () (format-time-string "%Y-%m-%d")))
+	  ("%mtg-timeformat%" . (lambda () (format-time-string "%m%d")))
+      ("%include-guard%"    . (lambda () (format "__SCHEME_%s__" (upcase (file-name-sans-extension (file-name-nondirectory buffer-file-name))))))))
+  (defun my-template ()
+    (time-stamp)
+    (mapc #'(lambda(c)
+              (progn
+                (goto-char (point-min))
+                (replace-string (car c) (funcall (cdr c)) nil)))
+          template-replacements-alists)
+    (goto-char (point-max))
+    (message "done."))
+  (add-hook 'find-file-not-found-hooks 'auto-insert)
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

@@ -13,3 +13,4 @@
 /.emacs.d/recentf
 /.emacs.d/undohist/*
 /.emacs.d/backups/*
+/.emacs.d/template/*

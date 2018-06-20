@@ -1,1 +1,1 @@
-("~/Project/metis_app/" "~/Project/dotfiles/.emacs.d/" "~/Project/kanemochi/" "~/Project/dotfiles/" "~/Project/Sandbox/cordova-plugin-purchase/")
+("~/Project/dotfiles/.emacs.d/" "~/Project/metis_app/" "~/Documents/Meeting/" "~/Project/dotfiles/" "~/Project/kanemochi/" "~/Project/Sandbox/cordova-plugin-purchase/")
