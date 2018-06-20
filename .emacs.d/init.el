@@ -512,12 +512,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (require 'py-autopep8)
 (add-hook 'before-save-hook 'py-autopep8-before-save)
 
-(defun prev-window ()
-  (interactive)
-  (other-window -1))
-
-(require 'ag)
-
 ;;Key-bind (necessary bind-key.el)
 (require 'bind-key)
 (bind-key "C-z" 'undo)
