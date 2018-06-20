@@ -1,1 +1,0 @@
-(helm-pass :fetcher gitlab :repo "jabranham/helm-pass")

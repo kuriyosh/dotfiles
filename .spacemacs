@@ -351,6 +351,15 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (bind-key* "C-." 'goto-last-change-reverse)
   (bind-key  "C-x :" 'toggle-truncate-lines)
   (bind-key "C-z" 'helm-select-action helm-map)
+
+  (bind-key "<hybrid-state> <tab>" 'indent-for-tab-command emmet-mode-keymap)
+  (bind-key "<emacs-state> <tab>" 'indent-for-tab-command emmet-mode-keymap)
+  (bind-key "<insert-state> <tab>" 'indent-for-tab-command emmet-mode-keymap)
+
+  ;; (define-key input-decode-map "\C-i" [C-i])
+  (bind-key "C-i" [C-i] input-decode-map)
+  (bind-key "<C-i>" 'emmet-expand-line emmet-mode-keymap)
+
   (bind-key "<tab>" 'helm-execute-persistent-action helm-find-files-map)
   (bind-key "<tab>" 'helm-execute-persistent-action helm-read-file-map)
   (bind-key "C-n" 'company-select-next company-active-map)

@@ -1,10 +1,13 @@
 ;;; open-junk-file-autoloads.el --- automatically extracted autoloads
 ;;
 ;;; Code:
-(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))
+
+(add-to-list 'load-path (directory-file-name
+                         (or (file-name-directory #$) (car load-path))))
+
 
-;;;### (autoloads nil "open-junk-file" "open-junk-file.el" (22766
-;;;;;;  55826 554488 99000))
+;;;### (autoloads nil "open-junk-file" "open-junk-file.el" (0 0 0
+;;;;;;  0))
 ;;; Generated autoloads from open-junk-file.el
 
 (autoload 'find-file-hook--open-junk-file "open-junk-file" "\
@@ -27,11 +30,14 @@ Default value of them are `open-junk-file-format' and
 
 \(fn &optional FORMAT FIND-FILE-FN)" t nil)
 
+(if (fboundp 'register-definition-prefixes) (register-definition-prefixes "open-junk-file" '("open-junk-file-")))
+
 ;;;***
 
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
+;; coding: utf-8
 ;; End:
 ;;; open-junk-file-autoloads.el ends here

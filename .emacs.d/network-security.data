@@ -1,3 +1,0 @@
-(
- (:id "sha1:f55267bf06704a2d4b741d3dadea53a599efbac3" :fingerprint "sha1:c5:e9:fa:db:82:ce:11:6f:ce:33:41:17:fc:7f:6d:54:e6:c7:45:cd" :host "translate.google.com:443" :conditions (:insecure :unknown-ca :invalid))
-)
