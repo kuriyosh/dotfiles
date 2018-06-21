@@ -13,8 +13,6 @@
 (let ((envs '("PATH" "VIRTUAL_ENV" "GOROOT" "GOPATH")))
   (exec-path-from-shell-copy-envs envs))
 
-(setq tramp-default-method "ssh")
-
 (defun add-to-load-path (&rest paths)
   (let (path)
     (dolist (path paths paths)
@@ -443,6 +441,14 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (global-set-key (kbd "C-c y") 'helm-yas-complete)
 (push '("emacs.+/snippets/" . snippet-mode) auto-mode-alist)
 (yas-global-mode 1)
+
+(defvar company-mode/enable-yas t
+  "Enable yasnippet for all backends.")
+(defun company-mode/backend-with-yas (backend)
+  (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+      backend
+    (append (if (consp backend) backend (list backend))
+            '(:with company-yasnippet))))
 
 ;; hs-modeの設定
 (add-hook 'c++-mode-hook

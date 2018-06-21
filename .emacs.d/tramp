@@ -1,4 +1,4 @@
-;; -*- emacs-lisp -*- <18/06/21 17:18:22 /Users/torith/.emacs.d/tramp>
+;; -*- emacs-lisp -*- <18/06/21 18:30:40 /Users/torith/.emacs.d/tramp>
 ;; Tramp connection history.  Don't change this file.
 ;; You can delete it, forcing Tramp to reapply the checks.
 
@@ -23,8 +23,4 @@
   ("gid-integer" 1000)
   ("gid-string" "ubuntu")
   ("git" "\\git")
-  ("env-u-option" t))
- ((tramp-file-name "ssh" "ubuntu" nil "10.0.0.245" nil nil nil)
-  nil)
- ((tramp-file-name "sudo" "root" nil "localhost" nil nil nil)
-  nil))
+  ("env-u-option" t)))
