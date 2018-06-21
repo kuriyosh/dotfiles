@@ -13,6 +13,8 @@
 (let ((envs '("PATH" "VIRTUAL_ENV" "GOROOT" "GOPATH")))
   (exec-path-from-shell-copy-envs envs))
 
+(setq tramp-default-method "ssh")
+
 (defun add-to-load-path (&rest paths)
   (let (path)
     (dolist (path paths paths)
@@ -515,7 +517,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")) t)
  '(package-selected-packages
    (quote
-	(powerline spacemacs-theme company goto-chg js-doc smartparens elscreen dracula-theme bm cyberpunk-theme madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key dashboard))))
+	(helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen dracula-theme bm madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
@@ -524,5 +526,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(cursor ((t (:background "#AAA"))))
  '(helm-buffer-directory ((t (:foreground "DarkRed"))))
  '(helm-ff-directory ((t (:foreground "Orange")))))
