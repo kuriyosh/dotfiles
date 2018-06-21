@@ -38,6 +38,10 @@
 ;; Mac用ちらつかせ防止
 (setq redisplay-dont-pause nil)
 
+(setq desktop-globals-to-save '(extended-command-history))
+(setq desktop-files-not-to-save "")
+(desktop-save-mode 1)
+
 ;; ===============================================================
 ;; Shell Setting
 ;; ===============================================================
@@ -409,6 +413,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;; (setq org-agenda-todo-ignore-with-date t)
 ;; 今日から予定を表示させる
 (setq org-agenda-start-on-weekday nil)
+
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
 ;;flycheckの設定
 (add-hook 'after-init-hook #'global-flycheck-mode)

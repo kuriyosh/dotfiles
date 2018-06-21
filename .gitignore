@@ -2,15 +2,8 @@
 *~
 
 # Emacs
-/.emacs.d.bak/*
-!/.emacs.d.bak/elisp
-!/.emacs.d.bak/elpa
-!/.emacs.d.bak/init.el
-!/.emacs.d.bak/cli.el
-!/.emacs.d.bak/snippets
-
-# Spacemacs
-/.emacs.d/recentf
 /.emacs.d/undohist/*
-/.emacs.d/backups/*
 /.emacs.d/template/*
+/.emacs.d/recentf
+/.emacs.d/auto-save-list/*
+/.emacs.d/backups/*
