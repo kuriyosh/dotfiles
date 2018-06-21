@@ -4,33 +4,14 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
+;; ===============================================================
+;; Global Setting
+;; ===============================================================
 (setq default-directory "~/")
 (setq command-line-default-directory "~/")
 
-(set-language-environment "Japanese")
-(prefer-coding-system 'utf-8)
-
 (let ((envs '("PATH" "VIRTUAL_ENV" "GOROOT" "GOPATH")))
   (exec-path-from-shell-copy-envs envs))
-;; shell の設定
-(defun skt:shell ()
-  (or (executable-find "fish")
-      (executable-find "bash")
-      (error "can't find 'shell' command in PATH!!")))
-
-;; Shell 名の設定
-(setq shell-file-name (skt:shell))
-(setenv "SHELL" shell-file-name)
-(setq explicit-shell-file-name shell-file-name)
-
-(require 'ucs-normalize)
-(set-file-name-coding-system 'utf-8-hfs)
-(setq locale-coding-system 'utf-8-hfs)
-
-(toggle-truncate-lines 1)
-
-;; mac用ちらつかせ防止
-(setq redisplay-dont-pause nil)
 
 (defun add-to-load-path (&rest paths)
   (let (path)
@@ -41,6 +22,8 @@
 	(if (fboundp 'normal-top-level-add-subdirs-to-load-path)
 	    (normal-top-level-add-subdirs-to-load-path))))))
 
+(toggle-truncate-lines 1)
+
 ;;elispをPATHに設定
 (add-to-load-path "elisp")
 (add-to-load-path "elpa")
@@ -49,6 +32,41 @@
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")
         ("org" . "http://orgmode.org/elpa/")))
+
+(load-theme 'badwolf)
+
+;; Mac用ちらつかせ防止
+(setq redisplay-dont-pause nil)
+
+;; ===============================================================
+;; Shell Setting
+;; ===============================================================
+
+;; fishをデフォルトシェルに
+(defun skt:shell ()
+  (or (executable-find "fish")
+      (executable-find "bash")
+      (error "can't find 'shell' command in PATH!!")))
+(setq shell-file-name (skt:shell))
+(setenv "SHELL" shell-file-name)
+(setq explicit-shell-file-name shell-file-name)
+
+;; ===============================================================
+;; Language Setting
+;; ===============================================================
+(set-language-environment "Japanese")
+(prefer-coding-system 'utf-8)
+
+(require 'ucs-normalize)
+(set-file-name-coding-system 'utf-8-hfs)
+(setq locale-coding-system 'utf-8-hfs)
+
+(when (eq system-type 'gnu/linux) ; Linux OS
+  (set-frame-parameter nil 'fullscreen 'maximized)
+  (add-to-list 'default-frame-alist '(font . "ricty-13.5")))
+(set-fontset-font
+ nil 'japanese-jisx0208
+ (font-spec :family "メイリオ"))
 
 ;; smartparensの設定
 (require 'smartparens-config)
@@ -67,6 +85,7 @@
 
 ;;スクロールバーを消す
 (scroll-bar-mode 0)
+
 ;;起動時のメッセージを消す
 (setq ihibit-startup-message t)
 
@@ -82,14 +101,10 @@
 ;; スクリーンの最大化
 (when (eq system-type 'darwin) ; Mac OS
   (set-frame-parameter nil 'fullscreen 'fullboth))
-(when (eq system-type 'gnu/linux) ; Linux OS
-  (set-frame-parameter nil 'fullscreen 'maximized)
-  (add-to-list 'default-frame-alist '(font . "ricty-13.5")))
  
 ;; character code 設定
 (set-keyboard-coding-system 'cp932)
  
-;;(prefer-coding-system 'utf-8-dos)
 (prefer-coding-system 'utf-8-unix)
  
 (set-file-name-coding-system 'cp932)
@@ -98,36 +113,15 @@
 ;;TABの表示幅　初期値は８
 (setq-default tab-width 4)
 
-;;カラーテーマの設定
-(load-theme 'dracula)
-
-
-;;日本語フォントをメイリオに
-(set-fontset-font
- nil 'japanese-jisx0208
- (font-spec :family "メイリオ"))
-
-;; (require 'hl-line)
-;; (defun global-hl-line-timer-function ()
-;;   (global-hl-line-unhighlight-all)
-;;   (let ((global-hl-line-mode t))
-;;     (global-hl-line-highlight)))
-;; (setq global-hl-line-timer
-;;       (run-with-idle-timer 0.1 t 'global-hl-line-timer-function))
-(require 'hl-line+)
-(toggle-hl-line-when-idle)
-(setq hl-line-idle-interval 3)
+(require 'smart-mode-line)
+(sml/setup)
+(setq sml/no-confirm-load-theme t)
+(sml/apply-theme 'dark)
 
 ;;対応する括弧を強調して表示する
 (setq show-paren-delay 0) ;表示までの秒数
 (show-paren-mode t) ;有効化
-;;括弧内の強調表示
-(setq show-paren-style 'expression)
-;;フェイスを変更する
-;; (set-face-attribute 'show-paren-match-face nil
-;;                     :background nil :foreground nil
-;;                     :underline "#ffff00" :weight 'extra-bold)
-
+(setq show-paren-style 'mixed)
 
 ;;バックアップファイルとオートセーブファイルを~/.emacs.d/backupsへ集める
 (add-to-list 'backup-directory-alist
@@ -151,8 +145,8 @@
 
 
 (require 'company)
-(global-company-mode) ; 全バッファで有効にする 
-(setq company-idle-delay 0) ; デフォルトは0.5
+(global-company-mode) ;全バッファで有効にする
+(setq company-idle-delay 0) ;デフォルトは0.5
 (setq company-minimum-prefix-length 1) ; デフォルトは4
 (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
 (defun edit-category-table-for-company-dabbrev (&optional table)
@@ -193,19 +187,6 @@
 (global-set-key (kbd "M-]") 'bm-next)
 
 (require 'goto-chg)
-
-;; helm-bm.el設定
-(require 'helm-bm)
-;; annotationはあまり使わないので仕切り線で表示件数減るの嫌
-(setq helm-source-bm (delete '(multiline) helm-source-bm))
-
-(defun bm-toggle-or-helm ()
-  "2回連続で起動したらhelm-bmを実行させる"
-  (interactive)
-  (bm-toggle)
-  (when (eq last-command 'bm-toggle-or-helm)
-    (helm-bm)))
-(global-set-key (kbd "M-SPC") 'bm-toggle-or-helm)
 
 ;;; これがないとemacs -Qでエラーになる。おそらくバグ。
 (require 'compile)
@@ -403,21 +384,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (setq web-mode-tag-auto-close-style 2)
 )
 (add-hook 'web-mode-hook 'web-mode-hook)
-;; 色の設定
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(web-mode-comment-face ((t (:foreground "#D9333F"))))
-;;  '(web-mode-css-at-rule-face ((t (:foreground "#FF7F00"))))
-;;  '(web-mode-css-pseudo-class-face ((t (:foreground "#FF7F00"))))
-;;  '(web-mode-css-rule-face ((t (:foreground "#A0D8EF"))))
-;;  '(web-mode-doctype-face ((t (:foreground "#82AE46"))))
-;;  '(web-mode-html-attr-name-face ((t (:foreground "#C97586"))))
-;;  '(web-mode-html-attr-value-face ((t (:foreground "#82AE46"))))
-;;  '(web-mode-html-tag-face ((t (:foreground "#E6B422" :weight bold))))
-;;  '(web-mode-server-comment-face ((t (:foreground "#D9333F")))))
 
 ;;org-modeの設定
 (setq org-startup-truncated nil)
@@ -444,27 +410,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;; 今日から予定を表示させる
 (setq org-agenda-start-on-weekday nil)
 
-;; ネタ用の起動画面
-(defvar my-startup-display-message "\nHello Torith!!\nHappy Hacking (^o^)/\n")
-
-(defun my-startup-display-mode ()
-  "Sets a fixed width (monospace) font in current buffer"
-  (setq buffer-face-mode-face '(:height 800))
-  (buffer-face-mode))
-
-(defun my-startup-display ()
-  "Display startup message on buffer"
-  (interactive)
-  (let ((temp-buffer-show-function 'switch-to-buffer))
-    (with-output-to-temp-buffer "*MyStartUpMessage*"  
-      (princ my-startup-display-message)))
-  (my-startup-display-mode))
-
 ;;flycheckの設定
 (add-hook 'after-init-hook #'global-flycheck-mode)
-;;flycheck-pop-tips
-(with-eval-after-load 'flycheck
-  (flycheck-pos-tip-mode))
 
 (require 'helm-config)
 (helm-mode 1)
@@ -480,7 +427,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (require 'redo+)
 (setq undo-no-redo t)
 (global-set-key (kbd "C-/") 'redo)
-
 
 (require 'yasnippet)
 (require 'helm-c-yasnippet)
@@ -556,14 +502,13 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-	("d577e33443b26fd3f3c6840ddf8c7aeae0d948b7da4924a8a0c85b38831d54cc" "604648621aebec024d47c352b8e3411e63bdb384367c3dd2e8db39df81b475f5" default)))
- '(flycheck-display-errors-function (function flycheck-pos-tip-error-messages))
+	("a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "36619802ccdb9e68a21f11c9baa30d86e25fd46635e48605399bf1cc2689cf39" "d577e33443b26fd3f3c6840ddf8c7aeae0d948b7da4924a8a0c85b38831d54cc" "604648621aebec024d47c352b8e3411e63bdb384367c3dd2e8db39df81b475f5" default)))
  '(org-agenda-files
    (quote
 	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")) t)
  '(package-selected-packages
    (quote
-	(spacemacs-theme company goto-chg js-doc smartparens elscreen dracula-theme bm cyberpunk-theme madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck-pos-tip flycheck quickrun helm recentf-ext pdf-tools bind-key dashboard))))
+	(powerline spacemacs-theme company goto-chg js-doc smartparens elscreen dracula-theme bm cyberpunk-theme madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key dashboard))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
@@ -572,4 +517,5 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(helm-buffer-directory ((t (:foreground "DarkRed"))))
+ '(helm-ff-directory ((t (:foreground "Orange")))))
