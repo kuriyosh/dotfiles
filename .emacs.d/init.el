@@ -38,9 +38,57 @@
 ;; Mac用ちらつかせ防止
 (setq redisplay-dont-pause nil)
 
+;; コマンドの履歴を保存する
 (setq desktop-globals-to-save '(extended-command-history))
 (setq desktop-files-not-to-save "")
 (desktop-save-mode 1)
+
+;;終了時の確認
+(setq confirm-kill-emacs 'y-or-n-p)
+
+;;メニューバーを消す
+(menu-bar-mode 0)
+
+;;ツールバーを消す
+(tool-bar-mode 0)
+
+;;スクロールバーを消す
+(scroll-bar-mode 0)
+
+;;起動時のメッセージを消す
+(setq ihibit-startup-message t)
+
+;;yes,noをy,nで回答可能にする
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;;自動インデントモード
+(setq c-tab-always-indent nil)
+
+;;起動時のメッセージを非表示にする
+(setq inhibit-startup-message t)
+
+;; スクリーンの最大化
+(when (eq system-type 'darwin) ; Mac OS
+  (set-frame-parameter nil 'fullscreen 'fullboth))
+
+;;TABの表示幅　初期値は８
+(setq-default tab-width 4)
+
+;;対応する括弧を強調して表示する
+(show-paren-mode 1)
+(setq show-paren-delay 0) ;表示までの秒数
+(show-paren-mode t) ;有効化
+(setq show-paren-style 'mixed)
+
+;;バックアップファイルとオートセーブファイルを~/.emacs.d/backupsへ集める
+(add-to-list 'backup-directory-alist
+			 (cons "." "~/.emacs.d/backups/"))
+(setq auto-save-file-name-transforms
+	  `((".*" ,(expand-file-name "~/.emacs.d/backups/") t)))
+
+;;スクリプトファイルに実行権限を与えて保存
+(add-hook 'after-save-hook
+		  'executable-make-buffer-file-executable-if-script-p)
 
 ;; ===============================================================
 ;; Shell Setting
@@ -72,40 +120,6 @@
  nil 'japanese-jisx0208
  (font-spec :family "メイリオ"))
 
-;; smartparensの設定
-(require 'smartparens-config)
-(smartparens-global-mode t)
-(sp-pair "「" "」")
-(sp-pair "'" "'")
-
-;;終了時の確認
-(setq confirm-kill-emacs 'y-or-n-p)
-
-;;メニューバーを消す
-(menu-bar-mode 0)
-
-;;ツールバーを消す
-(tool-bar-mode 0)
-
-;;スクロールバーを消す
-(scroll-bar-mode 0)
-
-;;起動時のメッセージを消す
-(setq ihibit-startup-message t)
-
-;;yes,noをy,nで回答可能にする
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-;;自動インデントモード
-(setq c-tab-always-indent nil)
-
-;;起動時のメッセージを非表示にする
-(setq inhibit-startup-message t)
-
-;; スクリーンの最大化
-(when (eq system-type 'darwin) ; Mac OS
-  (set-frame-parameter nil 'fullscreen 'fullboth))
- 
 ;; character code 設定
 (set-keyboard-coding-system 'cp932)
  
@@ -114,28 +128,21 @@
 (set-file-name-coding-system 'cp932)
 (setq default-process-coding-system '(cp932 . cp932))
 
-;;TABの表示幅　初期値は８
-(setq-default tab-width 4)
+;; ===============================================================
+;; Various Package Setting
+;; ===============================================================
 
+;; smartparen
+(require 'smartparens-config)
+(smartparens-global-mode t)
+(sp-pair "「" "」")
+(sp-pair "'" "'")
+
+;; smart mode line
 (require 'smart-mode-line)
 (sml/setup)
 (setq sml/no-confirm-load-theme t)
 (sml/apply-theme 'dark)
-
-;;対応する括弧を強調して表示する
-(setq show-paren-delay 0) ;表示までの秒数
-(show-paren-mode t) ;有効化
-(setq show-paren-style 'mixed)
-
-;;バックアップファイルとオートセーブファイルを~/.emacs.d/backupsへ集める
-(add-to-list 'backup-directory-alist
-			 (cons "." "~/.emacs.d/backups/"))
-(setq auto-save-file-name-transforms
-	  `((".*" ,(expand-file-name "~/.emacs.d/backups/") t)))
-
-;;スクリプトファイルに実行権限を与えて保存
-(add-hook 'after-save-hook
-		  'executable-make-buffer-file-executable-if-script-p)
 
 ;;Elisp関数や変数をエコーエリアへ表示する(Elispmode時)
 (defun elisp-mode-hooks ()
@@ -195,6 +202,8 @@
 ;;; これがないとemacs -Qでエラーになる。おそらくバグ。
 (require 'compile)
 
+(setq TeX-parse-self t)  ; ファイルを開いた時に自動パース
+
 ;;yatexの設定
 (setq auto-mode-alist
   (cons (cons "\\.tex$" 'yatex-mode) auto-mode-alist))
@@ -207,35 +216,6 @@
          (YaTeX-define-key "\C-j" 'latex-math-preview-last-symbol-again)
          (YaTeX-define-key "\C-b" 'latex-math-preview-beamer-frame)))
 (setq latex-math-preview-in-math-mode-p-func 'YaTeX-in-math-mode-p)
-
-(defun window-resizer ()
-  "Control window size and position."
-  (interactive)
-  (let ((window-obj (selected-window))
-        (current-width (window-width))
-        (current-height (window-height))
-        (dx (if (= (nth 0 (window-edges)) 0) 1
-              -1))
-        (dy (if (= (nth 1 (window-edges)) 0) 1
-              -1))
-        c)
-    (catch 'end-flag
-      (while t
-        (message "size[%dx%d]"
-                 (window-width) (window-height))
-        (setq c (read-char))
-        (cond ((= c ?f)
-               (enlarge-window-horizontally dx))
-              ((= c ?b)
-               (shrink-window-horizontally dx))
-              ((= c ?p)
-               (enlarge-window dy))
-              ((= c ?n)
-               (shrink-window dy))
-              ;; otherwise
-              (t
-               (message "Quit")
-               (throw 'end-flag t)))))))
 
 ;; seqの設定
 (defun count-string-matches (regexp string)
@@ -262,56 +242,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (setq popwin:popup-window-position 'bottom)
 (setq display-buffer-function 'popwin:display-buffer)
 
-;; ;;google-translateの設定
-;; (require 'google-translate)
-;; (require 'google-translate-default-ui)
-;; (push '(*Google Translate*) popwin:special-display-config)
-
-;; (defvar google-translate-english-chars "[:ascii:]"
-;;   "これらの文字が含まれているときは英語とみなす")
-;; (defun google-translate-enja-or-jaen (&optional string)
-;;   "regionか現在位置の単語を翻訳する。C-u付きでquery指定も可能"
-;;   (interactive)
-;;   (setq string
-;;         (cond ((stringp string) string)
-;;               (current-prefix-arg
-;;                (read-string "Google Translate: "))
-;;               ((use-region-p)
-;;                (buffer-substring (region-beginning) (region-end)))
-;;               (t
-;;                (thing-at-point 'word))))
-;;   (let* ((asciip (string-match
-;;                   (format "\\`[%s]+\\'" google-translate-english-chars)
-;;                   string)))
-;;     (run-at-time 0.1 nil 'deactivate-mark)
-;;     (google-translate-translate
-;;      (if asciip "en" "ja")
-;;      (if asciip "ja" "en")
-;;      string)))
-
-;; (push '("\*Google Translate\*" :height 0.5 :stick t) popwin:special-display-config)
-;; (global-set-key (kbd "C-c t") 'google-translate-enja-or-jaen)
-;; dict.py is from http://sakito.jp/mac/dictionary.html
-;; (defun dictionary ()
-;;   "dictionary.app"
-;;   (interactive)
-;;   (let ((word (if (and transient-mark-mode mark-active)
-;;                   (buffer-substring-no-properties (region-beginning) (region-end))
-;;                 (read-string "Dictionary: ")))
-;;         (cur-buffer (current-buffer))
-;;         (tmpbuf " * dict-process *"))
-;;     (set-buffer (get-buffer-create tmpbuf))
-;;     (erase-buffer)
-;;     (insert word "\n")
-;;     (let ((coding-system-for-read 'utf-8-mac)
-;;           (coding-system-for-write 'utf-8-mac))
-;;       (call-process "~/.scripts/dict.py" nil tmpbuf nil word) ;; specify full pass of dict.py
-;;       (let ( (str (buffer-substring (point-min) (- (point-max) 2))))
-;;         (set-buffer cur-buffer)
-;;         (popup-tip str :scroll-bar t))
-;;       ))))
-
-
 ;;Shellの設定
 ;; shellの文字化けを回避
 (add-hook 'shell-mode-hook
@@ -319,7 +249,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
             (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)
             ))
 
-;;autoinsertの設定
+;; autoinsertの設定
 (require 'autoinsert)
 (setq auto-insert-directory "~/.emacs.d/template/")
 (setq auto-insert-alist
@@ -414,12 +344,12 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;; 今日から予定を表示させる
 (setq org-agenda-start-on-weekday nil)
 
-(require 'org-bullets)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+(when (require 'org-bullets nil t)
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 ;;flycheckの設定
 (add-hook 'after-init-hook #'global-flycheck-mode)
-
+(add-hook 'japanese-latex-mode-hook (lambda () (flycheck-mode nil)))
 (require 'helm-config)
 (helm-mode 1)
 (define-key helm-map (kbd "C-z")  'helm-select-action)
@@ -431,9 +361,10 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
 
 ;; redo+の設定
-(require 'redo+)
-(setq undo-no-redo t)
-(global-set-key (kbd "C-/") 'redo)
+(when (require 'redo+ nil t)
+  (setq undo-no-redo t)
+  (global-set-key (kbd "C-/") 'redo))
+
 
 (require 'yasnippet)
 (require 'helm-c-yasnippet)
@@ -470,8 +401,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
           '(lambda ()
              (hs-minor-mode 1)))
 
-(require 'py-autopep8)
-(add-hook 'before-save-hook 'py-autopep8-before-save)
+(when (require 'py-autopep8 nil t)
+  (add-hook 'before-save-hook 'py-autopep8-before-save))
 
 ;;Key-bind (necessary bind-key.el)
 (require 'bind-key)
@@ -480,7 +411,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-t j" 'windmove-down)
 (bind-key* "C-t k" 'windmove-up)
 (bind-key* "C-t l" 'windmove-right)
-(bind-key* "C-<tab>" 'other-window)
+(bind-key* "C-t -" 'split-window-below)
+(bind-key* "C-t |" 'split-window-right)
 (bind-key* "C-S-<tab>" 'prev-window)
 (bind-key "M-n" (kbd "C-u 5 C-n"))
 (bind-key "M-p" (kbd "C-u 5 C-p"))
@@ -523,7 +455,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")) t)
  '(package-selected-packages
    (quote
-	(helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen dracula-theme bm madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
+	(auctex helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen dracula-theme bm madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
