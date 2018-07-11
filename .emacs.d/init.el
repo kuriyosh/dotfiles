@@ -237,10 +237,21 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (end-of-line))
 
 ;;popwinの設定
-(require 'popwin)
-(setq special-display-function 'popwin:special-display-popup-window)
-(setq popwin:popup-window-position 'bottom)
-(setq display-buffer-function 'popwin:display-buffer)
+;; (require 'popwin)
+;; (setq special-display-function 'popwin:special-display-popup-window)
+;; (setq popwin:popup-window-position 'bottom)
+;; (setq display-buffer-function 'popwin:display-buffer)
+
+;; shackleの設定
+(require 'shackle)
+(setq shackle-rules
+	  '(
+        ("*helm mini*" :align below :ratio 0.5)
+		("*helm M-x*" :align below :ratio 0.5)
+		("*helm find files*" :align below :ratio 0.5)
+        ))
+(shackle-mode 1)
+
 
 ;;Shellの設定
 ;; shellの文字化けを回避
@@ -455,7 +466,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")) t)
  '(package-selected-packages
    (quote
-	(auctex helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen dracula-theme bm madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
+	(shackle auctex helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen dracula-theme bm madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
