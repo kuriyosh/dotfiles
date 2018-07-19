@@ -5,7 +5,7 @@ set PATH ~/Library/Android/sdk/tools $PATH
 set -x PATH $HOME/.pyenv/bin $PATH
 
 # pyenv init
-. (pyenv init - | psub)
+eval (rbenv init - | source)
 
 # rm 
 alias rm "rmtrash"
