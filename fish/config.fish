@@ -7,9 +7,10 @@ set -x PATH $HOME/.pyenv/bin $PATH
 # pyenv init
 eval (rbenv init - | source)
 
-# rm 
+# alias
 alias rm "rmtrash"
 alias emacs "/Applications/Emacs.app/Contents/MacOS/Emacs -nw -q -l ~/.emacs.d/cli.el"
+alias o "open"
 
 # cd > ls
 function cd
