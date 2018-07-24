@@ -6,6 +6,7 @@ set -x PATH $HOME/.pyenv/bin $PATH
 
 # pyenv init
 eval (rbenv init - | source)
+. (pyenv init - | psub)
 
 # alias
 alias rm "rmtrash"
