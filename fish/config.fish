@@ -5,7 +5,7 @@ set PATH ~/Library/Android/sdk/tools $PATH
 set -x PATH $HOME/.pyenv/bin $PATH
 
 # pyenv init
-eval (rbenv init - | source)
+# eval (rbenv init - | source)
 . (pyenv init - | psub)
 
 # alias
