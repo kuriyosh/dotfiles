@@ -1,11 +1,12 @@
-# Set Path
+x# Set Path
 set PATH ~/.nodebrew/current/bin $PATH
 set PATH ~/Library/Android/sdk/platform-tools $PATH
 set PATH ~/Library/Android/sdk/tools $PATH
 set -x PATH $HOME/.pyenv/bin $PATH
 
 # pyenv init
-eval (rbenv init - | source)
+# eval (pyenv init - | source)
+# eval (rbenv init - | source)
 
 # alias
 alias rm "rmtrash"
