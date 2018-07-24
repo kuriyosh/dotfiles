@@ -253,6 +253,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (shackle-mode 1)
 
 
+
+
 ;;Shellの設定
 ;; shellの文字化けを回避
 (add-hook 'shell-mode-hook
@@ -376,6 +378,11 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (setq undo-no-redo t)
   (global-set-key (kbd "C-/") 'redo))
 
+;; hl-line+の設定
+(require 'hl-line+)
+(toggle-hl-line-when-idle)
+(setq hl-line-idle-interval 3)
+(set-face-background 'hl-line "firebrick")
 
 (require 'yasnippet)
 (require 'helm-c-yasnippet)
@@ -420,7 +427,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (when (require 'py-autopep8 nil t)
   (add-hook 'before-save-hook 'py-autopep8-before-save))
 
-;;Key-bind (necessary bind-key.el)
+;; ===============================================================
+;; Key-bind (necessary bind-key.el)
+;; ===============================================================
 (require 'bind-key)
 (bind-key "C-z" 'undo)
 (bind-key* "C-t h" 'windmove-left)
@@ -438,7 +447,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "C-x C-f" 'helm-find-files)
 (bind-key "M-w" 'easy-kill)
 (bind-key "M-y" 'helm-show-kill-ring)
-;; (bind-key* "C-j" 'toggle-input-method)
 (bind-key "C-x j" 'open-junk-file)
 (bind-key "M-x" 'helm-M-x)
 (bind-key "C-;" 'hs-toggle-hiding)
@@ -450,6 +458,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-." 'goto-last-change-reverse)
 (bind-key "<tab>" 'indent-for-tab-command emmet-mode-keymap)
 (bind-key "C-i" 'emmet-expand-line emmet-mode-keymap)
+
 (define-key company-active-map (kbd "M-n") nil)
 (define-key company-active-map (kbd "M-p") nil)
 (define-key company-active-map (kbd "C-n") 'company-select-next)
