@@ -249,6 +249,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
         ("*helm mini*" :align below :ratio 0.5)
 		("*helm M-x*" :align below :ratio 0.5)
 		("*helm find files*" :align below :ratio 0.5)
+		("*Help*" :align below :ratio 0.5)
+		("*quickrun*" :align below :ratio 0.5)
         ))
 (shackle-mode 1)
 
