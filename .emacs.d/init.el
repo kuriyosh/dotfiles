@@ -33,7 +33,7 @@
         ("melpa" . "http://melpa.org/packages/")
         ("org" . "http://orgmode.org/elpa/")))
 
-(load-theme 'badwolf)
+(load-theme 'badwolf t)
 
 ;; Mac用ちらつかせ防止
 (setq redisplay-dont-pause nil)
