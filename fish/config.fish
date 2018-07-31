@@ -14,7 +14,8 @@ alias emacs "/Applications/Emacs.app/Contents/MacOS/Emacs -nw -q -l ~/.emacs.d/c
 alias o "open"
 
 # cd > ls
-function cd
-  builtin cd $argv
-  ls -a
-end
+# TOOD: なれないし'cd -'が使えないから実装が微妙
+# function cd
+#   builtin cd $argv
+#   ls -a
+# end
