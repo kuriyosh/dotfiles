@@ -2,11 +2,18 @@
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
-(package-initialize)
 
 ;; ===============================================================
 ;; Global Setting
 ;; ===============================================================
+(require 'package)
+(setq package-archives
+      '(("gnu" . "http://elpa.gnu.org/packages/")
+        ("melpa" . "http://melpa.org/packages/")
+        ("org" . "http://orgmode.org/elpa/")))
+(package-initialize)
+
+
 (setq default-directory "~/")
 (setq command-line-default-directory "~/")
 
@@ -28,12 +35,13 @@
 (add-to-load-path "elisp")
 (add-to-load-path "elpa")
 
-(setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-        ("melpa" . "http://melpa.org/packages/")
-        ("org" . "http://orgmode.org/elpa/")))
-
+(require 'exec-path-from-shell)
+;TODO: 起動にこの処理を反映させたいけどうまくいかない
 (exec-path-from-shell-initialize)
+
+
+;; Warningがうざいので出さない
+(setq warning-minimum-level :error)
 
 (load-theme 'badwolf t)
 
@@ -472,9 +480,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "C-i" 'emmet-expand-line emmet-mode-keymap)
 
 (defadvice kill-region (around kill-word-or-kill-region activate)
-      (if (and (interactive-p) transient-mark-mode (not mark-active))
-          (backward-kill-word 1)
-        ad-do-it))
+  (if (and (interactive-p) transient-mark-mode (not mark-active))
+      (backward-kill-word 1)
+    ad-do-it))
  
 (bind-key "C-w" 'backward-kill-word minibuffer-local-completion-map)
 
@@ -491,6 +499,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (define-key company-active-map (kbd "C-p") 'company-select-previous)
 (define-key company-active-map (kbd "C-h") nil)
 (define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
+;; HACK: 何故か2度呼び出すとうまくいくから書いてる。ちなみに上のやつ消してもだめ、絶対2回
+(exec-path-from-shell-initialize)
 
 (put 'upcase-region 'disabled nil)
 (custom-set-variables
