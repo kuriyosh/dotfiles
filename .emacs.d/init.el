@@ -461,20 +461,11 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "<tab>" 'indent-for-tab-command emmet-mode-keymap)
 (bind-key "C-i" 'emmet-expand-line emmet-mode-keymap)
 
-;; TODO: 単語の末尾の時、現状その単語の次の単語を削除しているが、その前の単語を削除するように変更したい
-;; defadviceの中でinteractive-pをするとWarningが出るので別関数で定義
-(defvar kill-region-interactive-p
-  (if (fboundp 'called-interactively-p)
-      (lambda () (called-interactively-p 'interactive))
-    'interactive-p))
-
 (defadvice kill-region (around kill-word-or-kill-region activate)
-  (if (and (funcall kill-region-interactive-p) transient-mark-mode (not mark-active))
-	  (let ((char (char-to-string (char-after (point)))))
-        (cond
-         ((string-match "[\t\n -@\[-`{-~]" char) (kill-word 1))
-         (t (forward-char) (backward-word) (kill-word 1))))
-    ad-do-it))
+      (if (and (interactive-p) transient-mark-mode (not mark-active))
+          (backward-kill-word 1)
+        ad-do-it))
+ 
 (bind-key "C-w" 'backward-kill-word minibuffer-local-completion-map)
 
 ;; C-kのkill-line後に次の行のインデントを少なくする
