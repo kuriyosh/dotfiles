@@ -10,8 +10,8 @@
 (setq default-directory "~/")
 (setq command-line-default-directory "~/")
 
-(let ((envs '("PATH" "VIRTUAL_ENV" "GOROOT" "GOPATH")))
-  (exec-path-from-shell-copy-envs envs))
+;; (let ((envs '("PATH" "VIRTUAL_ENV" "GOROOT" "GOPATH")))
+;;   (exec-path-from-shell-copy-envs envs))
 
 (defun add-to-load-path (&rest paths)
   (let (path)
@@ -32,6 +32,8 @@
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")
         ("org" . "http://orgmode.org/elpa/")))
+
+(exec-path-from-shell-initialize)
 
 (load-theme 'badwolf t)
 
@@ -54,6 +56,8 @@
 
 ;;スクロールバーを消す
 (scroll-bar-mode 0)
+
+(setq truncate-partial-width-windows t)
 
 ;;起動時のメッセージを消す
 (setq ihibit-startup-message t)
@@ -273,6 +277,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
                ("\\.py$"   . ["template.py" my-template])
 			   ("\\.org$"   . ["template.org" my-template])
 			   ("\\.tex$"   . ["template.tex" my-template])
+			   ("\\.js$"   . ["template.js" my-template])
                ) auto-insert-alist))
 (require 'cl)
 (defvar template-replacements-alists
@@ -305,7 +310,12 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (add-hook 'emmet-mode-hook (lambda () (setq emmet-indentation 2))) ;; indent はスペース2個
 (eval-after-load "emmet-mode"
   '(define-key emmet-mode-keymap (kbd "C-j") nil)) ;; C-j は newline のままにしておく
-(add-to-list 'auto-mode-alist '("\\.jsp$"       . web-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(eval-after-load 'flycheck
+  '(custom-set-variables
+    '(flycheck-disabled-checkers '(javascript-jshint javascript-jscs))
+    ))
+;; (add-to-list 'auto-mode-alist '("\\.jsp$"       . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?$"     . web-mode))
 (defun my-wrap-lines-with-html-tag ($tag)
   (interactive "sTag: ")
@@ -496,7 +506,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")) t)
  '(package-selected-packages
    (quote
-	(shackle auctex helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen bm madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
+	(js2-mode shackle auctex helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen bm madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
