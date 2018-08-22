@@ -19,3 +19,15 @@ alias o "open"
 #   builtin cd $argv
 #   ls -a
 # end
+
+# tmuxを開く設定
+function start_tmux
+    if command -s tmux > /dev/null
+	   tmux -2 new-session
+        # if test -z "$TMUX"; and test -z $TERMINAL_CONTEXT
+        #     tmux -2 attach; or tmux -2 new-session
+        # end
+    end
+end
+
+start_tmux
