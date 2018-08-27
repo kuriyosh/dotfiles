@@ -83,7 +83,7 @@
 (when (eq system-type 'darwin) ; Mac OS
   (set-frame-parameter nil 'fullscreen 'fullboth))
 
-;;TABの表示幅　初期値は８
+;;TABの表示幅　初期値は8
 (setq-default tab-width 4)
 
 ;;対応する括弧を強調して表示する
@@ -511,12 +511,13 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
  '(custom-safe-themes
    (quote
 	("a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "36619802ccdb9e68a21f11c9baa30d86e25fd46635e48605399bf1cc2689cf39" "d577e33443b26fd3f3c6840ddf8c7aeae0d948b7da4924a8a0c85b38831d54cc" "604648621aebec024d47c352b8e3411e63bdb384367c3dd2e8db39df81b475f5" default)))
+ '(flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))
  '(org-agenda-files
    (quote
 	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")) t)
  '(package-selected-packages
    (quote
-	(js2-mode shackle auctex helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen bm madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
+	(js2-refactor js2-mode shackle auctex helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen bm madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
