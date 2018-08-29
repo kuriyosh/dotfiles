@@ -440,6 +440,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (add-hook 'python-mode-hook
           '(lambda ()
              (hs-minor-mode 1)))
+(add-hook 'js2-mode-hook
+          '(lambda ()
+             (hs-minor-mode 1)))
 (add-hook 'ruby-mode-hook
           '(lambda ()
              (hs-minor-mode 1)))
@@ -478,6 +481,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-." 'goto-last-change-reverse)
 (bind-key "<tab>" 'indent-for-tab-command emmet-mode-keymap)
 (bind-key "C-i" 'emmet-expand-line emmet-mode-keymap)
+(bind-key "C-M-l" 'hs-show-block)
+(bind-key "C-M-h" 'hs-hide-block)
 
 (defadvice kill-region (around kill-word-or-kill-region activate)
   (if (and (interactive-p) transient-mark-mode (not mark-active))
