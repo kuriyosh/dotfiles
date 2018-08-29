@@ -39,7 +39,6 @@
 ;TODO: 起動にこの処理を反映させたいけどうまくいかない
 (exec-path-from-shell-initialize)
 
-
 ;; Warningがうざいので出さない
 (setq warning-minimum-level :error)
 
@@ -208,6 +207,14 @@
 (global-set-key (kbd "M-SPC") 'bm-toggle)
 (global-set-key (kbd "M-[") 'bm-previous)
 (global-set-key (kbd "M-]") 'bm-next)
+
+(add-hook 'c++-mode-hook
+          '(lambda()
+             (c-set-style "stroustrup")
+             (setq indent-tabs-mode nil)     ; インデントは空白文字で行う（TABコードを空白に変換）
+             (c-set-offset 'innamespace 0)   ; namespace {}の中はインデントしない
+             (c-set-offset 'arglist-close 0) ; 関数の引数リストの閉じ括弧はインデントしない
+             ))
 
 (require 'goto-chg)
 
@@ -448,6 +455,26 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (add-hook 'before-save-hook 'py-autopep8-before-save))
 
 ;; ===============================================================
+;; C/C++ setting
+;; ===============================================================
+(defun my-c-c++-mode-init ()
+  (setq c-tab-always-indent t)
+  (setq c-auto-newline t)
+  (setq c-hungry-delete-key t)
+  (setq indent-tabs-mode t)
+  (c-toggle-auto-hungry-state -1)
+  (setq c-basic-offset 4))
+(add-hook 'c++-mode-hook 'my-c-c++-mode-init)
+
+(require 'irony)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-to-list 'company-backends 'company-irony) ; backend追加
+
+
+
+
+;; ===============================================================
 ;; Key-bind (necessary bind-key.el)
 ;; ===============================================================
 (require 'bind-key)
@@ -517,7 +544,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")) t)
  '(package-selected-packages
    (quote
-	(js2-refactor js2-mode shackle auctex helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen bm madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
+	(company-irony irony js2-refactor js2-mode shackle auctex helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen bm madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
