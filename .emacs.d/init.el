@@ -35,9 +35,11 @@
 (add-to-load-path "elisp")
 (add-to-load-path "elpa")
 
-(require 'exec-path-from-shell)
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
 ;TODO: 起動にこの処理を反映させたいけどうまくいかない
-(exec-path-from-shell-initialize)
+
 
 ;; Warningがうざいので出さない
 (setq warning-minimum-level :error)
@@ -144,16 +146,18 @@
 ;; ===============================================================
 
 ;; smartparen
-(require 'smartparens-config)
-(smartparens-global-mode t)
-(sp-pair "「" "」")
-(sp-pair "'" "'")
+(use-package smartparens
+  :config
+  (smartparens-global-mode t)
+  (sp-pair "「" "」")
+  (sp-pair "'" "'"))
 
 ;; smart mode line
-(require 'smart-mode-line)
-(sml/setup)
-(setq sml/no-confirm-load-theme t)
-(sml/apply-theme 'dark)
+(use-package smart-mode-line
+  :config
+  (sml/setup)
+  (setq sml/no-confirm-load-theme t)
+  (sml/apply-theme 'dark))
 
 ;;Elisp関数や変数をエコーエリアへ表示する(Elispmode時)
 (defun elisp-mode-hooks ()
@@ -180,7 +184,6 @@
     (modify-category-entry i ?s table t))
       (setq i (1+ i)))))
 (edit-category-table-for-company-dabbrev)
-;; (add-hook 'TeX-mode-hook 'edit-category-table-for-company-dabbrev) ; 下の追記参照
 (setq company-dabbrev-char-regexp "\\cs")
 
 ;;recentf-extの設定
@@ -192,22 +195,6 @@
   (setq recentf-auto-save-timer (run-with-idle-timer 30 t 'recentf-save-list))
   (recentf-mode 1))
 
-;; bmの設定
-(setq-default bm-buffer-persistence)
-(setq bm-restore-repository-on-load t)
-(require 'bm)
-(add-hook 'find-file-hook 'bm-buffer-restore)
-(add-hook 'kill-buffer-hook 'bm-buffer-save)
-(add-hook 'after-save-hook 'bm-buffer-save)
-(add-hook 'after-revert-hook 'bm-buffer-restore)
-(add-hook 'vc-before-checkin-hook 'bm-buffer-save)
-(add-hook 'kill-emacs-hook '(lambda nil
-                              (bm-buffer-save-all)
-                              (bm-repository-save)))
-(global-set-key (kbd "M-SPC") 'bm-toggle)
-(global-set-key (kbd "M-[") 'bm-previous)
-(global-set-key (kbd "M-]") 'bm-next)
-
 (add-hook 'c++-mode-hook
           '(lambda()
              (c-set-style "stroustrup")
@@ -215,8 +202,6 @@
              (c-set-offset 'innamespace 0)   ; namespace {}の中はインデントしない
              (c-set-offset 'arglist-close 0) ; 関数の引数リストの閉じ括弧はインデントしない
              ))
-
-(require 'goto-chg)
 
 ;;; これがないとemacs -Qでエラーになる。おそらくバグ。
 (require 'compile)
@@ -255,15 +240,10 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
                   "\n")))
   (end-of-line))
 
-;;popwinの設定
-;; (require 'popwin)
-;; (setq special-display-function 'popwin:special-display-popup-window)
-;; (setq popwin:popup-window-position 'bottom)
-;; (setq display-buffer-function 'popwin:display-buffer)
-
 ;; shackleの設定
-(require 'shackle)
-(setq shackle-rules
+(use-package shackle
+  :init
+  (setq shackle-rules
 	  '(
         ("*helm mini*" :align below :ratio 0.5)
 		("*helm M-x*" :align below :ratio 0.5)
@@ -271,7 +251,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 		("*Help*" :align below :ratio 0.5)
 		("*quickrun*" :align below :ratio 0.5)
         ))
-(shackle-mode 1)
+  :config
+  (shackle-mode 1))
 
 
 
@@ -313,8 +294,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (add-hook 'find-file-not-found-hooks 'auto-insert)
 
 ;;undohistの設定
-(require 'undohist)
-(undohist-initialize)
+(use-package undohist
+  :config
+  (undohist-initialize))
 
 ;;web-modeの設定
 (require 'web-mode)
@@ -401,8 +383,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
 
 ;; redo+の設定
-(when (require 'redo+ nil t)
-  (setq undo-no-redo t)
+(use-package redo+
+  :config
   (global-set-key (kbd "C-/") 'redo))
 
 ;; hl-line+の設定
@@ -474,6 +456,14 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (add-hook 'c++-mode-hook 'irony-mode)
 (add-to-list 'company-backends 'company-irony) ; backend追加
 
+;; ignoramusの設定
+;; TODO: helm-miniで無視されないので使う価値を感じない
+;; (require 'dired-x)
+;; (require 'ignoramus)
+;; (defun ignoramus-do-ignore-helm ()
+;;   "Tell `helm-mini' to ignore unwanted files."
+;;   (setq helm-source-buffers-list (list ignoramus-boring-file-regexp)))
+;; (ignoramus-setup)
 
 
 
@@ -549,7 +539,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")) t)
  '(package-selected-packages
    (quote
-	(company-irony irony js2-refactor js2-mode shackle auctex helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen bm madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
+	(use-package ignoramus company-irony irony js2-refactor js2-mode shackle auctex helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
