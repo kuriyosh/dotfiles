@@ -94,10 +94,14 @@
 (setq show-paren-style 'mixed)
 
 ;;バックアップファイルとオートセーブファイルを~/.emacs.d/backupsへ集める
-(add-to-list 'backup-directory-alist
-			 (cons "." "~/.emacs.d/backups/"))
+(setq backup-directory-alist
+	  '((".*" . "~/.emacs.d/backups/")))
 (setq auto-save-file-name-transforms
-	  `((".*" ,(expand-file-name "~/.emacs.d/backups/") t)))
+	  '((".*" "~/.emacs.d/backups/" t)))
+
+;; 自動ファイルリストとロックファイルは生成しない
+(setq auto-save-list-file-prefix nil)
+(setq create-lockfiles nil)
 
 ;;スクリプトファイルに実行権限を与えて保存
 (add-hook 'after-save-hook
