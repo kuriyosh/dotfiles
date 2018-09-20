@@ -44,6 +44,8 @@
   (message "done."))
 (add-hook 'find-file-not-found-hooks 'auto-insert)
 
+(electric-pair-mode t)
+
 ;; Key bindings
 (global-set-key (kbd "C-z") 'undo)
 (global-set-key (kbd "C-h") 'delete-backward-char)

@@ -472,6 +472,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (require 'irony)
 (add-hook 'c-mode-hook 'irony-mode)
 (add-hook 'c++-mode-hook 'irony-mode)
+(setq irony-additional-clang-options '("-std=c++11"))
 (add-to-list 'company-backends 'company-irony) ; backend追加
 
 
