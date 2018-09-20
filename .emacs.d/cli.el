@@ -10,8 +10,11 @@
 ;; tabの幅
 (setq-default tab-width 4)
 
-;; バックアップファイルを生成しない
-(setq make-backup-files t)
+;; バックアップファイル・自動保存ファイルの保存先
+(setq backup-directory-alist
+	  '((".*" . "~/.emacs.d/backups/")))
+(setq auto-save-file-name-transforms
+	  '((".*" "~/.emacs.d/backups/" t)))
 
 ;; 言語周り
 (set-language-environment "Japanese")

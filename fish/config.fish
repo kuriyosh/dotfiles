@@ -12,6 +12,7 @@ set -x PATH $HOME/.pyenv/bin $PATH
 alias rm "rmtrash"
 alias emacs "/Applications/Emacs.app/Contents/MacOS/Emacs -nw -q -l ~/.emacs.d/cli.el"
 alias o "open"
+alias g++ "g++-8"
 
 # cd > ls
 # TOOD: なれないし'cd -'が使えないから実装が微妙
