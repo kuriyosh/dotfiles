@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: argtemp
+# key: argtemp
+# --
+parser = argparse.ArgumentParser(
+     prog='',
+     usage='',
+     description='description',
+     epilog='end',
+     add_help=True,
+)
+
+# (option)
+parser.add_argument('-i', '--input',
+                        help='input',
+                        action='store',
+                        required=True)
+args = parser.parse_args()

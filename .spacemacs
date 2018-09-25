@@ -3,6 +3,9 @@
 ;; It must be stored in your home directory.
 
 (defun dotspacemacs/layers ()
+  "Configuration Layers declaration.
+You should not put any user code in this function besides modifying the variable
+values."
   (setq-default
    ;; Base distribution to use. This is a layer contained in the directory
    ;; `+distribution'. For now available distributions are `spacemacs-base'
@@ -28,19 +31,15 @@
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     markdown
-     javascript
-     html
-     python
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      helm
+     ;; auto-completion
      ;; better-defaults
      emacs-lisp
-     auto-completion
      ;; git
      ;; markdown
      ;; org
@@ -50,22 +49,18 @@
      ;; spell-checking
      ;; syntax-checking
      ;; version-control
+     (c-c++ :variables c-c++-enable-clang-support t)
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
-                                      company
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages
-   '(
-     ;; auto-completion
-     evil
-     )
+   dotspacemacs-excluded-packages '()
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -108,7 +103,7 @@ values."
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
-   dotspacemacs-editing-style 'emacs
+   dotspacemacs-editing-style 'vim
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -226,8 +221,8 @@ values."
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil to boost the loading time. (default t)
    dotspacemacs-loading-progress-bar t
-   ;; If non nil the frame is fullscreen when Emacs starts up. (default nil) 
-  ;; (Emacs 24.4+ only)
+   ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
+   ;; (Emacs 24.4+ only)
    dotspacemacs-fullscreen-at-startup nil
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
@@ -311,93 +306,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
   )
 
 (defun dotspacemacs/user-config ()
-
-  ;; -----------------------------------------------------------------------------------------------
-  ;; Global Setting
-  ;; -----------------------------------------------------------------------------------------------
-  (smartparens-global-mode t)
-  (setq confirm-kill-emacs 'y-or-n-p)
-  (when (eq system-type 'darwin) ; Mac OS
-    (set-frame-parameter nil 'fullscreen 'fullboth))
-  (when (eq system-type 'gnu/linux) ; Linux OS
-    (set-frame-parameter nil 'fullscreen 'maximized))
-  (setq-default tab-width 4)
-  (setq redisplay-dont-pause nil)
-  ;; シェルスクリプトの
-  (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
-
-  (global-company-mode)
-  (setq company-idle-delay 0) ; デフォルトは0.5
-  (setq company-minimum-prefix-length 1) ; デフォルトは4
-  (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
-
-  ;; ----------------------------------------------------------------------------------------------
-  ;; Key-Binds
-  ;; ----------------------------------------------------------------------------------------------
-  (bind-key "C-z" 'undo)
-  (bind-key* "C-t h" 'windmove-left)
-  (bind-key* "C-t j" 'windmove-down)
-  (bind-key* "C-t k" 'windmove-up)
-  (bind-key* "C-t l" 'windmove-right)
-  (bind-key "M-n" (kbd "C-u 5 C-n"))
-  (bind-key "M-p" (kbd "C-u 5 C-p"))
-  (bind-key "M-g" 'goto-line)
-  (bind-key "C-x C-r" 'helm-mini)
-  (bind-key "C-x j" 'open-junk-file)
-  (bind-key "C-;" 'hs-toggle-hiding)
-  (bind-key "C-h" 'delete-backward-char)
-  (bind-key*  "M-h" 'backward-kill-word)
-  (bind-key* "C-," 'goto-last-change)
-  (bind-key* "C-." 'goto-last-change-reverse)
-  (bind-key  "C-x :" 'toggle-truncate-lines)
-  (bind-key "C-z" 'helm-select-action helm-map)
-
-  (bind-key "<hybrid-state> <tab>" 'indent-for-tab-command emmet-mode-keymap)
-  (bind-key "<emacs-state> <tab>" 'indent-for-tab-command emmet-mode-keymap)
-  (bind-key "<insert-state> <tab>" 'indent-for-tab-command emmet-mode-keymap)
-
-  ;; (define-key input-decode-map "\C-i" [C-i])
-  (bind-key "C-i" [C-i] input-decode-map)
-  (bind-key "<C-i>" 'emmet-expand-line emmet-mode-keymap)
-
-  (bind-key "<tab>" 'helm-execute-persistent-action helm-find-files-map)
-  (bind-key "<tab>" 'helm-execute-persistent-action helm-read-file-map)
-  (bind-key "C-n" 'company-select-next company-active-map)
-  (bind-key "C-p" 'company-select-previous company-active-map)
-  (bind-key "C-n" 'company-select-next company-search-map)
-  (bind-key "C-p" 'company-select-previous company-search-map)
-
-
-  ;; ----------------------------------------------------------------------------------------------
-  ;; Template
-  ;; ----------------------------------------------------------------------------------------------
-  (require 'autoinsert)
-  (setq auto-insert-directory "~/.emacs.d/template/")
-  (setq auto-insert-alist
-        (nconc '(
-                 ("\\.cpp$" . ["template.cpp" my-template])
-                 ("\\.py$"   . ["template.py" my-template])
-			     ("\\.org$"   . ["template.org" my-template])
-			     ("\\.tex$"   . ["template.tex" my-template])
-                 ) auto-insert-alist))
-  (require 'cl)
-  (defvar template-replacements-alists
-    '(("%file%"             . (lambda () (file-name-nondirectory (buffer-file-name))))
-      ("%file-without-ext%" . (lambda () (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))))
-      ("%time%" . (lambda () (format-time-string "%Y-%m-%d")))
-	  ("%mtg-timeformat%" . (lambda () (format-time-string "%m%d")))
-      ("%include-guard%"    . (lambda () (format "__SCHEME_%s__" (upcase (file-name-sans-extension (file-name-nondirectory buffer-file-name))))))))
-  (defun my-template ()
-    (time-stamp)
-    (mapc #'(lambda(c)
-              (progn
-                (goto-char (point-min))
-                (replace-string (car c) (funcall (cdr c)) nil)))
-          template-replacements-alists)
-    (goto-char (point-max))
-    (message "done."))
-  (add-hook 'find-file-not-found-hooks 'auto-insert)
-
+  "Configuration function for user code.
+This function is called at the very end of Spacemacs initialization after
+layers configuration.
+This is the place where most of your configurations should be done. Unless it is
+explicitly specified that a variable should be set before a package is loaded,
+you should place your code here."
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -407,13 +321,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
- '(evil-toggle-key "")
  '(package-selected-packages
    (quote
-    (mmm-mode markdown-toc markdown-mode gh-md auto-complete web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern tern coffee-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional helm-pydoc cython-mode company-anaconda anaconda-mode pythonic helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet ac-ispell ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
- '(safe-local-variable-values (quote ((eval progn (pp-buffer) (indent-buffer))))))
+    (disaster cmake-mode clang-format badwolf-theme ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

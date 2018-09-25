@@ -13,7 +13,6 @@
         ("org" . "http://orgmode.org/elpa/")))
 (package-initialize)
 
-
 (setq default-directory "~/")
 (setq command-line-default-directory "~/")
 
@@ -174,11 +173,7 @@
 (add-hook 'emacs-lisp-mode-hook 'elisp-mode-hooks)
 
 
-(require 'company)
-(global-company-mode) ;全バッファで有効にする
-(setq company-idle-delay 0) ;デフォルトは0.5
-(setq company-minimum-prefix-length 1) ; デフォルトは4
-(setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
+;; どっかからもらった関数で何してるのかわからん
 (defun edit-category-table-for-company-dabbrev (&optional table)
   (define-category ?s "word constituents for company-dabbrev" table)
   (let ((i 0))
@@ -187,17 +182,29 @@
       (modify-category-entry i ?s table)
     (modify-category-entry i ?s table t))
       (setq i (1+ i)))))
-(edit-category-table-for-company-dabbrev)
-(setq company-dabbrev-char-regexp "\\cs")
+
+(use-package company
+  :init
+  (setq company-idle-delay 0) ;デフォルトは0.5
+  (setq company-minimum-prefix-length 1) ; デフォルトは4
+  (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
+  (setq company-dabbrev-char-regexp "\\cs")
+  :config
+  (global-company-mode) ;全バッファで有効にする
+  (edit-category-table-for-company-dabbrev)
+  )
 
 ;;recentf-extの設定
-(require 'recentf-ext)
-(when (require 'recentf-ext nil t)
+(use-package recentf-ext
+  :init
   (setq recentf-max-saved-items 2000)
   (setq recentf-exclude '(".recentf"))
   (setq recentf-auto-cleanup 10)
   (setq recentf-auto-save-timer (run-with-idle-timer 30 t 'recentf-save-list))
-  (recentf-mode 1))
+  :config
+  (recentf-mode 1)
+  )
+
 
 (add-hook 'c++-mode-hook
           '(lambda()
@@ -258,9 +265,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   :config
   (shackle-mode 1))
 
-
-
-
 ;;Shellの設定
 ;; shellの文字化けを回避
 (add-hook 'shell-mode-hook
@@ -269,17 +273,21 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
             ))
 
 ;; autoinsertの設定
-(require 'autoinsert)
-(setq auto-insert-directory "~/.emacs.d/template/")
-(setq auto-insert-alist
-      (nconc '(
-               ("\\.cpp$" . ["template.cpp" my-template])
-               ("\\.py$"   . ["template.py" my-template])
-			   ("\\.org$"   . ["template.org" my-template])
-			   ("\\.tex$"   . ["template.tex" my-template])
-			   ("\\.js$"   . ["template.js" my-template])
-               ) auto-insert-alist))
-(require 'cl)
+(use-package autoinsert
+  :init
+  (setq auto-insert-directory "~/.emacs.d/template/")
+  :config
+  (setq auto-insert-alist
+		(nconc '(
+				 ("\\.cpp$" . ["template.cpp" my-template])
+				 ("\\.py$"   . ["template.py" my-template])
+				 ("\\.org$"   . ["template.org" my-template])
+				 ("\\.tex$"   . ["template.tex" my-template])
+				 ("\\.js$"   . ["template.js" my-template])
+				 ) auto-insert-alist))
+  (add-hook 'find-file-not-found-hooks 'auto-insert) ;; HACK: :hookの中に入れたほうがきれい
+  )
+
 (defvar template-replacements-alists
   '(("%file%"             . (lambda () (file-name-nondirectory (buffer-file-name))))
     ("%file-without-ext%" . (lambda () (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))))
@@ -295,42 +303,31 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
     template-replacements-alists)
   (goto-char (point-max))
   (message "done."))
-(add-hook 'find-file-not-found-hooks 'auto-insert)
 
 ;;undohistの設定
 (use-package undohist
   :config
   (undohist-initialize))
 
-;;web-modeの設定
-(require 'web-mode)
-(require 'emmet-mode)
-(add-hook 'sgml-mode-hook 'emmet-mode) ;; マークアップ言語全部で使う
-(add-hook 'web-mode-hook 'emmet-mode) ;; マークアップ言語全部で使う
-(add-hook 'css-mode-hook  'emmet-mode) ;; CSSにも使う
-(add-hook 'emmet-mode-hook (lambda () (setq emmet-indentation 2))) ;; indent はスペース2個
-(eval-after-load "emmet-mode"
-  '(define-key emmet-mode-keymap (kbd "C-j") nil)) ;; C-j は newline のままにしておく
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-(eval-after-load 'flycheck
-  '(custom-set-variables
-    '(flycheck-disabled-checkers '(javascript-jshint javascript-jscs))
-    ))
-;; (add-to-list 'auto-mode-alist '("\\.jsp$"       . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html?$"     . web-mode))
-(defun my-wrap-lines-with-html-tag ($tag)
-  (interactive "sTag: ")
-  (if (and mark-active transient-mark-mode)
-      (shell-command-on-region
-       (region-beginning) (region-end)
-       (concat "perl -0 -p -w -e \'"
-               "s/^([^\\S\\r\\n]*)(\\S.*?)[^\\S\\r\\n]*$/$1<"
-               $tag ">$2<\\/" $tag ">/gm\'")
-       nil t)))
+(use-package emmet-mode
+  :init
+  (setq emmet-indentation 2)
+  :bind
+  (:map emmet-mode-keymap
+  		("C-j" . nil)
+		("<tab>" . indent-for-tab-command)
+		("C-i" . emmet-expand-line)
+	)
+  :hook
+  (sgml-mode web-mode css-mode-hook)
+  )
 
-(defun web-mode-hook ()
-  "Hooks for Web mode."
-  ;; indent
+;;web-modeの設定
+(use-package web-mode
+  :bind
+  (:map web-mode-map
+		("C-x i" . my-wrap-lines-with-html-tag))
+  :config
   (setq web-mode-html-offset   2)
   (setq web-mode-style-padding 2)
   (setq web-mode-css-offset    2)
@@ -338,12 +335,31 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (setq web-mode-java-offset   2)
   (setq web-mode-asp-offset    2)
   ;; auto tag closing
-  ;0=no auto-closing
-  ;1=auto-close with </
-  ;2=auto-close with > and </
+  ;; 0=no auto-closing
+  ;; 1=auto-close with </
+  ;; 2=auto-close with > and </
   (setq web-mode-tag-auto-close-style 2)
-)
-(add-hook 'web-mode-hook 'web-mode-hook)
+  :mode ("\\.html?$")
+  )
+
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode)) ;本当はjs2-modeにしたいけど重すぎる
+(eval-after-load 'flycheck
+  '(custom-set-variables
+    '(flycheck-disabled-checkers '(javascript-jshint javascript-jscs))
+    ))
+;; (add-to-list 'auto-mode-alist '("\\.jsp$"       . web-mode))
+
+;; この関数なんで追加したかまじで忘れた
+;; (defun my-wrap-lines-with-html-tag ($tag)
+;;   (interactive "sTag: ")
+;;   (if (and mark-active transient-mark-mode)
+;;       (shell-command-on-region
+;;        (region-beginning) (region-end)
+;;        (concat "perl -0 -p -w -e \'"
+;;                "s/^([^\\S\\r\\n]*)(\\S.*?)[^\\S\\r\\n]*$/$1<"
+;;                $tag ">$2<\\/" $tag ">/gm\'")
+;;        nil t)))
+
 
 ;;org-modeの設定
 (setq org-startup-truncated nil)
@@ -370,44 +386,63 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;; 今日から予定を表示させる
 (setq org-agenda-start-on-weekday nil)
 
-(when (require 'org-bullets nil t)
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+(use-package org-bullets
+  :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  )
 
 ;;flycheckの設定
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'japanese-latex-mode-hook (lambda () (flycheck-mode nil)))
-(require 'helm-config)
-(helm-mode 1)
-(define-key helm-map (kbd "C-z")  'helm-select-action)
-(define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
-(define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
+
+(use-package helm-config
+  :config
+  (helm-mode 1)
+  :bind
+  (:map helm-map
+		("C-z" . helm-select-action))
+  (:map helm-find-files-map
+		("TAB" . helm-execute-persistent-action))
+  (:map helm-read-file-map
+		("TAB" . helm-execute-persistent-action))
+  )
+
 ;;helm-flycheckの設定
-(require 'helm-flycheck) ;; Not necessary if using ELPA package
-(eval-after-load 'flycheck
-  '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
+(use-package helm-flycheck
+  :bind
+  (:map flycheck-mode-map
+		("C-c ! h" . helm-flycheck))
+  )
 
 ;; redo+の設定
 (use-package redo+
-  :config
-  (global-set-key (kbd "C-/") 'redo))
+  :bind (("C-/" . redo)))
 
 ;; hl-line+の設定
-(require 'hl-line+)
-(toggle-hl-line-when-idle)
-(setq hl-line-idle-interval 3)
-(set-face-background 'hl-line "firebrick")
+(use-package hl-line+
+  :init
+  (setq hl-line-idle-interval 2)
+  :config
+  (toggle-hl-line-when-idle)
+  (set-face-background 'hl-line "firebrick")
+  )
 
-(require 'yasnippet)
-(require 'helm-c-yasnippet)
-(setq helm-yas-space-match-any-greedy t)
-(global-set-key (kbd "C-c y") 'helm-yas-complete)
-(push '("emacs.+/snippets/" . snippet-mode) auto-mode-alist)
-(yas-global-mode 1)
-(eval-after-load "yasnippet"
-  '(progn
-     ;; companyと競合するのでyasnippetのフィールド移動は "C-i" のみにする
-     (define-key yas-keymap (kbd "<tab>") nil)
-     (yas-global-mode 1)))
+(use-package yasnippet
+  :bind
+  (:map yas-keymap
+		("TAB" . nil))
+  :config
+  (yas-global-mode 1)
+  (push '("emacs.+/snippets/" . snippet-mode) auto-mode-alist)
+  )
+
+
+(use-package helm-c-yasnippet
+  :init
+  (setq helm-yas-space-match-any-greedy t)
+  :bind
+  ("C-c y" . helm-yas-complete)
+  )
+
 
 (defvar company-mode/enable-yas t
   "Enable yasnippet for all backends.")
@@ -440,8 +475,18 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
           '(lambda ()
              (hs-minor-mode 1)))
 
-(when (require 'py-autopep8 nil t)
-  (add-hook 'before-save-hook 'py-autopep8-before-save))
+(use-package 
+  :config
+  (add-hook 'before-save-hook 'py-autopep8-before-save)
+  )
+
+;; ===============================================================
+;; js-mode
+;; ===============================================================
+(use-package js2-mode
+  init:
+  (setq js2-idle-timer-delay 2)
+  )
 
 ;; ===============================================================
 ;; C/C++ setting
@@ -455,10 +500,11 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (setq c-basic-offset 4))
 (add-hook 'c++-mode-hook 'my-c-c++-mode-init)
 
-(require 'irony)
-(add-hook 'c-mode-hook 'irony-mode)
-(add-hook 'c++-mode-hook 'irony-mode)
-(add-to-list 'company-backends 'company-irony) ; backend追加
+;; ironyがあまりにも重いので使わない
+;; (require 'irony)
+;; (add-hook 'c-mode-hook 'irony-mode)
+;; (add-hook 'c++-mode-hook 'irony-mode)
+;; (add-to-list 'company-backends 'company-irony) ; backend追加
 
 ;; ignoramusの設定
 ;; TODO: helm-miniで無視されないので使う価値を感じない
@@ -495,13 +541,10 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "M-x" 'helm-M-x)
 (bind-key "C-;" 'hs-toggle-hiding)
 (bind-key "C-h" 'delete-backward-char)
-(bind-key  "C-x i" 'my-wrap-lines-with-html-tag web-mode-map)
 (bind-key  "C-x :" 'toggle-truncate-lines)
 (bind-key*  "M-h" 'backward-kill-word)
 (bind-key* "C-," 'goto-last-change)
 (bind-key* "C-." 'goto-last-change-reverse)
-(bind-key "<tab>" 'indent-for-tab-command emmet-mode-keymap)
-(bind-key "C-i" 'emmet-expand-line emmet-mode-keymap)
 (bind-key "C-M-l" 'hs-show-block)
 (bind-key "C-M-h" 'hs-hide-block)
 
@@ -543,7 +586,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")) t)
  '(package-selected-packages
    (quote
-	(use-package ignoramus company-irony irony js2-refactor js2-mode shackle auctex helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
+	(multiple-cursors js3-mode use-package ignoramus company-irony irony js2-refactor js2-mode shackle auctex helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
@@ -552,6 +595,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(cursor ((t (:background "#AAA"))))
+ '(cursor ((t (:background "Yellow"))))
  '(helm-buffer-directory ((t (:foreground "DarkRed"))))
  '(helm-ff-directory ((t (:foreground "Orange")))))
+

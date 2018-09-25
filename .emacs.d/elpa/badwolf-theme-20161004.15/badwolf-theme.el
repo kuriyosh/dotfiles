@@ -304,7 +304,6 @@
    '(helm-ff-directory ((t (:foreground "Orange"))))
    '(helm-source-header ((t (:background "DarkRed" :height 1.3 :weight bold))))
    `(helm-selection ((t (:background ,gravel))))
-   
 
    ;; smart-mode-line
    `(sml/global ((t (:foreground ,plain))))
