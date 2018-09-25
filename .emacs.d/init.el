@@ -500,6 +500,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (setq c-basic-offset 4))
 (add-hook 'c++-mode-hook 'my-c-c++-mode-init)
 
+
 ;; ironyがあまりにも重いので使わない
 ;; (require 'irony)
 ;; (add-hook 'c-mode-hook 'irony-mode)
