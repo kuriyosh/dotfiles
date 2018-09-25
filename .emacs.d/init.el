@@ -475,16 +475,16 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
           '(lambda ()
              (hs-minor-mode 1)))
 
-(use-package 
-  :config
-  (add-hook 'before-save-hook 'py-autopep8-before-save)
-  )
+;; (use-package 
+;;   :config
+;;   (add-hook 'before-save-hook 'py-autopep8-before-save)
+;;   )
 
 ;; ===============================================================
 ;; js-mode
 ;; ===============================================================
 (use-package js2-mode
-  init:
+  :init
   (setq js2-idle-timer-delay 2)
   )
 
