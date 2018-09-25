@@ -394,16 +394,17 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'japanese-latex-mode-hook (lambda () (flycheck-mode nil)))
 
-(use-package helm-config
+;; helmの設定
+(use-package helm
   :config
   (helm-mode 1)
   :bind
   (:map helm-map
-		("C-z" . helm-select-action))
-  (:map helm-find-files-map
-		("TAB" . helm-execute-persistent-action))
-  (:map helm-read-file-map
-		("TAB" . helm-execute-persistent-action))
+		("C-z" . helm-select-action)
+  :map helm-find-files-map
+  		("<tab>" . helm-execute-persistent-action)
+  :map helm-read-file-map
+  		("<tab>" . helm-execute-persistent-action))
   )
 
 ;;helm-flycheckの設定
@@ -429,7 +430,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (use-package yasnippet
   :bind
   (:map yas-keymap
-		("TAB" . nil))
+		("<tab>" . nil))
   :config
   (yas-global-mode 1)
   (push '("emacs.+/snippets/" . snippet-mode) auto-mode-alist)
