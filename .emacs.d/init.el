@@ -23,10 +23,10 @@
   (let (path)
     (dolist (path paths paths)
       (let ((default-directory
-	      (expand-file-name (concat user-emacs-directory path))))
-	(add-to-list 'load-path default-directory)
-	(if (fboundp 'normal-top-level-add-subdirs-to-load-path)
-	    (normal-top-level-add-subdirs-to-load-path))))))
+          (expand-file-name (concat user-emacs-directory path))))
+    (add-to-list 'load-path default-directory)
+    (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
+        (normal-top-level-add-subdirs-to-load-path))))))
 
 (toggle-truncate-lines 1)
 
@@ -42,6 +42,9 @@
 
 ;; Warningがうざいので出さない
 (setq warning-minimum-level :error)
+
+;; ビープ音がうるさい
+(setq ring-bell-function 'ignore)
 
 (load-theme 'badwolf t)
 
@@ -94,9 +97,9 @@
 
 ;;バックアップファイルとオートセーブファイルを~/.emacs.d/backupsへ集める
 (setq backup-directory-alist
-	  '((".*" . "~/.emacs.d/backups/")))
+      '((".*" . "~/.emacs.d/backups/")))
 (setq auto-save-file-name-transforms
-	  '((".*" "~/.emacs.d/backups/" t)))
+      '((".*" "~/.emacs.d/backups/" t)))
 
 ;; 自動ファイルリストとロックファイルは生成しない
 (setq auto-save-list-file-prefix nil)
@@ -104,7 +107,7 @@
 
 ;;スクリプトファイルに実行権限を与えて保存
 (add-hook 'after-save-hook
-		  'executable-make-buffer-file-executable-if-script-p)
+          'executable-make-buffer-file-executable-if-script-p)
 
 ;; ===============================================================
 ;; Shell Setting
@@ -138,9 +141,9 @@
 
 ;; character code 設定
 (set-keyboard-coding-system 'cp932)
- 
+
 (prefer-coding-system 'utf-8-unix)
- 
+
 (set-file-name-coding-system 'cp932)
 (setq default-process-coding-system '(cp932 . cp932))
 
@@ -166,9 +169,9 @@
 (defun elisp-mode-hooks ()
   "lisp-mode-hooks"
   (when (require 'eldoc nil t)
-	(setq eldoc-idle-delay 0.2)
-	(setq eldoc-echo-area-use-multiline-p t)
-	(turn-on-eldoc-mode)))
+    (setq eldoc-idle-delay 0.2)
+    (setq eldoc-echo-area-use-multiline-p t)
+    (turn-on-eldoc-mode)))
 ;;elisp-mode-hookのON/OFF
 (add-hook 'emacs-lisp-mode-hook 'elisp-mode-hooks)
 
@@ -255,12 +258,12 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (use-package shackle
   :init
   (setq shackle-rules
-	  '(
+      '(
         ("*helm mini*" :align below :ratio 0.5)
-		("*helm M-x*" :align below :ratio 0.5)
-		("*helm find files*" :align below :ratio 0.5)
-		("*Help*" :align below :ratio 0.5)
-		("*quickrun*" :align below :ratio 0.5)
+        ("*helm M-x*" :align below :ratio 0.5)
+        ("*helm find files*" :align below :ratio 0.5)
+        ("*Help*" :align below :ratio 0.5)
+        ("*quickrun*" :align below :ratio 0.5)
         ))
   :config
   (shackle-mode 1))
@@ -278,13 +281,13 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (setq auto-insert-directory "~/.emacs.d/template/")
   :config
   (setq auto-insert-alist
-		(nconc '(
-				 ("\\.cpp$" . ["template.cpp" my-template])
-				 ("\\.py$"   . ["template.py" my-template])
-				 ("\\.org$"   . ["template.org" my-template])
-				 ("\\.tex$"   . ["template.tex" my-template])
-				 ("\\.js$"   . ["template.js" my-template])
-				 ) auto-insert-alist))
+        (nconc '(
+                 ("\\.cpp$" . ["template.cpp" my-template])
+                 ("\\.py$"   . ["template.py" my-template])
+                 ("\\.org$"   . ["template.org" my-template])
+                 ("\\.tex$"   . ["template.tex" my-template])
+                 ("\\.js$"   . ["template.js" my-template])
+                 ) auto-insert-alist))
   (add-hook 'find-file-not-found-hooks 'auto-insert) ;; HACK: :hookの中に入れたほうがきれい
   )
 
@@ -292,7 +295,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   '(("%file%"             . (lambda () (file-name-nondirectory (buffer-file-name))))
     ("%file-without-ext%" . (lambda () (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))))
     ("%time%" . (lambda () (format-time-string "%Y-%m-%d")))
-	("%mtg-timeformat%" . (lambda () (format-time-string "%m%d")))
+    ("%mtg-timeformat%" . (lambda () (format-time-string "%m%d")))
     ("%include-guard%"    . (lambda () (format "__SCHEME_%s__" (upcase (file-name-sans-extension (file-name-nondirectory buffer-file-name))))))))
 (defun my-template ()
   (time-stamp)
@@ -309,15 +312,50 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   :config
   (undohist-initialize))
 
+(use-package whitespace
+  :init
+  (setq whitespace-style
+        '(
+          face ; faceで可視化
+          trailing ; 行末
+          tabs ; タブ
+          spaces ; スペース
+          space-mark ; 表示のマッピング
+          tab-mark
+          ))
+  (setq whitespace-display-mappings
+        '(
+          (space-mark ?\u3000 [?\u2423])
+          (tab-mark ?\t [?\u00BB ?\t] [?\\ ?\t])
+          ))
+  (setq whitespace-trailing-regexp  "\\([ \u00A0]+\\)$")
+  (setq whitespace-space-regexp "\\(\u3000+\\)")
+  (setq whitespace-action '(auto-cleanup))
+  :config
+  (global-whitespace-mode)
+  (set-face-attribute 'whitespace-trailing nil
+                      :foreground "RoyalBlue4"
+                      :background "RoyalBlue4"
+                      :underline nil)
+  (set-face-attribute 'whitespace-tab nil
+                      :foreground "yellow4"
+                      :background "yellow4"
+                      :underline nil)
+  (set-face-attribute 'whitespace-space nil
+                      :foreground "gray40"
+                      :background "gray20"
+                      :underline nil)
+  )
+
 (use-package emmet-mode
   :init
   (setq emmet-indentation 2)
   :bind
   (:map emmet-mode-keymap
-  		("C-j" . nil)
-		("<tab>" . indent-for-tab-command)
-		("C-i" . emmet-expand-line)
-	)
+        ("C-j" . nil)
+        ("<tab>" . indent-for-tab-command)
+        ("C-i" . emmet-expand-line)
+    )
   :hook
   (sgml-mode web-mode css-mode-hook)
   )
@@ -326,7 +364,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (use-package web-mode
   :bind
   (:map web-mode-map
-		("C-x i" . my-wrap-lines-with-html-tag))
+        ("C-x i" . my-wrap-lines-with-html-tag))
   :config
   (setq web-mode-html-offset   2)
   (setq web-mode-style-padding 2)
@@ -343,10 +381,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   )
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode)) ;本当はjs2-modeにしたいけど重すぎる
-(eval-after-load 'flycheck
-  '(custom-set-variables
-    '(flycheck-disabled-checkers '(javascript-jshint javascript-jscs))
-    ))
 ;; (add-to-list 'auto-mode-alist '("\\.jsp$"       . web-mode))
 
 ;; この関数なんで追加したかまじで忘れた
@@ -393,6 +427,11 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;;flycheckの設定
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'japanese-latex-mode-hook (lambda () (flycheck-mode nil)))
+(add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
+(eval-after-load 'flycheck
+  '(custom-set-variables
+    '(flycheck-disabled-checkers '(javascript-jshint javascript-jscs))
+    ))
 
 ;; helmの設定
 (use-package helm
@@ -400,23 +439,23 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (helm-mode 1)
   :bind
   (:map helm-map
-		("C-z" . helm-select-action)
+        ("C-z" . helm-select-action)
   :map helm-find-files-map
-  		("<tab>" . helm-execute-persistent-action)
+        ("<tab>" . helm-execute-persistent-action)
   :map helm-read-file-map
-  		("<tab>" . helm-execute-persistent-action))
+        ("<tab>" . helm-execute-persistent-action))
   )
 
 ;;helm-flycheckの設定
 (use-package helm-flycheck
   :bind
   (:map flycheck-mode-map
-		("C-c ! h" . helm-flycheck))
+        ("C-c ! h" . helm-flycheck))
   )
 
 ;; redo+の設定
 (use-package redo+
-  :bind (("C-/" . redo)))
+  :bind ("C-/" . redo))
 
 ;; hl-line+の設定
 (use-package hl-line+
@@ -430,7 +469,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (use-package yasnippet
   :bind
   (:map yas-keymap
-		("<tab>" . nil))
+        ("<tab>" . nil))
   :config
   (yas-global-mode 1)
   (push '("emacs.+/snippets/" . snippet-mode) auto-mode-alist)
@@ -455,8 +494,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 
 ;; hs-modeの設定
 (add-hook 'c++-mode-hook
-		  '(lambda ()
-			 (hs-minor-mode 1)))
+          '(lambda ()
+             (hs-minor-mode 1)))
 (add-hook 'c-mode-hook
           '(lambda ()
              (hs-minor-mode 1)))
@@ -476,7 +515,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
           '(lambda ()
              (hs-minor-mode 1)))
 
-;; (use-package 
+;; (use-package
 ;;   :config
 ;;   (add-hook 'before-save-hook 'py-autopep8-before-save)
 ;;   )
@@ -524,6 +563,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;; ===============================================================
 (require 'bind-key)
 (bind-key "C-z" 'undo)
+(bind-key "M-[" 'replace-string)
 (bind-key* "C-t h" 'windmove-left)
 (bind-key* "C-t j" 'windmove-down)
 (bind-key* "C-t k" 'windmove-up)
@@ -554,7 +594,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (if (and (interactive-p) transient-mark-mode (not mark-active))
       (backward-kill-word 1)
     ad-do-it))
- 
+
 (bind-key "C-w" 'backward-kill-word minibuffer-local-completion-map)
 
 ;; C-kのkill-line後に次の行のインデントを少なくする
@@ -585,7 +625,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
  '(flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))
  '(org-agenda-files
    (quote
-	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")) t)
+	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")))
  '(package-selected-packages
    (quote
 	(multiple-cursors js3-mode use-package ignoramus company-irony irony js2-refactor js2-mode shackle auctex helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
@@ -597,7 +637,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(cursor ((t (:background "Yellow"))))
+ '(cursor ((t (:background "yellow1"))))
  '(helm-buffer-directory ((t (:foreground "DarkRed"))))
  '(helm-ff-directory ((t (:foreground "Orange")))))
 

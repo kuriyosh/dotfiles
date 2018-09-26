@@ -3,9 +3,8 @@
 # key: argtemp
 # --
 parser = argparse.ArgumentParser(
-     prog='',
-     usage='',
-     description='description',
+     prog='$0',
+     description='$1',
      epilog='end',
      add_help=True,
 )
