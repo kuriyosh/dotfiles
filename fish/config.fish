@@ -13,6 +13,7 @@ alias rm "rmtrash"
 alias emacs "/Applications/Emacs.app/Contents/MacOS/Emacs -nw -q -l ~/.emacs.d/cli.el"
 alias o "open"
 alias g++ "g++-8"
+alias cr "cd (git rev-parse --show-toplevel)"
 
 # cd > ls
 # TOOD: なれないし'cd -'が使えないから実装が微妙
