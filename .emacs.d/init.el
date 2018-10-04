@@ -196,6 +196,10 @@
   (global-company-mode) ;全バッファで有効にする
   (edit-category-table-for-company-dabbrev)
   )
+(setq company-backends (delete 'company-semantic company-backends))
+(use-package company-c-headers
+  :config
+  (add-to-list 'company-backends 'company-c-headers))
 
 ;;recentf-extの設定
 (use-package recentf-ext
@@ -425,13 +429,14 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   )
 
 ;;flycheckの設定
-(add-hook 'after-init-hook #'global-flycheck-mode)
-(add-hook 'japanese-latex-mode-hook (lambda () (flycheck-mode nil)))
-(add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
-(eval-after-load 'flycheck
-  '(custom-set-variables
-    '(flycheck-disabled-checkers '(javascript-jshint javascript-jscs))
-    ))
+(use-package flycheck
+  :config
+  (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++14")))
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+  (add-hook 'japanese-latex-mode-hook (lambda () (flycheck-mode nil)))
+  (custom-set-variables
+   '(flycheck-disabled-checkers '(javascript-jshint javascript-jscs)))
+  )
 
 ;; helmの設定
 (use-package helm
@@ -540,13 +545,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (setq c-basic-offset 4))
 (add-hook 'c++-mode-hook 'my-c-c++-mode-init)
 
-
-;; ironyがあまりにも重いので使わない
-;; (require 'irony)
-;; (add-hook 'c-mode-hook 'irony-mode)
-;; (add-hook 'c++-mode-hook 'irony-mode)
-;; (add-to-list 'company-backends 'company-irony) ; backend追加
-
 ;; ignoramusの設定
 ;; TODO: helm-miniで無視されないので使う価値を感じない
 ;; (require 'dired-x)
@@ -623,12 +621,13 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
    (quote
 	("a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "36619802ccdb9e68a21f11c9baa30d86e25fd46635e48605399bf1cc2689cf39" "d577e33443b26fd3f3c6840ddf8c7aeae0d948b7da4924a8a0c85b38831d54cc" "604648621aebec024d47c352b8e3411e63bdb384367c3dd2e8db39df81b475f5" default)))
  '(flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))
+ '(irony-additional-clang-options (quote ("-std=c++11")))
  '(org-agenda-files
    (quote
 	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")) t)
  '(package-selected-packages
    (quote
-	(multiple-cursors js3-mode use-package ignoramus js2-refactor js2-mode shackle auctex helm-tramp powerline spacemacs-theme company goto-chg js-doc smartparens elscreen madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
+	(company-c-headers multiple-cursors js3-mode use-package ignoramus js2-refactor js2-mode shackle auctex helm-tramp powerline spacemacs-theme goto-chg js-doc smartparens elscreen madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
