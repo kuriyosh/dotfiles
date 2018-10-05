@@ -197,9 +197,19 @@
   (edit-category-table-for-company-dabbrev)
   )
 (setq company-backends (delete 'company-semantic company-backends))
+
 (use-package company-c-headers
   :config
-  (add-to-list 'company-backends 'company-c-headers))
+  (add-to-list 'company-backends 'company-c-headers)
+  ;TODO: 以下環境依存な部分もあるため、環境毎に対応させる必要
+  (add-to-list 'company-c-headers-path-system "/usr/local/Cellar/gcc/8.2.0/include/c++/8.2.0")
+  (add-to-list 'company-c-headers-path-system "/usr/local/Cellar/gcc/8.2.0/include/c++/8.2.0/x86_64-apple-darwin17.7.0")
+  (add-to-list 'company-c-headers-path-system "/usr/local/Cellar/gcc/8.2.0/include/c++/8.2.0/x86_64-apple-darwin17.7.0")
+  (add-to-list 'company-c-headers-path-system "/usr/local/Cellar/gcc/8.2.0/lib/gcc/8/gcc/x86_64-apple-darwin17.7.0/8.2.0/include")
+  (add-to-list 'company-c-headers-path-system "/usr/local/Cellar/gcc/8.2.0/include")
+  (add-to-list 'company-c-headers-path-system "/usr/local/Cellar/gcc/8.2.0/lib/gcc/8/gcc/x86_64-apple-darwin17.7.0/8.2.0/include-fixed")
+  (add-to-list 'company-c-headers-path-system "/System/Library/Frameworks")
+  (add-to-list 'company-c-headers-path-system "/Library/Frameworks"))
 
 ;;recentf-extの設定
 (use-package recentf-ext
@@ -624,10 +634,10 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
  '(irony-additional-clang-options (quote ("-std=c++11")))
  '(org-agenda-files
    (quote
-	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")) t)
+	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")))
  '(package-selected-packages
    (quote
-	(company-c-headers multiple-cursors js3-mode use-package ignoramus js2-refactor js2-mode shackle auctex helm-tramp powerline spacemacs-theme goto-chg js-doc smartparens elscreen madhat2r-theme markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode mozc-popup hide-comnt open-junk-file google-translate helm-flycheck web-mode multi-term flymake-cppcheck undo-tree undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
+	(company-c-headers multiple-cursors use-package js2-refactor js2-mode shackle helm-tramp spacemacs-theme goto-chg js-doc smartparens markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode hide-comnt open-junk-file helm-flycheck web-mode multi-term undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
