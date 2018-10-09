@@ -39,7 +39,6 @@
   (exec-path-from-shell-initialize))
 ;TODO: 起動にこの処理を反映させたいけどうまくいかない
 
-
 ;; Warningがうざいので出さない
 (setq warning-minimum-level :error)
 
@@ -165,7 +164,7 @@
   (setq sml/no-confirm-load-theme t)
   (sml/apply-theme 'dark))
 
-;;Elisp関数や変数をエコーエリアへ表示する(Elispmode時)
+;; Elisp関数や変数をエコーエリアへ表示する(Elispmode時)
 (defun elisp-mode-hooks ()
   "lisp-mode-hooks"
   (when (require 'eldoc nil t)
@@ -188,7 +187,7 @@
 
 (use-package company
   :init
-  (setq company-idle-delay 0) ;デフォルトは0.5
+  (setq company-idle-delay 0) ; デフォルトは0.5
   (setq company-minimum-prefix-length 1) ; デフォルトは4
   (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
   (setq company-dabbrev-char-regexp "\\cs")
@@ -233,6 +232,11 @@
 
 ;;; これがないとemacs -Qでエラーになる。おそらくバグ。
 (require 'compile)
+
+(use-package dumb-jump
+  :init
+  (setq dumb-jump-default-project "")
+  (setq dumb-jump-force-searcher 'ag))
 
 (setq TeX-parse-self t)  ; ファイルを開いた時に自動パース
 
@@ -465,7 +469,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (use-package helm-flycheck
   :bind
   (:map flycheck-mode-map
-        ("C-c ! h" . helm-flycheck))
+        ("C-c f" . helm-flycheck))
   )
 
 ;; redo+の設定
@@ -530,11 +534,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
           '(lambda ()
              (hs-minor-mode 1)))
 
-;; (use-package
-;;   :config
-;;   (add-hook 'before-save-hook 'py-autopep8-before-save)
-;;   )
-
 ;; ===============================================================
 ;; js-mode
 ;; ===============================================================
@@ -554,17 +553,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (c-toggle-auto-hungry-state -1)
   (setq c-basic-offset 4))
 (add-hook 'c++-mode-hook 'my-c-c++-mode-init)
-
-;; ignoramusの設定
-;; TODO: helm-miniで無視されないので使う価値を感じない
-;; (require 'dired-x)
-;; (require 'ignoramus)
-;; (defun ignoramus-do-ignore-helm ()
-;;   "Tell `helm-mini' to ignore unwanted files."
-;;   (setq helm-source-buffers-list (list ignoramus-boring-file-regexp)))
-;; (ignoramus-setup)
-
-
 
 ;; ===============================================================
 ;; Key-bind (necessary bind-key.el)
@@ -597,6 +585,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-." 'goto-last-change-reverse)
 (bind-key "C-M-l" 'hs-show-block)
 (bind-key "C-M-h" 'hs-hide-block)
+(bind-key* "C-u" 'kill-whole-line)
 
 (defadvice kill-region (around kill-word-or-kill-region activate)
   (if (and (interactive-p) transient-mark-mode (not mark-active))
@@ -637,7 +626,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")))
  '(package-selected-packages
    (quote
-	(company-c-headers multiple-cursors use-package js2-refactor js2-mode shackle helm-tramp spacemacs-theme goto-chg js-doc smartparens markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode hide-comnt open-junk-file helm-flycheck web-mode multi-term undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
+	(dumb-jump company-c-headers multiple-cursors use-package js2-refactor js2-mode shackle helm-tramp spacemacs-theme goto-chg js-doc smartparens markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode hide-comnt open-junk-file helm-flycheck web-mode multi-term undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
