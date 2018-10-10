@@ -300,7 +300,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   :config
   (setq auto-insert-alist
         (nconc '(
-                 ("\\.cpp$" . ["template.cpp" my-template])
+                 ;; ("\\.cpp$" . ["template.cpp" my-template])
+				 ("\\.cpp$" . ["template2.cpp" my-template]) ; プロジェクト毎にテンプレートを変更する、新規ファイル作成時にどのテンプレートを利用するか入力するなどしたいが諦めた
                  ("\\.py$"   . ["template.py" my-template])
                  ("\\.org$"   . ["template.org" my-template])
                  ("\\.tex$"   . ["template.tex" my-template])
@@ -325,6 +326,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (goto-char (point-max))
   (message "done."))
 
+;; auto-insert-choose
+(use-package auto-insert-choose)
+
 ;;undohistの設定
 (use-package undohist
   :config
@@ -336,10 +340,10 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
         '(
           face ; faceで可視化
           trailing ; 行末
-          tabs ; タブ
+          ;; tabs ; タブ
           spaces ; スペース
           space-mark ; 表示のマッピング
-          tab-mark
+          ;; tab-mark
           ))
   (setq whitespace-display-mappings
         '(
@@ -390,8 +394,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (setq web-mode-script-offset 2)
   (setq web-mode-java-offset   2)
   (setq web-mode-asp-offset    2)
-  ;; auto tag closing
-  ;; 0=no auto-closing
+  ;;tag closing
+  ;; 0=no -closing
   ;; 1=auto-close with </
   ;; 2=auto-close with > and </
   (setq web-mode-tag-auto-close-style 2)
