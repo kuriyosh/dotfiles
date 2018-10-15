@@ -125,6 +125,7 @@
 ;; Language Setting
 ;; ===============================================================
 (set-language-environment "Japanese")
+(setenv "LANG" "ja_JP.UTF-8")
 (prefer-coding-system 'utf-8)
 
 (require 'ucs-normalize)
@@ -218,8 +219,39 @@
   (setq recentf-auto-cleanup 10)
   (setq recentf-auto-save-timer (run-with-idle-timer 30 t 'recentf-save-list))
   :config
-  (recentf-mode 1)
-  )
+  (recentf-mode 1))
+
+(require 'multi-term)
+(defun term-send-forward-char ()
+  (interactive)
+  (term-send-raw-string "\C-f"))
+(defun term-send-backward-char ()
+  (interactive)
+  (term-send-raw-string "\C-b"))
+(defun term-send-previous-line ()
+  (interactive)
+  (term-send-raw-string "\C-p"))
+(defun term-send-next-line ()
+  (interactive)
+  (term-send-raw-string "\C-n"))
+(add-hook 'term-mode-hook
+          '(lambda ()
+             (let* ((key-and-func
+                     `(("\C-p"           term-send-previous-line)
+                       ("\C-n"           term-send-next-line)
+                       ("\C-b"           term-send-backward-char)
+                       ("\C-f"           term-send-forward-char)
+                       (,(kbd "C-h")     term-send-backspace)
+                       (,(kbd "C-y")     term-paste)
+                       (,(kbd "ESC ESC") term-send-raw)
+                       (,(kbd "C-S-p")   multi-term-prev)
+                       (,(kbd "C-S-n")   multi-term-next)
+                       ;; 利用する場合は
+                       ;; helm-shell-historyの記事を参照してください
+                       ;; ("\C-r"           helm-shell-history)
+                       )))
+               (loop for (keybind function) in key-and-func do
+                     (define-key term-raw-map keybind function)))))
 
 
 (add-hook 'c++-mode-hook
