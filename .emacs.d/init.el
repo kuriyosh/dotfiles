@@ -139,6 +139,8 @@
  nil 'japanese-jisx0208
  (font-spec :family "メイリオ"))
 
+(setq default-cursor-in-non-selected-windows nil)
+
 ;; character code 設定
 (set-keyboard-coding-system 'cp932)
 
@@ -197,6 +199,29 @@
   (edit-category-table-for-company-dabbrev)
   )
 (setq company-backends (delete 'company-semantic company-backends))
+
+(use-package diminish
+  :config
+  (eval-after-load "company"
+	'(diminish 'company-mode "Ⓒ"))
+  (eval-after-load "yasnippet"
+	'(diminish 'yas-minor-mode "Ⓨ"))
+  (eval-after-load "flycheck"
+	'(diminish 'flycheck-mode "Ⓕ"))
+  (eval-after-load "helm-mode"
+	'(diminish 'helm-mode "Ⓗ"))
+  (eval-after-load "whitespace"
+	'(diminish 'global-whitespace-mode "Ⓦ"))
+  (eval-after-load "smartparens"
+	'(diminish 'smartparens-mode "Ⓢ"))
+  (eval-after-load "hideshow"
+	'(diminish 'hs-minor-mode ""))
+  (diminish 'auto-revert-mode "")
+  (diminish 'eldoc-mode "")
+  )
+;; バッファの表示位置をモードラインに表示するのをやめる
+(setq mode-line-position nil)
+(display-time-mode t)
 
 (use-package company-c-headers
   :config
@@ -418,7 +443,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (use-package web-mode
   :bind
   (:map web-mode-map
-        ("C-x i" . my-wrap-lines-with-html-tag))
+        ("C-x i" . my-wrap-lines-with-html-tag)
+		("C-;" . web-mode-fold-or-unfold))
   :config
   (setq web-mode-html-offset   2)
   (setq web-mode-style-padding 2)
@@ -431,8 +457,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   ;; 1=auto-close with </
   ;; 2=auto-close with > and </
   (setq web-mode-tag-auto-close-style 2)
-  :mode ("\\.html?$")
-  )
+  :mode ("\\.html?$"))
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode)) ;本当はjs2-modeにしたいけど重すぎる
 ;; (add-to-list 'auto-mode-alist '("\\.jsp$"       . web-mode))
@@ -662,7 +687,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")))
  '(package-selected-packages
    (quote
-	(dumb-jump company-c-headers multiple-cursors use-package js2-refactor js2-mode shackle helm-tramp spacemacs-theme goto-chg js-doc smartparens markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode hide-comnt open-junk-file helm-flycheck web-mode multi-term undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
+	(diminish dumb-jump company-c-headers multiple-cursors use-package js2-refactor js2-mode shackle helm-tramp spacemacs-theme goto-chg js-doc smartparens markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode hide-comnt open-junk-file helm-flycheck web-mode multi-term undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
