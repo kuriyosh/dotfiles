@@ -418,7 +418,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (use-package web-mode
   :bind
   (:map web-mode-map
-        ("C-x i" . my-wrap-lines-with-html-tag))
+        ("C-x i" . my-wrap-lines-with-html-tag)
+		("C-;" . web-mode-fold-or-unfold))
   :config
   (setq web-mode-html-offset   2)
   (setq web-mode-style-padding 2)
@@ -431,8 +432,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   ;; 1=auto-close with </
   ;; 2=auto-close with > and </
   (setq web-mode-tag-auto-close-style 2)
-  :mode ("\\.html?$")
-  )
+  :mode ("\\.html?$"))
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode)) ;本当はjs2-modeにしたいけど重すぎる
 ;; (add-to-list 'auto-mode-alist '("\\.jsp$"       . web-mode))
