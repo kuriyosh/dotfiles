@@ -1,6 +1,9 @@
 # default
 *~
 
+# Mac OS
+.DS_Store
+
 ###########################
 # Emacs Local Files
 ###########################
