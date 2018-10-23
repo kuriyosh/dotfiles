@@ -339,9 +339,21 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
         ("*helm find files*" :align below :ratio 0.5)
         ("*Help*" :align below :ratio 0.5)
         ("*quickrun*" :align below :ratio 0.5)
+		("*terminal*" :regexp t :align below :ratio 0.5)
         ))
   :config
   (shackle-mode 1))
+
+
+(use-package shell-pop
+  :init
+  (setq shell-pop-shell-type (quote ("ansi-term" "*shell-pop-ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
+  (setq shell-pop-term-shell "/usr/local/bin/fish")
+  (setq shell-pop-window-height 30)
+  (setq shell-pop-window-position "bottom")
+  :config
+  (define-key term-raw-map (kbd "M-x") 'nil)
+  )
 
 ;;Shellの設定
 ;; shellの文字化けを回避
@@ -627,6 +639,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-t l" 'windmove-right)
 (bind-key* "C-t -" 'split-window-below)
 (bind-key* "C-t |" 'split-window-right)
+(bind-key* "C-t t" 'shell-pop)
 (bind-key* "C-S-<tab>" 'prev-window)
 (bind-key "M-n" (kbd "C-u 5 C-n"))
 (bind-key "M-p" (kbd "C-u 5 C-p"))
