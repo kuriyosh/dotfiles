@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: inline
-# key: il
+# name: inn
+# key: inn
 # --
-inline $0
+int N; cin >> N;
