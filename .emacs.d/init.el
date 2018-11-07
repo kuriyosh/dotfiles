@@ -214,6 +214,8 @@
 	'(diminish 'global-whitespace-mode "Ⓦ"))
   (eval-after-load "smartparens"
 	'(diminish 'smartparens-mode "Ⓢ"))
+  (eval-after-load "abbrev-mode"
+	'(diminish 'abbrev-mode "Ⓐ"))
   (eval-after-load "hideshow"
 	'(diminish 'hs-minor-mode ""))
   (diminish 'auto-revert-mode "")
