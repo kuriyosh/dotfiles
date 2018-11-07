@@ -549,7 +549,11 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 
 ;; redo+の設定
 (use-package redo+
-  :bind ("C-/" . redo))
+  :bind
+  ("C-/" . redo)
+  :config
+  (setq undo-no-redo t)					;redo+が使えるときにはundoの挙動をストレートにする
+  )
 
 ;; hl-line+の設定
 (use-package hl-line+
