@@ -2,4 +2,6 @@
 # name: map
 # key: map
 # --
-std::map<${1:type1}$0> ${2:var};
+`(progn (goto-char (point-min)) (unless (re-search-forward
+"^using\\s-+namespace std;" nil 'no-errer) "std::"))
+`map<${1:type1}> ${2:var};$0

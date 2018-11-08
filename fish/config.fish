@@ -1,5 +1,6 @@
 # Set Path
 set PATH ~/.nodebrew/current/bin $PATH
+set PATH ~/.scripts $PATH
 set PATH ~/Library/Android/sdk/platform-tools $PATH
 set PATH ~/Library/Android/sdk/tools $PATH
 set -x PATH $HOME/.pyenv/bin $PATH
