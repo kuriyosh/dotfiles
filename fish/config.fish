@@ -33,4 +33,4 @@ function start_tmux
     end
 end
 
-start_tmux
+# start_tmux
