@@ -663,12 +663,13 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "M-x" 'helm-M-x)
 (bind-key "C-;" 'hs-toggle-hiding)
 (bind-key "C-h" 'delete-backward-char)
-(bind-key  "C-x :" 'toggle-truncate-lines)
+(bind-key "C-x :" 'toggle-truncate-lines)
 (bind-key*  "M-h" 'backward-kill-word)
 (bind-key* "C-," 'goto-last-change)
 (bind-key* "C-." 'goto-last-change-reverse)
 (bind-key "C-M-l" 'hs-show-block)
 (bind-key "C-M-h" 'hs-hide-block)
+(bind-key "C-o" 'ace-jump-char-mode)
 ;; (bind-key* "C-u" 'kill-whole-line)
 
 (defadvice kill-region (around kill-word-or-kill-region activate)
@@ -710,7 +711,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")))
  '(package-selected-packages
    (quote
-	(fish-mode diminish dumb-jump company-c-headers multiple-cursors use-package js2-refactor js2-mode shackle helm-tramp spacemacs-theme goto-chg js-doc smartparens markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode hide-comnt open-junk-file helm-flycheck web-mode multi-term undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
+	(ace-jump-mode fish-mode diminish dumb-jump company-c-headers multiple-cursors use-package js2-refactor js2-mode shackle helm-tramp spacemacs-theme goto-chg js-doc smartparens markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode hide-comnt open-junk-file helm-flycheck web-mode multi-term undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
