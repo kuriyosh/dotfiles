@@ -300,20 +300,18 @@
   (setq dumb-jump-default-project "")
   (setq dumb-jump-force-searcher 'ag))
 
-(setq TeX-parse-self t)  ; ファイルを開いた時に自動パース
-
-;;yatexの設定
-(setq auto-mode-alist
-  (cons (cons "\\.tex$" 'yatex-mode) auto-mode-alist))
-(autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
-(add-hook 'yatex-mode-hook
-         '(lambda ()
-         (YaTeX-define-key "p" 'latex-math-preview-expression)
-         (YaTeX-define-key "\C-p" 'latex-math-preview-save-image-file)
-         (YaTeX-define-key "j" 'latex-math-preview-insert-symbol)
-         (YaTeX-define-key "\C-j" 'latex-math-preview-last-symbol-again)
-         (YaTeX-define-key "\C-b" 'latex-math-preview-beamer-frame)))
-(setq latex-math-preview-in-math-mode-p-func 'YaTeX-in-math-mode-p)
+;; auctexの設定
+;; (use-package tex
+;;   :defer t
+;;   :ensure auctex
+;;   :config)
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq TeX-default-mode 'japanese-latex-mode)
+(setq TeX-engine-alist '((ptex "pTeX" "eptex" "platex" "eptex")
+						 (jtex "jTeX" "jtex" "jlatex" nil)
+						 (uptex "upTeX" "euptex" "uplatex" "euptex")))
+(setq TeX-engine 'uptex)
 
 ;; seqの設定
 (defun count-string-matches (regexp string)
@@ -371,6 +369,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (use-package autoinsert
   :init
   (setq auto-insert-directory "~/.emacs.d/template/")
+  (setq auto-insert-query nil)
   :config
   (auto-insert-mode 1)
   (setq auto-insert-alist
@@ -711,7 +710,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")))
  '(package-selected-packages
    (quote
-	(ace-jump-mode fish-mode diminish dumb-jump company-c-headers multiple-cursors use-package js2-refactor js2-mode shackle helm-tramp spacemacs-theme goto-chg js-doc smartparens markdown-mode latex-math-preview request exec-path-from-shell magit yatex rainbow-mode emmet-mode hide-comnt open-junk-file helm-flycheck web-mode multi-term undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
+	(auctex ace-jump-mode fish-mode diminish dumb-jump company-c-headers multiple-cursors use-package js2-refactor js2-mode shackle helm-tramp spacemacs-theme goto-chg js-doc smartparens markdown-mode latex-math-preview request exec-path-from-shell magit rainbow-mode emmet-mode hide-comnt open-junk-file helm-flycheck web-mode multi-term undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)

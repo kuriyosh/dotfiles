@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: fora
+# key: fora
+# --
+for (auto & $1 : $2) {
+	$0
+}
