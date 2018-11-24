@@ -197,6 +197,7 @@
   (setq company-minimum-prefix-length 1) ; デフォルトは4
   (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
   (setq company-dabbrev-char-regexp "\\cs")
+  (setq company-dabbrev-downcase nil)
   :config
   (global-company-mode) ;全バッファで有効にする
   (edit-category-table-for-company-dabbrev)
@@ -607,6 +608,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
           '(lambda ()
              (hs-minor-mode 1)))
 (add-hook 'python-mode-hook
+          '(lambda ()
+             (hs-minor-mode 1)))
+(add-hook 'js-mode-hook
           '(lambda ()
              (hs-minor-mode 1)))
 (add-hook 'js2-mode-hook
