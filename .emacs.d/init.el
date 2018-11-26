@@ -302,17 +302,27 @@
   (setq dumb-jump-force-searcher 'ag))
 
 ;; auctexの設定
-;; (use-package tex
-;;   :defer t
-;;   :ensure auctex
-;;   :config)
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq TeX-default-mode 'japanese-latex-mode)
-(setq TeX-engine-alist '((ptex "pTeX" "eptex" "platex" "eptex")
-						 (jtex "jTeX" "jtex" "jlatex" nil)
-						 (uptex "upTeX" "euptex" "uplatex" "euptex")))
-(setq TeX-engine 'uptex)
+(use-package auctex
+  :after (tex reftex)
+  :ensure t
+  :config
+  (setq TeX-default-mode 'japanese-latex-mode)
+  (setq japanese-LaTeX-default-style "jarticle")
+  (setq TeX-engine-alist '((ptex "pTeX" "eptex" "platex" "eptex")
+						   (jtex "jTeX" "jtex" "jlatex" nil)
+						   (uptex "upTeX" "euptex" "uplatex" "euptex")))
+  (setq TeX-engine 'uptex)
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq reftex-plug-into-AUCTeX t)
+  (setq-default TeX-master nil)
+  (add-hook 'japanese-latex-mode-hook (lambda () (flycheck-mode nil)))
+  :bind
+  ("C-c r" . reftex-reference)
+  ("C-c l" . reftex-label)
+  ("C-c c" . reftex-citation))
+
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex) ;auctexの中に入れたいけど何故か機能しない
 
 ;; seqの設定
 (defun count-string-matches (regexp string)
@@ -504,8 +514,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;;org-modeの設定
 (setq org-startup-truncated nil)
 (setq org-startup-with-inline-images t)
-(global-set-key (kbd "C-c c") 'org-capture)
-(global-set-key (kbd "C-c a") 'org-agenda)
+;; 以下のキーバインドは他のメジャーモードのキーバインドを汚染しがちなので避けたい(あまり使わないのでコマンド呼び出しで良い気がする)
+;; (global-set-key (kbd "C-c c") 'org-capture)
+;; (global-set-key (kbd "C-c a") 'org-agenda)
 (setq org-agenda-files '("~/Dropbox/org/todo.org"))
 ;; org-captureで2種類のメモを扱うようにする
 (setq org-capture-templates
@@ -533,9 +544,10 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;;flycheckの設定
 (use-package flycheck
   :config
+  ;TODO: globalにflycheckを有効化して、使わないメジャーモードについてdisableにする設定を行いたいけどうまくいかない
+  ;; (global-flycheck-mode)
   (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++14")))
-  (add-hook 'after-init-hook #'global-flycheck-mode)
-  (add-hook 'japanese-latex-mode-hook (lambda () (flycheck-mode nil)))
+  (add-hook 'js-mode-hook #'flycheck-mode)
   (custom-set-variables
    '(flycheck-disabled-checkers '(javascript-jshint javascript-jscs)))
   )
