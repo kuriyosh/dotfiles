@@ -333,6 +333,15 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
                   "\n")))
   (end-of-line))
 
+;; multiple-cursorsの設定
+(use-package multiple-cursors
+  :bind
+  ("C-S-c" . mc/edit-lines)
+  ("C->" . mc/mark-next-like-this-symbol)
+  ("C-<" . mc/mark-previous-like-this-symbol)
+  ("C-c C-<" . mc/mark-all-like-this)
+  )
+
 ;; shackleの設定
 (use-package shackle
   :init
@@ -665,7 +674,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "C-x j" 'open-junk-file)
 (bind-key "M-x" 'helm-M-x)
 (bind-key "C-;" 'hs-toggle-hiding)
-(bind-key "C-h" 'delete-backward-char)
+(bind-key* "C-h" 'delete-backward-char)
 (bind-key "C-x :" 'toggle-truncate-lines)
 (bind-key*  "M-h" 'backward-kill-word)
 (bind-key* "C-," 'goto-last-change)
