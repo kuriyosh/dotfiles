@@ -548,6 +548,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   ;; (global-flycheck-mode)
   (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++14")))
   (add-hook 'js-mode-hook #'flycheck-mode)
+  (add-hook 'c++-mode-hook #'flycheck-mode)
   (custom-set-variables
    '(flycheck-disabled-checkers '(javascript-jshint javascript-jscs)))
   )
@@ -735,7 +736,13 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")))
  '(package-selected-packages
    (quote
-	(auctex ace-jump-mode fish-mode diminish dumb-jump company-c-headers multiple-cursors use-package js2-refactor js2-mode shackle helm-tramp spacemacs-theme goto-chg js-doc smartparens markdown-mode latex-math-preview request exec-path-from-shell magit rainbow-mode emmet-mode hide-comnt open-junk-file helm-flycheck web-mode multi-term undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
+	(auctex ace-jump-mode fish-mode diminish dumb-jump company-c-headers multiple-cursors use-package js2-refactor js2-mode shackle helm-tramp spacemacs-theme goto-chg js-doc smartparens markdown-mode latex-math-preview request exec-path-from-shell magit rainbow-mode emmet-mode hide-comnt open-junk-file helm-flycheck web-mode multi-term undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key)))
+ '(safe-local-variable-values
+   (quote
+	((auto-insert-alist
+	  ("\\.org$" .
+	   ["template.org" my-template]))
+	 (auto-insert-directory . "~/Documents/Reading/Memo/")))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
