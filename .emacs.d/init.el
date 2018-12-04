@@ -548,6 +548,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   ;; (global-flycheck-mode)
   (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++14")))
   (add-hook 'js-mode-hook #'flycheck-mode)
+  (add-hook 'c++-mode-hook #'flycheck-mode)
   (custom-set-variables
    '(flycheck-disabled-checkers '(javascript-jshint javascript-jscs)))
   )
