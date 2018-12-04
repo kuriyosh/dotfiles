@@ -88,7 +88,7 @@
 (set-frame-position (selected-frame) 0 0)
 (set-frame-size (selected-frame) 942 1024 t)
 
-;;TABの表示幅　初期値は8
+;;TABの表示幅 初期値は8
 (setq-default tab-width 4)
 
 ;;対応する括弧を強調して表示する
@@ -591,8 +591,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 
 (use-package yasnippet
   :bind
-  (:map yas-keymap
-        ("<tab>" . nil))
+  ;; (:map yas-keymap
+  ;;       ("<tab>" . nil))
   :config
   (yas-global-mode 1)
   (push '("emacs.+/snippets/" . snippet-mode) auto-mode-alist)
@@ -647,6 +647,15 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (use-package js2-mode
   :init
   (setq js2-idle-timer-delay 2)
+  )
+
+;; ===============================================================
+;; rjsx-mode
+;; ===============================================================
+(use-package rjsx-mode
+  :init
+  (setq js-indent-level 2)
+  (setq js2-strict-missing-semi-warning nil)
   )
 
 ;; ===============================================================
@@ -732,10 +741,16 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
  '(irony-additional-clang-options (quote ("-std=c++11")))
  '(org-agenda-files
    (quote
-	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")))
+	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")) t)
  '(package-selected-packages
    (quote
-	(auctex ace-jump-mode fish-mode diminish dumb-jump company-c-headers multiple-cursors use-package js2-refactor js2-mode shackle helm-tramp spacemacs-theme goto-chg js-doc smartparens markdown-mode latex-math-preview request exec-path-from-shell magit rainbow-mode emmet-mode hide-comnt open-junk-file helm-flycheck web-mode multi-term undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key))))
+	(rjsx-mode auctex ace-jump-mode fish-mode diminish dumb-jump company-c-headers multiple-cursors use-package js2-refactor js2-mode shackle helm-tramp spacemacs-theme goto-chg js-doc smartparens markdown-mode latex-math-preview request exec-path-from-shell magit rainbow-mode emmet-mode hide-comnt open-junk-file helm-flycheck web-mode multi-term undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key)))
+ '(safe-local-variable-values
+   (quote
+	((auto-insert-alist
+	  ("\\.cpp$" .
+	   ["comptemp.cpp" my-template]))
+	 (auto-insert-directory . "~/Project/Procom/template/")))))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
