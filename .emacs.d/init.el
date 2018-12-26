@@ -30,7 +30,7 @@
 
 (toggle-truncate-lines 1)
 
-(global-subword-mode 1)
+(add-hook 'prog-mode-hook (lambda () (subword-mode 1)))
 
 ;;elispをPATHに設定
 (add-to-load-path "elisp")
@@ -710,20 +710,22 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "C-o" 'ace-jump-word-mode)
 (bind-key "C-S-o" 'ace-jump-char-mode)
 (unbind-key "C-\\")				 ;Emacsのレイヤーで日本語の入力サポートされたくない
-;; (bind-key* "C-u" 'kill-whole-line)
+
+;; TODO: MAP依存は各use-package以内に書いたほうが良いかな？
+;; キーバインドの設定はまとめた書いたほうが良いような、各設定の中で書いたほうが良いような微妙なところ
+;; → globalな設定もとい、他のパッケージ依存の設定はここに書かない
+(bind-key "C-w" 'backward-kill-word minibuffer-local-completion-map)
+(unbind-key "M-n" company-active-map)
+(unbind-key "M-p" company-active-map)
+(unbind-key "C-h" company-active-map)
+(bind-key "C-n" 'company-select-next company-active-map)
+(bind-key "C-p" 'company-select-previous company-active-map)
+(bind-key "<tab>" 'company-complete-common-or-cycle company-active-map)
 
 (defadvice kill-region (around kill-word-or-kill-region activate)
   (if (and (interactive-p) transient-mark-mode (not mark-active))
       (backward-kill-word 1)
     ad-do-it))
-
-(bind-key "C-w" 'backward-kill-word minibuffer-local-completion-map)
-(define-key company-active-map (kbd "M-n") nil)
-(define-key company-active-map (kbd "M-p") nil)
-(define-key company-active-map (kbd "C-n") 'company-select-next)
-(define-key company-active-map (kbd "C-p") 'company-select-previous)
-(define-key company-active-map (kbd "C-h") nil)
-(define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
 
 ;; C-kのkill-line後に次の行のインデントを少なくする
 (defadvice kill-line (before kill-line-and-fixup activate)
