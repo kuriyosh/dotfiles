@@ -14,6 +14,7 @@
 /.emacs.d/backups/*
 /.emacs.d/.cache/*
 /.emacs.d/tramp
+/.emacs.d/custom.el
 /.emacs.d/.emacs.desktop.lock
 /.emacs.d/.emacs.desktop
 .emacs.d/elpa/irony-20180519.422/server/*

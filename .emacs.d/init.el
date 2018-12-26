@@ -30,9 +30,14 @@
 
 (toggle-truncate-lines 1)
 
+(global-subword-mode 1)
+
 ;;elispをPATHに設定
 (add-to-load-path "elisp")
 (add-to-load-path "elpa")
+
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file 'noerror)
 
 (use-package exec-path-from-shell
   :config
@@ -227,7 +232,6 @@
   )
 ;; バッファの表示位置をモードラインに表示するのをやめる
 (setq mode-line-position nil)
-(display-time-mode t)
 
 (use-package company-c-headers
   :config
@@ -703,7 +707,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-." 'goto-last-change-reverse)
 (bind-key "C-M-l" 'hs-show-block)
 (bind-key "C-M-h" 'hs-hide-block)
-(bind-key "C-o" 'ace-jump-char-mode)
+(bind-key "C-o" 'ace-jump-word-mode)
+(bind-key "C-S-o" 'ace-jump-char-mode)
+(unbind-key "C-\\")				 ;Emacsのレイヤーで日本語の入力サポートされたくない
 ;; (bind-key* "C-u" 'kill-whole-line)
 
 (defadvice kill-region (around kill-word-or-kill-region activate)
@@ -712,6 +718,12 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
     ad-do-it))
 
 (bind-key "C-w" 'backward-kill-word minibuffer-local-completion-map)
+(define-key company-active-map (kbd "M-n") nil)
+(define-key company-active-map (kbd "M-p") nil)
+(define-key company-active-map (kbd "C-n") 'company-select-next)
+(define-key company-active-map (kbd "C-p") 'company-select-previous)
+(define-key company-active-map (kbd "C-h") nil)
+(define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
 
 ;; C-kのkill-line後に次の行のインデントを少なくする
 (defadvice kill-line (before kill-line-and-fixup activate)
@@ -720,47 +732,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
     (fixup-whitespace)
     (backward-char)))
 
-(define-key company-active-map (kbd "M-n") nil)
-(define-key company-active-map (kbd "M-p") nil)
-(define-key company-active-map (kbd "C-n") 'company-select-next)
-(define-key company-active-map (kbd "C-p") 'company-select-previous)
-(define-key company-active-map (kbd "C-h") nil)
-(define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
 ;; HACK: 何故か2度呼び出すとうまくいくから書いてる。ちなみに上のやつ消してもだめ、絶対2回
 (exec-path-from-shell-initialize)
 
 (put 'upcase-region 'disabled nil)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-	("a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "36619802ccdb9e68a21f11c9baa30d86e25fd46635e48605399bf1cc2689cf39" "d577e33443b26fd3f3c6840ddf8c7aeae0d948b7da4924a8a0c85b38831d54cc" "604648621aebec024d47c352b8e3411e63bdb384367c3dd2e8db39df81b475f5" default)))
- '(flycheck-disabled-checkers (quote (javascript-jshint javascript-jscs)))
- '(irony-additional-clang-options (quote ("-std=c++11")))
- '(org-agenda-files
-   (quote
-	("~/Documents/Reading/Presentation/NS201803/memo.org" "~/Dropbox/org/todo.org")) t)
- '(package-selected-packages
-   (quote
-	(rjsx-mode auctex ace-jump-mode fish-mode diminish dumb-jump company-c-headers multiple-cursors use-package js2-refactor js2-mode shackle helm-tramp spacemacs-theme goto-chg js-doc smartparens markdown-mode latex-math-preview request exec-path-from-shell magit rainbow-mode emmet-mode hide-comnt open-junk-file helm-flycheck web-mode multi-term undohist flycheck-irony flycheck quickrun helm recentf-ext pdf-tools bind-key)))
- '(safe-local-variable-values
-   (quote
-	((auto-insert-alist
-	  ("\\.cpp$" .
-	   ["comptemp.cpp" my-template]))
-	 (auto-insert-directory . "~/Project/Procom/template/")))))
-
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(cursor ((t (:background "yellow1"))))
- '(helm-buffer-directory ((t (:foreground "DarkRed"))))
- '(helm-ff-directory ((t (:foreground "Orange")))))
-

@@ -64,7 +64,7 @@
        (deepgravel "#45413b")
        (deepergravel "#35322d")
        (darkgravel "#242321")
-       (blackgravel "#1c1b1a")
+       (blackgravel "#000")
        (blackestgravel "#141413")
        (dalespale "#fade3e")
        (dirtyblonde "#f4cf86")

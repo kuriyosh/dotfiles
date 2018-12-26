@@ -2,4 +2,4 @@
 # name: inn
 # key: inn
 # --
-int N; cin >> N;
+int $1; cin >> $1;$0
