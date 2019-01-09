@@ -676,6 +676,17 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (add-hook 'c++-mode-hook 'my-c-c++-mode-init)
 
 ;; ===============================================================
+;; Original Function
+;; ===============================================================
+(defun kill-word-at-point ()
+  (interactive)
+  (let ((char (char-to-string (char-after (point)))))
+    (cond
+     ((string= " " char) (delete-horizontal-space))
+     ((string-match "[\t\n -@\[-`{-~]" char) (kill-word 1))
+     (t (forward-char) (backward-word) (kill-word 1)))))
+
+;; ===============================================================
 ;; Key-bind (necessary bind-key.el)
 ;; ===============================================================
 (require 'bind-key)
@@ -689,6 +700,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-t |" 'split-window-right)
 (bind-key* "C-t t" 'shell-pop)
 (bind-key* "C-S-<tab>" 'prev-window)
+(bind-key "M-d" 'kill-word-at-point)
 (bind-key "M-n" (kbd "C-u 5 C-n"))
 (bind-key "M-p" (kbd "C-u 5 C-p"))
 (bind-key "M-g" 'goto-line)
