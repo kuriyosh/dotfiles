@@ -699,6 +699,10 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-t -" 'split-window-below)
 (bind-key* "C-t |" 'split-window-right)
 (bind-key* "C-t t" 'shell-pop)
+;; C-mでEnter使わないので別のバインドにしたい
+;; bind-keyでC-mの設定しちゃうとなぜかC-m = Enter扱いになるからglobal-set-keyで行っている。
+(define-key input-decode-map [?\C-m] [C-m])
+(global-set-key (kbd "<C-m>") 'back-to-indentation)
 (bind-key* "C-S-<tab>" 'prev-window)
 (bind-key "M-d" 'kill-word-at-point)
 (bind-key "M-n" (kbd "C-u 5 C-n"))
