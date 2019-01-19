@@ -50,7 +50,9 @@
 ;; ビープ音がうるさい
 (setq ring-bell-function 'ignore)
 
-(load-theme 'badwolf t)
+;; (load-theme 'badwolf t)
+(load-theme 'dracula t)
+(add-hook 'prog-mode-hook 'highlight-numbers-mode)
 
 ;; カーソルの点滅を止める
 (blink-cursor-mode 0)
