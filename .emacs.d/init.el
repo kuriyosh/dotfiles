@@ -52,6 +52,9 @@
 
 (load-theme 'badwolf t)
 
+;; カーソルの点滅を止める
+(blink-cursor-mode 0)
+
 ;; Mac用ちらつかせ防止
 (setq redisplay-dont-pause nil)
 
@@ -723,8 +726,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-." 'goto-last-change-reverse)
 (bind-key "C-M-l" 'hs-show-block)
 (bind-key "C-M-h" 'hs-hide-block)
-(bind-key "C-o" 'ace-jump-word-mode)
-(bind-key "C-S-o" 'ace-jump-char-mode)
+(bind-key "C-o" 'avy-goto-word-1)
+(bind-key "C-S-o" 'avy-goto-char-timer)
 (unbind-key "C-\\")				 ;Emacsのレイヤーで日本語の入力サポートされたくない
 
 ;; TODO: MAP依存は各use-package以内に書いたほうが良いかな？
