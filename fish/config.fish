@@ -17,7 +17,7 @@ alias g++ "g++-8"
 alias cr "cd (git rev-parse --show-toplevel)"
 alias pull "git pull"
 alias push "git push"
-alias gc "cd (ghq root)/(ghq list | peco)"
+alias gc "ghq look (ghq list | peco)"
 
 # cd > ls
 # TOOD: なれないし'cd -'が使えないから実装が微妙

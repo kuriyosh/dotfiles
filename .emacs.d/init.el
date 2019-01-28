@@ -3,6 +3,8 @@
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 
+;TODO: abbrevいらないのでは？
+
 ;; ===============================================================
 ;; Global Setting
 ;; ===============================================================
@@ -195,18 +197,19 @@
 
 
 
-;; どっかからもらった関数で何してるのかわからん
-(defun edit-category-table-for-company-dabbrev (&optional table)
-  (define-category ?s "word constituents for company-dabbrev" table)
-  (let ((i 0))
-    (while (< i 128)
-      (if (equal ?w (char-syntax i))
-      (modify-category-entry i ?s table)
-    (modify-category-entry i ?s table t))
-      (setq i (1+ i)))))
+;; ;; どっかからもらった関数で何してるのかわからん
+;; (defun edit-category-table-for-company-dabbrev (&optional table)
+;;   (define-category ?s "word constituents for company-dabbrev" table)
+;;   (let ((i 0))
+;;     (while (< i 128)
+;;       (if (equal ?w (char-syntax i))
+;;       (modify-category-entry i ?s table)
+;;     (modify-category-entry i ?s table t))
+;;       (setq i (1+ i)))))
 
 (use-package ace-isearch
   :init
+  (setq ace-isearch-jump-delay 0.3)		;defaultの設定だと早すぎるかな
   (setq ace-isearch-function 'avy-goto-word-1)
   :config
   (global-ace-isearch-mode)
@@ -217,11 +220,11 @@
   (setq company-idle-delay 0) ; デフォルトは0.5
   (setq company-minimum-prefix-length 1) ; デフォルトは4
   (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
-  (setq company-dabbrev-char-regexp "\\cs")
-  (setq company-dabbrev-downcase nil)
+  ;; (setq company-dabbrev-char-regexp "\\cs")
+  ;; (setq company-dabbrev-downcase nil)
   :config
-  (global-company-mode) ;全バッファで有効にする
-  (edit-category-table-for-company-dabbrev)
+  (add-hook 'prog-mode-hook 'company-mode)
+  ;; (edit-category-table-for-company-dabbrev)
   )
 (setq company-backends (delete 'company-semantic company-backends))
 
@@ -241,8 +244,8 @@
 	'(diminish 'global-whitespace-mode "Ⓦ"))
   (eval-after-load "smartparens"
 	'(diminish 'smartparens-mode "Ⓢ"))
-  (eval-after-load "abbrev-mode"
-	'(diminish 'abbrev-mode "Ⓐ"))
+  (eval-after-load "ace-isearch"
+	'(diminish 'ace-isearch-mode "Ⓐ"))
   (eval-after-load "hideshow"
 	'(diminish 'hs-minor-mode ""))
   (eval-after-load "subword-mode"
@@ -790,6 +793,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "C-S-o" 'avy-goto-char-timer)
 (unbind-key "C-\\")				 ;Emacsのレイヤーで日本語の入力サポートされたくない
 (bind-key "C-x C-f" 'helm-find-files)
+(bind-key "C-x C-g" 'helm-ghq)
 
 
 ;; TODO: MAP依存は各use-package以内に書いたほうが良いかな？
