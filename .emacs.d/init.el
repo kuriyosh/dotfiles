@@ -79,6 +79,7 @@
 
 (setq truncate-partial-width-windows t)
 
+
 ;;起動時のメッセージを消す
 (setq ihibit-startup-message t)
 
@@ -190,6 +191,9 @@
 ;;elisp-mode-hookのON/OFF
 (add-hook 'emacs-lisp-mode-hook 'elisp-mode-hooks)
 
+(setq ispell-program-name "aspell")
+
+
 
 ;; どっかからもらった関数で何してるのかわからん
 (defun edit-category-table-for-company-dabbrev (&optional table)
@@ -200,6 +204,13 @@
       (modify-category-entry i ?s table)
     (modify-category-entry i ?s table t))
       (setq i (1+ i)))))
+
+(use-package ace-isearch
+  :init
+  (setq ace-isearch-function 'avy-goto-word-1)
+  :config
+  (global-ace-isearch-mode)
+  )
 
 (use-package company
   :init
@@ -213,6 +224,8 @@
   (edit-category-table-for-company-dabbrev)
   )
 (setq company-backends (delete 'company-semantic company-backends))
+
+(require 'es6-snippets)
 
 (use-package diminish
   :config
@@ -232,6 +245,8 @@
 	'(diminish 'abbrev-mode "Ⓐ"))
   (eval-after-load "hideshow"
 	'(diminish 'hs-minor-mode ""))
+  (eval-after-load "subword-mode"
+	'(diminish 'subword-mode ""))
   (diminish 'auto-revert-mode "")
   (diminish 'eldoc-mode "")
   )
@@ -281,7 +296,6 @@
                        ("\C-n"           term-send-next-line)
                        ("\C-b"           term-send-backward-char)
                        ("\C-f"           term-send-forward-char)
-                       (,(kbd "C-h")     term-send-backspace)
                        (,(kbd "C-y")     term-paste)
                        (,(kbd "ESC ESC") term-send-raw)
                        (,(kbd "C-S-p")   multi-term-prev)
@@ -691,12 +705,53 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
      ((string-match "[\t\n -@\[-`{-~]" char) (kill-word 1))
      (t (forward-char) (backward-word) (kill-word 1)))))
 
+(defun window-resizer ()
+  "ウィンドウのサイズをhjklで変更する関数"
+  (interactive)
+  (let ((window-obj (selected-window))
+        (current-width (window-width))
+        (current-height (window-height))
+        (dx (if (= (nth 0 (window-edges)) 0) 1
+              -1))
+        (dy (if (= (nth 1 (window-edges)) 0) 1
+              -1))
+        c)
+    (catch 'end-flag
+      (while t
+        (message "size[%dx%d]"
+                 (window-width) (window-height))
+        (setq c (read-char))
+        (cond ((= c ?l)
+               (enlarge-window-horizontally dx))
+              ((= c ?h)
+               (shrink-window-horizontally dx))
+              ((= c ?j)
+               (enlarge-window dy))
+              ((= c ?k)
+               (shrink-window dy))
+              ;; otherwise
+              (t
+               (message "Quit")
+               (throw 'end-flag t)))))))
+
+(defun my-term-switch-line-char ()
+  "`ansi-term'内で`term-in-line-mode'と`term-in-char-mode'を入れ替える"
+  (interactive)
+  (cond
+   ((term-in-line-mode)
+    (term-char-mode)
+    (hl-line-mode -1))
+   ((term-in-char-mode)
+    (term-line-mode)
+    (hl-line-mode 1))))
+
 ;; ===============================================================
 ;; Key-bind (necessary bind-key.el)
 ;; ===============================================================
 (require 'bind-key)
 (bind-key "C-z" 'undo)
 (bind-key "M-[" 'replace-string)
+;; window系とterminal系は共通のプレフィックス `C-t'
 (bind-key* "C-t h" 'windmove-left)
 (bind-key* "C-t j" 'windmove-down)
 (bind-key* "C-t k" 'windmove-up)
@@ -704,6 +759,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-t -" 'split-window-below)
 (bind-key* "C-t |" 'split-window-right)
 (bind-key* "C-t t" 'shell-pop)
+(bind-key* "C-t C-r" 'window-resizer)
+(bind-key* "C-t [" 'my-term-switch-line-char term-raw-map)
+(bind-key* "C-t [" 'my-term-switch-line-char term-mode-map)
 ;; C-mでEnter使わないので別のバインドにしたい
 ;; bind-keyでC-mの設定しちゃうとなぜかC-m = Enter扱いになるからglobal-set-keyで行っている。
 (define-key input-decode-map [?\C-m] [C-m])
@@ -728,9 +786,11 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-." 'goto-last-change-reverse)
 (bind-key "C-M-l" 'hs-show-block)
 (bind-key "C-M-h" 'hs-hide-block)
-(bind-key "C-o" 'avy-goto-word-1)
+;; (bind-key "C-o" 'avy-goto-word-1)
 (bind-key "C-S-o" 'avy-goto-char-timer)
 (unbind-key "C-\\")				 ;Emacsのレイヤーで日本語の入力サポートされたくない
+(bind-key "C-x C-f" 'helm-find-files)
+
 
 ;; TODO: MAP依存は各use-package以内に書いたほうが良いかな？
 ;; キーバインドの設定はまとめた書いたほうが良いような、各設定の中で書いたほうが良いような微妙なところ
