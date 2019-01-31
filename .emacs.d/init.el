@@ -3,7 +3,7 @@
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 
-;TODO: abbrevいらないのでは？
+;; TODO: abbrevいらないのでは？
 
 ;; ===============================================================
 ;; Global Setting
@@ -25,10 +25,10 @@
   (let (path)
     (dolist (path paths paths)
       (let ((default-directory
-          (expand-file-name (concat user-emacs-directory path))))
-    (add-to-list 'load-path default-directory)
-    (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
-        (normal-top-level-add-subdirs-to-load-path))))))
+			  (expand-file-name (concat user-emacs-directory path))))
+		(add-to-list 'load-path default-directory)
+		(if (fboundp 'normal-top-level-add-subdirs-to-load-path)
+			(normal-top-level-add-subdirs-to-load-path))))))
 
 (toggle-truncate-lines 1)
 
@@ -44,7 +44,7 @@
 (use-package exec-path-from-shell
   :config
   (exec-path-from-shell-initialize))
-;TODO: 起動にこの処理を反映させたいけどうまくいかない
+										;TODO: 起動にこの処理を反映させたいけどうまくいかない
 
 ;; Warningがうざいので出さない
 (setq warning-minimum-level :error)
@@ -75,6 +75,9 @@
 
 ;;ツールバーを消す
 (tool-bar-mode 0)
+
+;; 選択範囲を上書き
+(delete-selection-mode t)
 
 ;;スクロールバーを消す
 (scroll-bar-mode 0)
@@ -207,13 +210,14 @@
 ;;     (modify-category-entry i ?s table t))
 ;;       (setq i (1+ i)))))
 
-(use-package ace-isearch
-  :init
-  (setq ace-isearch-jump-delay 0.3)		;defaultの設定だと早すぎるかな
-  (setq ace-isearch-function 'avy-goto-word-1)
-  :config
-  (global-ace-isearch-mode)
-  )
+;; (use-package ace-isearch
+;;   :init
+;;   (setq ace-isearch-jump-delay 0.3)		;defaultの設定だと早すぎるかな
+;;   (setq ace-isearch-input-length 100)
+;;   (setq ace-isearch-function 'avy-goto-word-1)
+;;   :config
+;;   (global-ace-isearch-mode)
+;;   )
 
 (use-package company
   :init
@@ -221,7 +225,7 @@
   (setq company-minimum-prefix-length 1) ; デフォルトは4
   (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
   ;; (setq company-dabbrev-char-regexp "\\cs")
-  ;; (setq company-dabbrev-downcase nil)
+  (setq company-dabbrev-downcase nil)	;string内で大文字と小文字の区別を行う
   :config
   (add-hook 'prog-mode-hook 'company-mode)
   ;; (edit-category-table-for-company-dabbrev)
@@ -259,7 +263,7 @@
 (use-package company-c-headers
   :config
   (add-to-list 'company-backends 'company-c-headers)
-  ;TODO: 以下環境依存な部分もあるため、環境毎に対応させる必要
+										;TODO: 以下環境依存な部分もあるため、環境毎に対応させる必要
   (add-to-list 'company-c-headers-path-system "/usr/local/Cellar/gcc/8.2.0/include/c++/8.2.0")
   (add-to-list 'company-c-headers-path-system "/usr/local/Cellar/gcc/8.2.0/include/c++/8.2.0/x86_64-apple-darwin17.7.0")
   (add-to-list 'company-c-headers-path-system "/usr/local/Cellar/gcc/8.2.0/include/c++/8.2.0/x86_64-apple-darwin17.7.0")
@@ -382,17 +386,17 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (use-package shackle
   :init
   (setq shackle-rules
-      '(
-        ("*helm mini*" :align below :ratio 0.5)
-        ("*helm M-x*" :align below :ratio 0.5)
-        ("*helm find files*" :align below :ratio 0.5)
-        ("*Help*" :align below :ratio 0.5)
-        ("*quickrun*" :align below :ratio 0.5)
-		("*terminal*" :regexp t :align below :ratio 0.5)
-        ))
+		'(
+          ("*helm mini*" :align below :ratio 0.5)
+		  ("*Helm Swoop*" :align below :ratio 0.3)
+          ("*helm M-x*" :align below :ratio 0.5)
+          ("*helm find files*" :align below :ratio 0.5)
+          ("*Help*" :align below :ratio 0.5)
+          ("*quickrun*" :align below :ratio 0.5)
+		  ("*terminal*" :regexp t :align below :ratio 0.5)
+          ))
   :config
   (shackle-mode 1))
-
 
 (use-package shell-pop
   :init
@@ -439,10 +443,10 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (defun my-template ()
   (time-stamp)
   (mapc #'(lambda(c)
-        (progn
-          (goto-char (point-min))
-          (replace-string (car c) (funcall (cdr c)) nil)))
-    template-replacements-alists)
+			(progn
+			  (goto-char (point-min))
+			  (replace-string (car c) (funcall (cdr c)) nil)))
+		template-replacements-alists)
   (goto-char (point-max))
   (message "done."))
 
@@ -497,7 +501,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
         ("C-j" . nil)
         ("<tab>" . indent-for-tab-command)
         ("C-i" . emmet-expand-line)
-    )
+		)
   :hook
   (sgml-mode web-mode css-mode-hook)
   )
@@ -570,13 +574,29 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;;flycheckの設定
 (use-package flycheck
   :config
-  ;TODO: globalにflycheckを有効化して、使わないメジャーモードについてdisableにする設定を行いたいけどうまくいかない
+										;TODO: globalにflycheckを有効化して、使わないメジャーモードについてdisableにする設定を行いたいけどうまくいかない
   ;; (global-flycheck-mode)
-  (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++14")))
+  (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++1")))
   (add-hook 'js-mode-hook #'flycheck-mode)
   (add-hook 'c++-mode-hook #'flycheck-mode)
   (custom-set-variables
    '(flycheck-disabled-checkers '(javascript-jshint javascript-jscs)))
+  (flycheck-define-checker c/c++11
+	"original C++ checker"
+	:command ("g++-8" "-Wall" "-Wextra" "-std=c++11" source)
+	:error-patterns  ((error line-start
+							 (file-name) ":" line ":" column ":" " Error: " (message)
+							 line-end)
+                      (error line-start
+                             (file-name) ":" line ":" column ":" " Fatal Error: " (message)
+							 line-end)
+                      (warning line-start
+                               (file-name) ":" line ":" column ":" " Warning: " (message)
+                               line-end))
+	:modes (c-mode c++-mode))
+  (add-hook 'c++-mode-hook				;originalのチェッカーをデフォルトに変更。競プロ用なのでdir-localでもいいかも
+			'(lambda()
+               (flycheck-select-checker 'c/c++11)))
   )
 
 ;; helmの設定
@@ -586,9 +606,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   :bind
   (:map helm-map
         ("C-z" . helm-select-action)
-  :map helm-find-files-map
+		:map helm-find-files-map
         ("<tab>" . helm-execute-persistent-action)
-  :map helm-read-file-map
+		:map helm-read-file-map
         ("<tab>" . helm-execute-persistent-action))
   )
 
@@ -597,6 +617,11 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   :bind
   (:map flycheck-mode-map
         ("C-c f" . helm-flycheck))
+  )
+
+(use-package helm-swoop
+  :init
+  (setq helm-swoop-split-window-function 'display-buffer)
   )
 
 ;; redo+の設定
@@ -765,6 +790,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-t C-r" 'window-resizer)
 (bind-key* "C-t [" 'my-term-switch-line-char term-raw-map)
 (bind-key* "C-t [" 'my-term-switch-line-char term-mode-map)
+(bind-key "C-S-s" 'helm-swoop)
 ;; C-mでEnter使わないので別のバインドにしたい
 ;; bind-keyでC-mの設定しちゃうとなぜかC-m = Enter扱いになるからglobal-set-keyで行っている。
 (define-key input-decode-map [?\C-m] [C-m])
@@ -789,11 +815,14 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-." 'goto-last-change-reverse)
 (bind-key "C-M-l" 'hs-show-block)
 (bind-key "C-M-h" 'hs-hide-block)
-;; (bind-key "C-o" 'avy-goto-word-1)
+(bind-key "C-o" 'avy-goto-word-1)
 (bind-key "C-S-o" 'avy-goto-char-timer)
 (unbind-key "C-\\")				 ;Emacsのレイヤーで日本語の入力サポートされたくない
 (bind-key "C-x C-f" 'helm-find-files)
 (bind-key "C-x C-g" 'helm-ghq)
+(bind-key "C-S-n" (lambda () (interactive) (scroll-up 3)))
+(bind-key "C-S-p" (lambda () (interactive) (scroll-down 3)))
+
 
 
 ;; TODO: MAP依存は各use-package以内に書いたほうが良いかな？
