@@ -49,6 +49,9 @@
 ;; Warningがうざいので出さない
 (setq warning-minimum-level :error)
 
+;; 分割したwindowで行の折り返しを
+(setq truncate-partial-width-windows nil)
+
 ;; ビープ音がうるさい
 (setq ring-bell-function 'ignore)
 
@@ -81,9 +84,6 @@
 
 ;;スクロールバーを消す
 (scroll-bar-mode 0)
-
-(setq truncate-partial-width-windows t)
-
 
 ;;起動時のメッセージを消す
 (setq ihibit-startup-message t)
@@ -198,26 +198,18 @@
 
 (setq ispell-program-name "aspell")
 
-
-
-;; ;; どっかからもらった関数で何してるのかわからん
-;; (defun edit-category-table-for-company-dabbrev (&optional table)
-;;   (define-category ?s "word constituents for company-dabbrev" table)
-;;   (let ((i 0))
-;;     (while (< i 128)
-;;       (if (equal ?w (char-syntax i))
-;;       (modify-category-entry i ?s table)
-;;     (modify-category-entry i ?s table t))
-;;       (setq i (1+ i)))))
-
-;; (use-package ace-isearch
-;;   :init
-;;   (setq ace-isearch-jump-delay 0.3)		;defaultの設定だと早すぎるかな
-;;   (setq ace-isearch-input-length 100)
-;;   (setq ace-isearch-function 'avy-goto-word-1)
-;;   :config
-;;   (global-ace-isearch-mode)
-;;   )
+(use-package avy
+  :init
+  (setq avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?w ?e ?r ?t ?u ?i ?o ?v ?c ?n ?m))
+  (setq avy-style 'at-full)
+  (setq avy-background t)
+  (setq avy-all-windows nil)
+  (setq avy-timeout-seconds 0.4)
+  :bind
+  ("C-o" . 'avy-goto-word-1)
+  ("C-S-o" . 'avy-goto-char-timer)
+  ("C-S-l" . 'avy-goto-line)
+  )
 
 (use-package company
   :init
@@ -387,13 +379,13 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   :init
   (setq shackle-rules
 		'(
-          ("*helm mini*" :align below :ratio 0.5)
-		  ("*Helm Swoop*" :align below :ratio 0.3)
-          ("*helm M-x*" :align below :ratio 0.5)
-          ("*helm find files*" :align below :ratio 0.5)
-          ("*Help*" :align below :ratio 0.5)
-          ("*quickrun*" :align below :ratio 0.5)
-		  ("*terminal*" :regexp t :align below :ratio 0.5)
+          ("*helm mini*" :popup t :align below :ratio 0.5)
+		  ("*Helm Swoop*" :popup t :align below :ratio 0.3)
+          ("*helm M-x*" :popup t :align below :ratio 0.5)
+          ("*helm find files*" :popup t :align below :ratio 0.5)
+          ("*Help*" :popup t :align below :ratio 0.5)
+          ("*quickrun*" :popup t :align below :ratio 0.5)
+		  ("*terminal*" :regexp t :popup t :align below :ratio 0.5)
           ))
   :config
   (shackle-mode 1))
@@ -506,6 +498,16 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (sgml-mode web-mode css-mode-hook)
   )
 
+(defun my-wrap-lines-with-html-tag ($tag)
+  (interactive "sTag: ")
+  (if (and mark-active transient-mark-mode)
+      (shell-command-on-region
+       (region-beginning) (region-end)
+       (concat "perl -0 -p -w -e \'"
+               "s/^([^\\S\\r\\n]*)(\\S.*?)[^\\S\\r\\n]*$/$1<"
+               $tag ">$2<\\/" $tag ">/gm\'")
+       nil t)))
+
 ;;web-modeの設定
 (use-package web-mode
   :bind
@@ -529,54 +531,12 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode)) ;本当はjs2-modeにしたいけど重すぎる
 ;; (add-to-list 'auto-mode-alist '("\\.jsp$"       . web-mode))
 
-;; この関数なんで追加したかまじで忘れた
-;; (defun my-wrap-lines-with-html-tag ($tag)
-;;   (interactive "sTag: ")
-;;   (if (and mark-active transient-mark-mode)
-;;       (shell-command-on-region
-;;        (region-beginning) (region-end)
-;;        (concat "perl -0 -p -w -e \'"
-;;                "s/^([^\\S\\r\\n]*)(\\S.*?)[^\\S\\r\\n]*$/$1<"
-;;                $tag ">$2<\\/" $tag ">/gm\'")
-;;        nil t)))
-
-
-;;org-modeの設定
-(setq org-startup-truncated nil)
-(setq org-startup-with-inline-images t)
-;; 以下のキーバインドは他のメジャーモードのキーバインドを汚染しがちなので避けたい(あまり使わないのでコマンド呼び出しで良い気がする)
-;; (global-set-key (kbd "C-c c") 'org-capture)
-;; (global-set-key (kbd "C-c a") 'org-agenda)
-(setq org-agenda-files '("~/Dropbox/org/todo.org"))
-;; org-captureで2種類のメモを扱うようにする
-(setq org-capture-templates
-      '(("t" "New TODO" entry
-         (file+headline "~/Dropbox/org/todo.org" "予定")
-         "* TODO %?\n\n")
-        ("m" "Memo" entry
-         (file+headline "~/Dropbox/org/memo.org" "メモ")
-         "* %U%?\n%i\n%a")))
-;; org-agendaでaを押したら予定表とTODOリストを表示
-(setq org-agenda-custom-commands
-      '(("a" "Agenda and TODO"
-         ((agenda "")
-          (alltodo "")))))
-;; TODO・予定用のファイルのみ指定
-;; TODOリストに日付つきTODOを表示しない
-;; (setq org-agenda-todo-ignore-with-date t)
-;; 今日から予定を表示させる
-(setq org-agenda-start-on-weekday nil)
-
-(use-package org-bullets
-  :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-  )
-
 ;;flycheckの設定
 (use-package flycheck
   :config
-										;TODO: globalにflycheckを有効化して、使わないメジャーモードについてdisableにする設定を行いたいけどうまくいかない
+  ;;TODO: globalにflycheckを有効化して、使わないメジャーモードについてdisableにする設定を行いたいけどうまくいかない
   ;; (global-flycheck-mode)
-  (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++1")))
+  (add-hook 'c++-mode-hook (lambda () (setq flycheck-gcc-language-standard "c++11")))
   (add-hook 'js-mode-hook #'flycheck-mode)
   (add-hook 'c++-mode-hook #'flycheck-mode)
   (custom-set-variables
@@ -643,8 +603,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 
 (use-package yasnippet
   :bind
-  ;; (:map yas-keymap
-  ;;       ("<tab>" . nil))
+  ;; companyのtabと競合しているのでC-iと使い分ける
+  (:map yas-keymap
+        ("<tab>" . nil))
   :config
   (yas-global-mode 1)
   (push '("emacs.+/snippets/" . snippet-mode) auto-mode-alist)
@@ -692,6 +653,41 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (add-hook 'ruby-mode-hook
           '(lambda ()
              (hs-minor-mode 1)))
+
+;; ===============================================================
+;; org-mode
+;; ===============================================================
+(use-package org-bullets
+  :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  )
+(use-package org
+  :init
+  (setq org-startup-truncated nil)		;org折返し
+  (setq org-startup-with-inline-images t) ;インラインで画像表示
+  (setq org-agenda-files '("~/Dropbox/org/todo.org" "~/Dropbox/org/will.org")) ;
+  (setq org-capture-templates
+		'(("t" "Todo" entry
+           (file+headline "~/Dropbox/org/todo.org" "Todo")
+           "* TODO %?\n")
+          ("m" "Memo" entry
+           (file+headline "~/Dropbox/org/memo.org" "Memo")
+           "* %u %?\n%i\n")
+		  ("w" "will" entry
+           (file+headline "~/Dropbox/org/will.org" "Will")
+           "* TODO %? \n SCHEDULED: %t\n")
+		  ("d" "Done" entry
+           (file+headline "~/Dropbox/org/done.org" "Done")
+           "* %u %?\n%i\n ")))
+  ;; org-agendaでaを押したら予定表とTODOリストを表示
+  (setq org-agenda-custom-commands
+		'(("a" "Agenda and TODO"
+           ((agenda "")
+			(alltodo "")))))
+  (setq org-agenda-start-on-weekday nil)
+  :bind
+  ("C-c c" . org-capture)
+  ("C-c a" . org-agenda)
+  )
 
 ;; ===============================================================
 ;; js-mode
@@ -815,8 +811,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-." 'goto-last-change-reverse)
 (bind-key "C-M-l" 'hs-show-block)
 (bind-key "C-M-h" 'hs-hide-block)
-(bind-key "C-o" 'avy-goto-word-1)
-(bind-key "C-S-o" 'avy-goto-char-timer)
 (unbind-key "C-\\")				 ;Emacsのレイヤーで日本語の入力サポートされたくない
 (bind-key "C-x C-f" 'helm-find-files)
 (bind-key "C-x C-g" 'helm-ghq)

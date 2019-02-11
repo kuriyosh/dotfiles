@@ -17,6 +17,7 @@
 /.emacs.d/custom.el
 /.emacs.d/.emacs.desktop.lock
 /.emacs.d/.emacs.desktop
+/.emacs.d/bookmarks
 .emacs.d/elpa/irony-20180519.422/server/*
 .emacs.d/elpa/irony-20180703.1740/server/*
 archive-contents
