@@ -1,4 +1,4 @@
-;; yes/noをy/nで
+;; yes/noをy/nで返答
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; menu bar
@@ -20,6 +20,7 @@
 (set-language-environment "Japanese")
 (prefer-coding-system 'utf-8)
 
+;; autoinsertによるテンプレート
 (require 'autoinsert)
 (setq auto-insert-directory "~/.emacs.d/template/")
 (setq auto-insert-alist
@@ -47,13 +48,36 @@
   (message "done."))
 (add-hook 'find-file-not-found-hooks 'auto-insert)
 
+;; 括弧の対応
 (electric-pair-mode t)
 
 ;; Key bindings
+;; (global-set-key (kbd "C-z") 'undo)
+;; (global-set-key (kbd "C-h") 'delete-backward-char)
+;; (global-set-key (kbd "C-x :") 'toggle-truncate-lines)
+;; (global-set-key (kbd "M-n") (kbd "C-u 5 C-n"))
+;; (global-set-key (kbd "M-p") (kbd "C-u 5 C-p"))
+;; (global-set-key (kbd "M-g") 'goto-line)
+;; (global-set-key (kbd "M-h") 'backward-kill-word)
+
 (global-set-key (kbd "C-z") 'undo)
-(global-set-key (kbd "C-h") 'delete-backward-char)
-(global-set-key (kbd "C-x :") 'toggle-truncate-lines)
-(global-set-key (kbd "M-n") (kbd "C-u 5 C-n"))
-(global-set-key (kbd "M-p") (kbd "C-u 5 C-p"))
+(global-set-key (kbd "M-[") 'replace-string)
+(global-set-key (kbd "M-d") 'kill-word-at-point)
 (global-set-key (kbd "M-g") 'goto-line)
+(global-set-key (kbd "C-;") 'hs-toggle-hiding)
+(global-set-key (kbd "C-h") 'delete-backward-char)
 (global-set-key (kbd "M-h") 'backward-kill-word)
+(global-set-key (kbd "C-,") 'goto-last-change)
+(global-set-key (kbd "C-.") 'goto-last-change-reverse)
+(global-set-key (kbd "C-M-l") 'hs-show-block)
+(global-set-key (kbd "C-M-h") 'hs-hide-block)
+(global-set-key (kbd "C-:") 'toggle-truncate-lines)
+(global-set-key (kbd "C-a") 'back-to-indentation)
+(global-set-key (kbd "C-S-a") 'move-beginning-of-line)
+(global-set-key (kbd "C-S-b") 'backward-word)
+(global-set-key (kbd "C-S-f") 'forward-word)
+(global-set-key (kbd "C-S-h") 'backward-kill-word)
+(global-set-key (kbd "C-S-d") 'kill-word-at-point)
+(global-set-key (kbd "M-n") (kbd "M-5 C-n"))
+(global-set-key (kbd "M-p") (kbd "M-5 C-p"))
+

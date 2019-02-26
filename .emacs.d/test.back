@@ -1,0 +1,13 @@
+(use-package smart-newline
+  :hook
+  (org-mode prog-mode)
+  :bind
+  ("C-m" . smart-newline))
+
+(bind-key "C-u" 'back-to-indentation)
+(bind-key "C-S-b" 'backward-word)
+(bind-key "C-S-f" 'forward-word)
+(bind-key* "C-S-h" 'backward-kill-word)
+(bind-key* "C-S-d" 'kill-word-at-point)
+(bind-key "M-n" (kbd "M-5 C-n"))
+(bind-key "M-p" (kbd "M-5 C-p"))

@@ -21,18 +21,32 @@
 ;; (let ((envs '("PATH" "VIRTUAL_ENV" "GOROOT" "GOPATH")))
 ;;   (exec-path-from-shell-copy-envs envs))
 
+(use-package smart-newline
+  ;; 本当は:hookで書きたかったのに何故かばぐるのでこう書いた
+  :init
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (smart-newline-mode t)))
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (smart-newline-mode t))))
+
 (defun add-to-load-path (&rest paths)
   (let (path)
     (dolist (path paths paths)
       (let ((default-directory
-			        (expand-file-name (concat user-emacs-directory path))))
-		    (add-to-list 'load-path default-directory)
-		    (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
-			      (normal-top-level-add-subdirs-to-load-path))))))
+			  (expand-file-name (concat user-emacs-directory path))))
+		(add-to-list 'load-path default-directory)
+		(if (fboundp 'normal-top-level-add-subdirs-to-load-path)
+			(normal-top-level-add-subdirs-to-load-path))))))
 
 (toggle-truncate-lines 1)
 
-(add-hook 'prog-mode-hook (lambda () (subword-mode 1)))
+;; (add-hook 'prog-mode-hook (lambda () (subword-mode 1)))
+(use-package subword
+  :diminish subword-mode
+  :config
+  (add-hook 'prog-mode-hook (lambda () (subword-mode 1))))
 
 ;;elispをPATHに設定
 (add-to-load-path "elisp")
@@ -179,20 +193,23 @@
   (sp-pair "「" "」")
   (sp-pair "'" "'"))
 
-;; smart mode line
-(use-package smart-mode-line
+(use-package spaceline
+  :demand t
+  :init
+  (setq ns-use-srgb-colorspace nil)
+  (setq-default powerline-default-separator 'slant)
   :config
-  (sml/setup)
-  (setq sml/no-confirm-load-theme t)
-  (sml/apply-theme 'dark))
+  (require 'spaceline-config)
+  (spaceline-emacs-theme)
+  (spaceline-helm-mode))
 
 ;; Elisp関数や変数をエコーエリアへ表示する(Elispmode時)
 (defun elisp-mode-hooks ()
   "lisp-mode-hooks"
   (when (require 'eldoc nil t)
-    (setq eldoc-idle-delay 0.2)
+    (setq eldoc-idle-deHlay 0.2)
     (setq eldoc-echo-area-use-multiline-p t)
-    (turn-on-eldoc-mode)))
+    (turn-on-eldoc-mode)z))
 ;;elisp-mode-hookのON/OFF
 (add-hook 'emacs-lisp-mode-hook 'elisp-mode-hooks)
 
@@ -221,36 +238,34 @@
   :config
   (add-hook 'prog-mode-hook 'company-mode)
   ;; (edit-category-table-for-company-dabbrev)
+  (setq company-backends (delete 'company-semantic company-backends))
   )
-(setq company-backends (delete 'company-semantic company-backends))
 
 (require 'es6-snippets)
 
 (use-package diminish
+  ;; 各use-package`:diminish'で設定できるのでそっちの方が良いかも
   :config
   (eval-after-load "company"
-	  '(diminish 'company-mode "Ⓒ"))
+	'(diminish 'company-mode "Ⓒ"))
   (eval-after-load "yasnippet"
-	  '(diminish 'yas-minor-mode "Ⓨ"))
+	'(diminish 'yas-minor-mode "Ⓨ"))
   (eval-after-load "flycheck"
-	  '(diminish 'flycheck-mode "Ⓕ"))
+	'(diminish 'flycheck-mode "Ⓕ"))
   (eval-after-load "helm-mode"
-	  '(diminish 'helm-mode "Ⓗ"))
+	'(diminish 'helm-mode "Ⓗ"))
   (eval-after-load "whitespace"
-	  '(diminish 'global-whitespace-mode "Ⓦ"))
+	'(diminish 'global-whitespace-mode "Ⓦ"))
   (eval-after-load "smartparens"
-	  '(diminish 'smartparens-mode "Ⓢ"))
+	'(diminish 'smartparens-mode "Ⓢ"))
   (eval-after-load "ace-isearch"
-	  '(diminish 'ace-isearch-mode "Ⓐ"))
+	'(diminish 'ace-isearch-mode "Ⓐ"))
   (eval-after-load "hideshow"
-	  '(diminish 'hs-minor-mode ""))
-  (eval-after-load "subword-mode"
-	  '(diminish 'subword-mode ""))
+	'(diminish 'hs-minor-mode ""))
   (diminish 'auto-revert-mode "")
   (diminish 'eldoc-mode "")
+  (diminish 'smart-newline-mode "")
   )
-;; バッファの表示位置をモードラインに表示するのをやめる
-(setq mode-line-position nil)
 
 (use-package company-c-headers
   :config
@@ -331,8 +346,8 @@
   (setq TeX-default-mode 'japanese-latex-mode)
   (setq japanese-LaTeX-default-style "jarticle")
   (setq TeX-engine-alist '((ptex "pTeX" "eptex" "platex" "eptex")
-						               (jtex "jTeX" "jtex" "jlatex" nil)
-						               (uptex "upTeX" "euptex" "uplatex" "euptex")))
+						   (jtex "jTeX" "jtex" "jlatex" nil)
+						   (uptex "upTeX" "euptex" "uplatex" "euptex")))
   (setq TeX-engine 'uptex)
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
@@ -375,17 +390,21 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   )
 
 ;; shackleの設定
+;;TODO: shackleの方が優秀なのかもしれない(https://qiita.com/fujimotok/items/164cd80b89992eeb4efe)
+;;TODO: https://github.com/shibayu36/emacs/commit/f096b0ef2698b13a9afa75df588d40695e26b18e
 (use-package shackle
   :init
   (setq shackle-rules
-		    '(
+		'(
           ("*helm mini*" :popup t :align below :ratio 0.5)
-		      ("*Helm Swoop*" :popup t :align below :ratio 0.3)
+		  ("*Helm Swoop*" :popup t :align below :ratio 0.3)
           ("*helm M-x*" :popup t :align below :ratio 0.5)
           ("*helm find files*" :popup t :align below :ratio 0.5)
           ("*Help*" :popup t :align below :ratio 0.5)
           ("*quickrun*" :popup t :align below :ratio 0.5)
-		      ("*terminal*" :regexp t :popup t :align below :ratio 0.5)
+		  ("*terminal*" :regexp t :popup t :align below :ratio 0.5)
+		  ("*Agenda Commands*" :regexp t :popup t :align below :ratio 0.5)
+		  ("*Org Agenda*" :regexp t :popup t :align below :ratio 0.5)
           ))
   :config
   (shackle-mode 1))
@@ -417,7 +436,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (setq auto-insert-alist
         (nconc '(
                  ("\\.cpp$" . ["template.cpp" my-template])
-				         ;; ("\\.cpp$" . ["template2.cpp" my-template]) ; プロジェクト毎にテンプレートを変更する、新規ファイル作成時にどのテンプレートを利用するか入力するなどしたいが諦めた
+				 ;; ("\\.cpp$" . ["template2.cpp" my-template]) ; プロジェクト毎にテンプレートを変更する、新規ファイル作成時にどのテンプレートを利用するか入力するなどしたいが諦めた
                  ("\\.py$"   . ["template.py" my-template])
                  ("\\.org$"   . ["template.org" my-template])
                  ("\\.tex$"   . ["template.tex" my-template])
@@ -435,10 +454,10 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (defun my-template ()
   (time-stamp)
   (mapc #'(lambda(c)
-			      (progn
-			        (goto-char (point-min))
-			        (replace-string (car c) (funcall (cdr c)) nil)))
-		    template-replacements-alists)
+			(progn
+			  (goto-char (point-min))
+			  (replace-string (car c) (funcall (cdr c)) nil)))
+		template-replacements-alists)
   (goto-char (point-max))
   (message "done."))
 
@@ -493,7 +512,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
         ("C-j" . nil)
         ("<tab>" . indent-for-tab-command)
         ("C-i" . emmet-expand-line)
-		    )
+		)
   :hook
   (sgml-mode web-mode css-mode-hook)
   )
@@ -513,7 +532,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   :bind
   (:map web-mode-map
         ("C-x i" . my-wrap-lines-with-html-tag)
-		    ("C-;" . web-mode-fold-or-unfold))
+		("C-;" . web-mode-fold-or-unfold))
   :config
   (setq web-mode-html-offset   2)
   (setq web-mode-style-padding 2)
@@ -544,20 +563,20 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (custom-set-variables
    '(flycheck-disabled-checkers '(javascript-jshint javascript-jscs)))
   (flycheck-define-checker c/c++11
-	  "original C++ checker"
-	  :command ("g++-8" "-Wall" "-Wextra" "-std=c++11" source)
-	  :error-patterns  ((error line-start
-							               (file-name) ":" line ":" column ":" " Error: " (message)
-							               line-end)
+	"original C++ checker"
+	:command ("g++-8" "-Wall" "-Wextra" "-std=c++11" source)
+	:error-patterns  ((error line-start
+							 (file-name) ":" line ":" column ":" " Error: " (message)
+							 line-end)
                       (error line-start
                              (file-name) ":" line ":" column ":" " Fatal Error: " (message)
-							               line-end)
+							 line-end)
                       (warning line-start
                                (file-name) ":" line ":" column ":" " Warning: " (message)
                                line-end))
-	  :modes (c-mode c++-mode))
+	:modes (c-mode c++-mode))
   (add-hook 'c++-mode-hook				;originalのチェッカーをデフォルトに変更。競プロ用なのでdir-localでもいいかも
-			      '(lambda()
+			'(lambda()
                (flycheck-select-checker 'c/c++11)))
   )
 
@@ -568,9 +587,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   :bind
   (:map helm-map
         ("C-z" . helm-select-action)
-		    :map helm-find-files-map
+		:map helm-find-files-map
         ("<tab>" . helm-execute-persistent-action)
-		    :map helm-read-file-map
+		:map helm-read-file-map
         ("<tab>" . helm-execute-persistent-action))
   )
 
@@ -669,28 +688,29 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (setq org-startup-with-inline-images t) ;インラインで画像表示
   (setq org-agenda-files '("~/Dropbox/org/todo.org" "~/Dropbox/org/will.org")) ;
   (setq org-capture-templates
-		    '(("t" "Todo" entry
+		'(("t" "Todo" entry
            (file+headline "~/Dropbox/org/todo.org" "Todo")
            "* TODO %?\n")
           ("m" "Memo" entry
            (file+headline "~/Dropbox/org/memo.org" "Memo")
            "* %u %?\n%i\n")
-		      ("w" "will" entry
+		  ("w" "will" entry
            (file+headline "~/Dropbox/org/will.org" "Will")
            "* TODO Daily Task [/] \n SCHEDULED: %t \n \s - [ ] %?")
-		      ("d" "Done" entry
+		  ("d" "Done" entry
            (file+headline "~/Dropbox/org/done.org" "Done")
            "* %u %?\n%i\n ")))
   ;; org-agendaでaを押したら予定表とTODOリストを表示
   (setq org-agenda-custom-commands
-		    '(("a" "Agenda and TODO"
+		'(("a" "Agenda and TODO"
            ((agenda "")
-			      (alltodo "")))))
+			(alltodo "")))))
   (setq org-agenda-start-on-weekday nil)
   (setq org-hide-emphasis-markers t)
+  :config
   (add-to-list 'org-emphasis-alist
-             '("*" (:foreground "red")
-               ))
+               '("*" (:foreground "red")
+				 ))
   :bind
   ("C-c c" . org-capture)
   ("C-c a" . org-agenda)
@@ -795,11 +815,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;; 一般的に使うプレフィックスなしキーバインド
 (bind-key "C-z" 'undo)
 (bind-key "M-[" 'replace-string)
-(define-key input-decode-map [?\C-m] [C-m]); bind-keyでC-mの設定しちゃうとなぜかC-m = Enter扱いになるからglobal-set-keyで行っている。
-(bind-key (kbd "<C-m>") 'back-to-indentation)
 (bind-key "M-d" 'kill-word-at-point)
-(bind-key "M-n" (kbd "C-u 5 C-n"))
-(bind-key "M-p" (kbd "C-u 5 C-p"))
 (bind-key "M-g" 'goto-line)
 (bind-key "M-w" 'easy-kill)
 (bind-key "M-y" 'helm-show-kill-ring)
@@ -811,11 +827,20 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-." 'goto-last-change-reverse)
 (bind-key "C-M-l" 'hs-show-block)
 (bind-key "C-M-h" 'hs-hide-block)
-(unbind-key "C-\\")				 ;Emacsのレイヤーで日本語の入力サポートされたくない
 (bind-key "C-x C-f" 'helm-find-files)
 (bind-key "C-S-n" (lambda () (interactive) (scroll-up 3)))
 (bind-key "C-S-p" (lambda () (interactive) (scroll-down 3)))
 (bind-key "C-:" 'toggle-truncate-lines)
+(bind-key "C-a" 'back-to-indentation)
+(bind-key "C-S-a" 'move-beginning-of-line)
+(bind-key "C-S-b" 'backward-word)
+(bind-key "C-S-f" 'forward-word)
+(bind-key* "C-S-h" 'backward-kill-word)
+(bind-key* "C-S-d" 'kill-word-at-point)
+(bind-key "M-n" (kbd "M-5 C-n"))
+(bind-key "M-p" (kbd "M-5 C-p"))
+(bind-key "C-w" 'backward-kill-word minibuffer-local-completion-map)
+(unbind-key "C-\\")				 ;Emacsのレイヤーで日本語の入力サポートされたくない
 
 ;; window系とterminal系は共通のプレフィックス `C-t'
 (unbind-key "C-t")
@@ -843,7 +868,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;; TODO: MAP依存は各use-package以内に書いたほうが良いかな？
 ;; キーバインドの設定はまとめた書いたほうが良いような、各設定の中で書いたほうが良いような微妙なところ
 ;; → globalな設定もとい、他のパッケージ依存の設定はここに書かない
-(bind-key "C-w" 'backward-kill-word minibuffer-local-completion-map)
 (unbind-key "M-n" company-active-map)
 (unbind-key "M-p" company-active-map)
 (unbind-key "C-h" company-active-map)
