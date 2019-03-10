@@ -26,9 +26,6 @@
   :init
   (add-hook 'org-mode-hook
             (lambda ()
-              (smart-newline-mode t)))
-  (add-hook 'prog-mode-hook
-            (lambda ()
               (smart-newline-mode t))))
 
 (defun add-to-load-path (&rest paths)
@@ -41,6 +38,10 @@
 			(normal-top-level-add-subdirs-to-load-path))))))
 
 (toggle-truncate-lines 1)
+
+;; Mac専用右コマンドをhyperキーに変更する
+(when (eq system-type 'darwin)
+  (setq mac-right-command-modifier 'hyper))
 
 ;; (add-hook 'prog-mode-hook (lambda () (subword-mode 1)))
 (use-package subword
@@ -192,6 +193,18 @@
   (smartparens-global-mode t)
   (sp-pair "「" "」")
   (sp-pair "'" "'"))
+
+;; newtree
+(use-package neotree
+  :commands (projectile)
+  :init
+  (setq neo-show-hidden-files t)
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+  :config
+  (projectile-global-mode)
+  :bind
+  ("<f8>" . 'neotree-projectile-action)
+  )
 
 (use-package spaceline
   :demand t
@@ -392,22 +405,35 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;; shackleの設定
 ;;TODO: shackleの方が優秀なのかもしれない(https://qiita.com/fujimotok/items/164cd80b89992eeb4efe)
 ;;TODO: https://github.com/shibayu36/emacs/commit/f096b0ef2698b13a9afa75df588d40695e26b18e
-(use-package shackle
-  :init
-  (setq shackle-rules
-		'(
-          ("*helm mini*" :popup t :align below :ratio 0.5)
-		  ("*Helm Swoop*" :popup t :align below :ratio 0.3)
-          ("*helm M-x*" :popup t :align below :ratio 0.5)
-          ("*helm find files*" :popup t :align below :ratio 0.5)
-          ("*Help*" :popup t :align below :ratio 0.5)
-          ("*quickrun*" :popup t :align below :ratio 0.5)
-		  ("*terminal*" :regexp t :popup t :align below :ratio 0.5)
-		  ("*Agenda Commands*" :regexp t :popup t :align below :ratio 0.5)
-		  ("*Org Agenda*" :regexp t :popup t :align below :ratio 0.5)
-          ))
+(use-package popwin
+  :after (helm)
   :config
-  (shackle-mode 1))
+  (popwin-mode 1)
+  (setq helm-display-function #'display-buffer)
+  (setq popwin:special-display-config
+    '(("*complitation*" :noselect t)
+      ("helm" :regexp t :height 0.4)
+	  ))
+  (push '("*Agenda Commands*" :regexp t) popwin:special-display-config)
+  (push '("^\*Org Agenda*" :regexp t :height 0.4) popwin:special-display-config)
+  )
+
+;; (use-package shackle
+;;   :init
+;;   (setq shackle-rules
+;; 		'(
+;;           ("*helm mini*" :popup t :align below :ratio 0.5)
+;; 		  ("*Helm Swoop*" :popup t :align below :ratio 0.3)
+;;           ("*helm M-x*" :popup t :align below :ratio 0.5)
+;;           ("*helm find files*" :popup t :align below :ratio 0.5)
+;;           ("*Help*" :popup t :align below :ratio 0.5)
+;;           ("*quickrun*" :popup t :align below :ratio 0.5)
+;; 		  ("*terminal*" :regexp t :popup t :align below :ratio 0.5)
+;; 		  ("*Agenda Commands*" :regexp t :popup t :align below :ratio 0.5)
+;; 		  ("*Org Agenda*" :regexp t :popup t :align below :ratio 0.5)
+;;           ))
+;;   :config
+;;   (shackle-mode 1))
 
 (use-package shell-pop
   :init
@@ -686,20 +712,15 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (setq org-startup-truncated nil)		;org折返し
   (setq org-use-speed-commands t)		;speed-commandをONにする
   (setq org-startup-with-inline-images t) ;インラインで画像表示
-  (setq org-agenda-files '("~/Dropbox/org/todo.org" "~/Dropbox/org/will.org")) ;
+  (setq org-agenda-files '("~/Dropbox/org/todo.org"))
   (setq org-capture-templates
-		'(("t" "Todo" entry
-           (file+headline "~/Dropbox/org/todo.org" "Todo")
-           "* TODO %?\n")
-          ("m" "Memo" entry
+		'(("t" "Task" entry
+           (file+headline "~/Dropbox/org/todo.org" "Task")
+           "* TODO %? \n ADDED: %t")
+		  ("m" "Memo" entry
            (file+headline "~/Dropbox/org/memo.org" "Memo")
            "* %u %?\n%i\n")
-		  ("w" "will" entry
-           (file+headline "~/Dropbox/org/will.org" "Will")
-           "* TODO Daily Task [/] \n SCHEDULED: %t \n \s - [ ] %?")
-		  ("d" "Done" entry
-           (file+headline "~/Dropbox/org/done.org" "Done")
-           "* %u %?\n%i\n ")))
+		  ))
   ;; org-agendaでaを押したら予定表とTODOリストを表示
   (setq org-agenda-custom-commands
 		'(("a" "Agenda and TODO"
@@ -797,7 +818,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
     (hl-line-mode 1))))
 
 (defadvice kill-region (around kill-word-or-kill-region activate)
-  (if (and (interactive-p) transient-mark-mode (not mark-active))
+  (if (and (called-interactively-p 'interactive) transient-mark-mode (not mark-active))
       (backward-kill-word 1)
     ad-do-it))
 
@@ -807,6 +828,19 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
     (forward-char)
     (fixup-whitespace)
     (backward-char)))
+
+;; Hyperキー+任意キーでavyを起動させる
+(defun one-prefix-avy (prefix c &optional mode)
+  (define-key global-map
+    (read-kbd-macro (concat prefix (string c)))
+    `(lambda ()
+       (interactive)
+       (funcall (if (eq ',mode 'char)
+                    #'avy-goto-word-1
+                  #'avy-goto-char) ,c))))
+(loop for c from ?0 to ?9 do (one-prefix-avy "H-" c))
+(loop for c from ?a to ?z do (one-prefix-avy "H-" c))
+
 
 ;; ===============================================================
 ;; Key-bind (necessary bind-key.el)
@@ -831,8 +865,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "C-S-n" (lambda () (interactive) (scroll-up 3)))
 (bind-key "C-S-p" (lambda () (interactive) (scroll-down 3)))
 (bind-key "C-:" 'toggle-truncate-lines)
-(bind-key "C-a" 'back-to-indentation)
-(bind-key "C-S-a" 'move-beginning-of-line)
+(bind-key "C-S-a" 'back-to-indentation)
 (bind-key "C-S-b" 'backward-word)
 (bind-key "C-S-f" 'forward-word)
 (bind-key* "C-S-h" 'backward-kill-word)
