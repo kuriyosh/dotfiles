@@ -1,1 +1,1 @@
-("~/Project/dotfiles/")
+("~/Project/Bearluxe/migration/" "~/Project/Bearluxe/" "~/Project/dotfiles/" "~/Project/metis_app/" "~/Project/Bearluxe/src/")

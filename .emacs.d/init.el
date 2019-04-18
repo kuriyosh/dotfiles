@@ -666,7 +666,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   ("C-c y" . helm-yas-complete)
   )
 
-
 (defvar company-mode/enable-yas t
   "Enable yasnippet for all backends.")
 (defun company-mode/backend-with-yas (backend)
@@ -819,8 +818,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 
 (defadvice kill-region (around kill-word-or-kill-region activate)
   (if (and (called-interactively-p 'interactive) transient-mark-mode (not mark-active))
-      (backward-kill-word 1)
-    ad-do-it))
+      (backward-kill-word 1) ad-do-it))
 
 ;; C-kのkill-line後に次の行のインデントを少なくする
 (defadvice kill-line (before kill-line-and-fixup activate)
@@ -838,9 +836,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
        (funcall (if (eq ',mode 'char)
                     #'avy-goto-word-1
                   #'avy-goto-char) ,c))))
-(loop for c from ?0 to ?9 do (one-prefix-avy "H-" c))
-(loop for c from ?a to ?z do (one-prefix-avy "H-" c))
-
+(loop for c from ?! to ?~ do (one-prefix-avy "H-" c))
 
 ;; ===============================================================
 ;; Key-bind (necessary bind-key.el)
