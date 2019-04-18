@@ -3,6 +3,8 @@ set PATH ~/.nodebrew/current/bin $PATH
 set PATH ~/.scripts $PATH
 set PATH ~/Library/Android/sdk/platform-tools $PATH
 set PATH ~/Library/Android/sdk/tools $PATH
+set PATH /usr/local/opt/mysql@5.7/bin/ $PATH
+set PATH ~/.cargo/bin $PATH
 set -x PATH $HOME/.pyenv/bin $PATH
 
 # pyenv init
