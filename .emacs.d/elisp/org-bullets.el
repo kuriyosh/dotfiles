@@ -1,7 +1,7 @@
-;;; org-bullets.el --- Show bullets in org-mode as UTF-8 characters
-;;; Version: 0.2.4
-;;; Author: sabof
-;;; URL: https://github.com/sabof/org-bullets
+;;; org-bullets.el --- Show bullets in org-mode as circle characters
+;;; Version: 0.2.4+
+;;; Author: hico-horiuchi
+;;; URL: https://github.com/hico-horiuchi/org-bullets
 
 ;; This file is NOT part of GNU Emacs.
 ;;
@@ -22,7 +22,7 @@
 
 ;;; Commentary:
 
-;; The project is hosted at https://github.com/sabof/org-bullets
+;; The project is hosted at https://github.com/hico-horiuchi/org-bullets
 ;; The latest version, and all the relevant information can be found there.
 
 ;;; Code:
@@ -30,20 +30,19 @@
 (eval-when-compile (require 'cl))
 
 (defgroup org-bullets nil
-  "Display bullets as UTF-8 characters"
+  "Display bullets as circle characters"
   :group 'org-appearance)
 
 ;; A nice collection of unicode bullets:
 ;; http://nadeausoftware.com/articles/2007/11/latency_friendly_customized_bullets_using_unicode_characters
 (defcustom org-bullets-bullet-list
   '(;;; Large
-    "◉"
+    "□"
+    "■"
+    "●"
+    "◎"
     "○"
-    "✸"
-    "✿"
-    ;; ♥ ● ◇ ✚ ✜ ☯ ◆ ♠ ♣ ♦ ☢ ❀ ◆ ◖ ▶
-    ;;; Small
-    ;; ► • ★ ▸
+    "・"
     )
   "This variable contains the list of bullets.
 It can contain any number of symbols, which will be repeated."
@@ -76,21 +75,48 @@ Should this be undesirable, one can remove them with
              (length org-bullets-bullet-list))
         org-bullets-bullet-list)))
 
+(defun org-bullets-export (path)
+  "Export to bullets style text file."
+  (interactive "FExport file: ")
+  (let* ((current-buffer-string (buffer-string)))
+    (with-temp-buffer
+      (insert current-buffer-string)
+      (goto-char (point-min))
+      (while (re-search-forward "^\\*+ " nil t)
+        (let ((level (- (match-end 0) (match-beginning 0) 1)))
+          (replace-match
+           (concat (string (org-bullets-level-char level)) " "))))
+      (write-file path))))
+
+(defun org-bullets-import (path)
+  "Import to bullets style text file."
+  (interactive "fImport file: ")
+  (insert
+   (with-temp-buffer
+     (insert-file-contents path)
+     (goto-char (point-min))
+     (dolist (bullet org-bullets-bullet-list)
+       (let* ((index (position bullet org-bullets-bullet-list))
+              (org-section (make-string (+ index 1) ?*)))
+         (while (re-search-forward (concat "^" bullet " ") nil t)
+           (replace-match (concat org-section " ")))))
+     (buffer-string))))
+
 ;;;###autoload
 (define-minor-mode org-bullets-mode
-    "UTF8 Bullets for org-mode"
+  "Circle Bullets for org-mode"
   nil nil nil
   (let* (( keyword
            `(("^\\*+ "
-              (0 (let* (( level (- (match-end 0) (match-beginning 0) 1))
-                        ( is-inline-task
-                          (and (boundp 'org-inlinetask-min-level)
-                               (>= level org-inlinetask-min-level))))
-                   (compose-region (- (match-end 0) 2)
+              (0 (let* ((level (- (match-end 0) (match-beginning 0) 1))
+                        (is-inline-task
+                         (and (boundp 'org-inlinetask-min-level)
+                              (>= level org-inlinetask-min-level))))
+                   (compose-region (match-beginning 0)
                                    (- (match-end 0) 1)
                                    (org-bullets-level-char level))
                    (when is-inline-task
-                     (compose-region (- (match-end 0) 3)
+                     (compose-region (- (match-beginning 0) 1)
                                      (- (match-end 0) 2)
                                      (org-bullets-level-char level)))
                    (when (facep org-bullets-face-name)
@@ -99,11 +125,6 @@ Should this be undesirable, one can remove them with
                                         (- (match-end 0) 1)
                                         'face
                                         org-bullets-face-name))
-                   (put-text-property (match-beginning 0)
-                                      (- (match-end 0) 2)
-                                      'face (list :foreground
-                                                  (face-attribute
-                                                   'default :background)))
                    (put-text-property (match-beginning 0)
                                       (match-end 0)
                                       'keymap

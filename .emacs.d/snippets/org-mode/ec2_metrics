@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: ec2_metrics
+# key: ec2m
+# --
+- CPUUtilization:
+- NetworkIn:
+- NetworkOut:
+- StatuCheckFailed:
+- Pimms:
+- EBS stats:

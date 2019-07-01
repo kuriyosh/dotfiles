@@ -51,15 +51,22 @@
 ;; 括弧の対応
 (electric-pair-mode t)
 
-;; Key bindings
-;; (global-set-key (kbd "C-z") 'undo)
-;; (global-set-key (kbd "C-h") 'delete-backward-char)
-;; (global-set-key (kbd "C-x :") 'toggle-truncate-lines)
-;; (global-set-key (kbd "M-n") (kbd "C-u 5 C-n"))
-;; (global-set-key (kbd "M-p") (kbd "C-u 5 C-p"))
-;; (global-set-key (kbd "M-g") 'goto-line)
-;; (global-set-key (kbd "M-h") 'backward-kill-word)
+(if (eq system-type 'darwin)
+    (progn
+      (defun copy-from-osx ()
+    (shell-command-to-string "reattach-to-user-namespace pbpaste"))
+      (defun paste-to-osx (text &optional push)
+    (let ((process-connection-type nil))
+      (let ((proc (start-process "pbcopy" "*Messages*" "reattach-to-user-namespace" "pbcopy")))
+        (process-send-string proc text)
+        (process-send-eof proc))))
+      (setq interprogram-cut-function 'paste-to-osx)
+      (setq interprogram-paste-function 'copy-from-osx)
+    )
+    (message "This platform is not mac")
+)
 
+;; Key bindings
 (global-set-key (kbd "C-z") 'undo)
 (global-set-key (kbd "M-[") 'replace-string)
 (global-set-key (kbd "M-d") 'kill-word-at-point)

@@ -24,9 +24,10 @@
 (use-package smart-newline
   ;; 本当は:hookで書きたかったのに何故かばぐるのでこう書いた
   :init
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (smart-newline-mode t))))
+  ;; (add-hook 'org-mode-hook
+  ;;           (lambda ()
+  ;;             (smart-newline-mode t)))
+  )
 
 (defun add-to-load-path (&rest paths)
   (let (path)
@@ -43,7 +44,6 @@
 (when (eq system-type 'darwin)
   (setq mac-right-command-modifier 'hyper))
 
-;; (add-hook 'prog-mode-hook (lambda () (subword-mode 1)))
 (use-package subword
   :diminish subword-mode
   :config
@@ -56,10 +56,10 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-(use-package exec-path-from-shell
-  :config
-  (exec-path-from-shell-initialize))
-                                        ;TODO: 起動にこの処理を反映させたいけどうまくいかない
+;; (use-package exec-path-from-shell
+;;   :config
+;;   (exec-path-from-shell-initialize))
+;;                                         ;TODO: 起動にこの処理を反映させたいけどうまくいかない
 
 ;; Warningがうざいので出さない
 (setq warning-minimum-level :error)
@@ -73,6 +73,9 @@
 ;; (load-theme 'badwolf t)
 (load-theme 'dracula t)
 (add-hook 'prog-mode-hook 'highlight-numbers-mode)
+
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(ns-appearance . dark)) ;; assuming you are using a dark theme
 
 ;; カーソルの点滅を止める
 (blink-cursor-mode 0)
@@ -130,9 +133,16 @@
 
 ;;バックアップファイルとオートセーブファイルを~/.emacs.d/backupsへ集める
 (setq backup-directory-alist
-      '((".*" . "~/.emacs.d/backups/")))
+      (cons (cons ".*" (expand-file-name "~/.emacs.d/backup"))
+        backup-directory-alist))
 (setq auto-save-file-name-transforms
-      '((".*" "~/.emacs.d/backups/" t)))
+      `((".*", (expand-file-name "~/.emacs.d/backup/") t)))
+
+;; ファイルをゴミ箱に移動させる
+(setq trash-directory "~/.Trash")
+(setq delete-by-moving-to-trash t)
+
+(use-package text-adjust)
 
 ;; 自動ファイルリストとロックファイルは生成しない
 (setq auto-save-list-file-prefix nil)
@@ -192,6 +202,7 @@
   :config
   (smartparens-global-mode t)
   (sp-pair "「" "」")
+  (sp-pair "【" "】")
   (sp-pair "'" "'"))
 
 ;; newtree
@@ -215,16 +226,6 @@
   (require 'spaceline-config)
   (spaceline-emacs-theme)
   (spaceline-helm-mode))
-
-;; Elisp関数や変数をエコーエリアへ表示する(Elispmode時)
-(defun elisp-mode-hooks ()
-  "lisp-mode-hooks"
-  (when (require 'eldoc nil t)
-    (setq eldoc-idle-deHlay 0.2)
-    (setq eldoc-echo-area-use-multiline-p t)
-    (turn-on-eldoc-mode)z))
-;;elisp-mode-hookのON/OFF
-(add-hook 'emacs-lisp-mode-hook 'elisp-mode-hooks)
 
 (setq ispell-program-name "aspell")
 
@@ -254,8 +255,6 @@
   (setq company-backends (delete 'company-semantic company-backends))
   )
 
-(require 'es6-snippets)
-
 (use-package diminish
   ;; 各use-package`:diminish'で設定できるのでそっちの方が良いかも
   :config
@@ -279,6 +278,15 @@
   (diminish 'eldoc-mode "")
   (diminish 'smart-newline-mode "")
   )
+
+(use-package doom-modeline
+      :ensure t
+      :hook (after-init . doom-modeline-mode)
+     :config
+     (setq doom-modeline-bar-width 3)
+     (setq doom-modeline-height 20)
+     (setq doom-modeline-icon t)
+     (setq doom-modeline-minor-modes t))
 
 (use-package company-c-headers
   :config
@@ -611,13 +619,16 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   :config
   (helm-mode 1)
   :bind
+  ("C-x C-r" . helm-mini)
+  ("C-x C-f" . helm-find-files)
+  ("M-y" . helm-show-kill-ring)
+  ("M-x" . 'helm-M-x)
   (:map helm-map
         ("C-z" . helm-select-action)
 		:map helm-find-files-map
         ("<tab>" . helm-execute-persistent-action)
 		:map helm-read-file-map
-        ("<tab>" . helm-execute-persistent-action))
-  )
+        ("<tab>" . helm-execute-persistent-action)))
 
 ;;helm-flycheckの設定
 (use-package helm-flycheck
@@ -629,6 +640,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (use-package helm-swoop
   :init
   (setq helm-swoop-split-window-function 'display-buffer)
+  :bind
+  ("C-S-s" . helm-swoop)
   )
 
 ;; redo+の設定
@@ -848,8 +861,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "M-d" 'kill-word-at-point)
 (bind-key "M-g" 'goto-line)
 (bind-key "M-w" 'easy-kill)
-(bind-key "M-y" 'helm-show-kill-ring)
-(bind-key "M-x" 'helm-M-x)
 (bind-key "C-;" 'hs-toggle-hiding)
 (bind-key* "C-h" 'delete-backward-char)
 (bind-key* "M-h" 'backward-kill-word)
@@ -871,6 +882,15 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "C-w" 'backward-kill-word minibuffer-local-completion-map)
 (unbind-key "C-\\")				 ;Emacsのレイヤーで日本語の入力サポートされたくない
 
+;; Mac 依存のキーバインド
+(bind-key "s-k" 'kill-this-buffer)
+(bind-key "s-o" 'finder-current-dir-open)
+(bind-key "s-." 'next-buffer)
+(bind-key "s-," 'previous-buffer)
+(bind-key "s-w" 'kill-current-buffer)
+(bind-key "s-=" 'text-scale-adjust)
+(bind-key "s--" 'text-scale-adjust)
+
 ;; window系とterminal系は共通のプレフィックス `C-t'
 (unbind-key "C-t")
 (bind-key* "C-t h" 'windmove-left)
@@ -883,19 +903,15 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-t C-r" 'window-resizer)
 (bind-key* "C-t [" 'my-term-switch-line-char term-raw-map)
 (bind-key* "C-t [" 'my-term-switch-line-char term-mode-map)
-(bind-key "C-S-s" 'helm-swoop)
-
                                         ;押しやすいキーなのでプレフィックスにする
 (unbind-key "C-q")		
 (bind-key "C-q C-q" 'quoted-insert)		 ;押しやすいキーなのでプレフィックスにする
 
 ;; ファイル系のプレフィックス `C-x'
-(bind-key "C-x C-r" 'helm-mini)
-(bind-key "C-x C-f" 'helm-find-files)
 (bind-key "C-x j" 'open-junk-file)
 
 ;; TODO: MAP依存は各use-package以内に書いたほうが良いかな？
-;; キーバインドの設定はまとめた書いたほうが良いような、各設定の中で書いたほうが良いような微妙なところ
+;; → あるパッケージを無効化したい時に、複数箇所コメントアウトする必要があるので、use-package内に記述していた方がよい
 ;; → globalな設定もとい、他のパッケージ依存の設定はここに書かない
 (unbind-key "M-n" company-active-map)
 (unbind-key "M-p" company-active-map)
