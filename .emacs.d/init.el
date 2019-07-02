@@ -746,8 +746,15 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 				 ))
   :bind
   ("C-c c" . org-capture)
-  ("C-c a" . org-agenda)
-  )
+  ("C-c a" . org-agenda))
+
+(setq org-publish-project-alist
+      '(("Case"
+         :base-directory "~/Documents/Case/Log/"
+         :recursive t
+		 :auto-sitemap t
+         :publishing-directory "~/Documents/Case/html/"
+         :publishing-function org-html-publish-to-html)))
 
 ;; ===============================================================
 ;; js-mode
@@ -851,6 +858,9 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
                   #'avy-goto-char) ,c))))
 (loop for c from ?! to ?~ do (one-prefix-avy "H-" c))
 
+(defun finder-current-dir-open()
+  (interactive)
+  (shell-command "open ."))
 ;; ===============================================================
 ;; Key-bind (necessary bind-key.el)
 ;; ===============================================================
