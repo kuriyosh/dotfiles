@@ -12,6 +12,7 @@
 /.emacs.d/recentf
 /.emacs.d/auto-save-list/*
 /.emacs.d/backups/*
+/.emacs.d/backup/*
 /.emacs.d/.cache/*
 /.emacs.d/tramp
 /.emacs.d/custom.el

@@ -148,6 +148,10 @@
 (setq auto-save-list-file-prefix nil)
 (setq create-lockfiles nil)
 
+;; scratchバッファーについては削除させない
+(with-current-buffer "*scratch*"
+  (emacs-lock-mode 'kill))
+
 ;;スクリプトファイルに実行権限を与えて保存
 (add-hook 'after-save-hook
           'executable-make-buffer-file-executable-if-script-p)
@@ -878,7 +882,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-." 'goto-last-change-reverse)
 (bind-key "C-M-l" 'hs-show-block)
 (bind-key "C-M-h" 'hs-hide-block)
-(bind-key "C-x C-f" 'helm-find-files)
 (bind-key "C-S-n" (lambda () (interactive) (scroll-up 3)))
 (bind-key "C-S-p" (lambda () (interactive) (scroll-down 3)))
 (bind-key "C-:" 'toggle-truncate-lines)
@@ -897,7 +900,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "s-o" 'finder-current-dir-open)
 (bind-key "s-." 'next-buffer)
 (bind-key "s-," 'previous-buffer)
-(bind-key "s-w" 'kill-current-buffer)
 (bind-key "s-=" 'text-scale-adjust)
 (bind-key "s--" 'text-scale-adjust)
 
