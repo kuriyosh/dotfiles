@@ -1,13 +1,13 @@
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
+;; ;; Added by Package.el.  This must come before configurations of
+;; ;; installed packages.  Don't delete this line.  If you don't want it,
+;; ;; just comment it out by adding a semicolon to the start of the line.
+;; ;; You may delete these explanatory comments.
 
-;; TODO: abbrevいらないのでは？
+;; ;; TODO: abbrevいらないのでは？
 
-;; ===============================================================
-;; Global Setting
-;; ===============================================================
+;; ;; ===============================================================
+;; ;; Global Setting
+;; ;; ===============================================================
 (require 'package)
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -197,9 +197,9 @@
 (set-file-name-coding-system 'cp932)
 (setq default-process-coding-system '(cp932 . cp932))
 
-;; ===============================================================
-;; Various Package Setting
-;; ===============================================================
+;; ;; ===============================================================
+;; ;; Various Package Setting
+;; ;; ===============================================================
 
 ;; smartparen
 (use-package smartparens
@@ -259,30 +259,7 @@
   (setq company-backends (delete 'company-semantic company-backends))
   )
 
-(use-package diminish
-  ;; 各use-package`:diminish'で設定できるのでそっちの方が良いかも
-  :config
-  (eval-after-load "company"
-	'(diminish 'company-mode "Ⓒ"))
-  (eval-after-load "yasnippet"
-	'(diminish 'yas-minor-mode "Ⓨ"))
-  (eval-after-load "flycheck"
-	'(diminish 'flycheck-mode "Ⓕ"))
-  (eval-after-load "helm-mode"
-	'(diminish 'helm-mode "Ⓗ"))
-  (eval-after-load "whitespace"
-	'(diminish 'global-whitespace-mode "Ⓦ"))
-  (eval-after-load "smartparens"
-	'(diminish 'smartparens-mode "Ⓢ"))
-  (eval-after-load "ace-isearch"
-	'(diminish 'ace-isearch-mode "Ⓐ"))
-  (eval-after-load "hideshow"
-	'(diminish 'hs-minor-mode ""))
-  (diminish 'auto-revert-mode "")
-  (diminish 'eldoc-mode "")
-  (diminish 'smart-newline-mode "")
-  )
-
+;; MEMO: diminish使うとmode-lineの幅がおかしくなる
 (use-package doom-modeline
       :ensure t
       :hook (after-init . doom-modeline-mode)
@@ -290,7 +267,7 @@
      (setq doom-modeline-bar-width 3)
      (setq doom-modeline-height 20)
      (setq doom-modeline-icon t)
-     (setq doom-modeline-minor-modes t))
+	 (setq doom-modeline-minor-modes nil))
 
 (use-package company-c-headers
   :config
@@ -865,6 +842,27 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (defun finder-current-dir-open()
   (interactive)
   (shell-command "open ."))
+
+;; `next-buffer' `before-buffer' について、閲覧する必要がないbufferをスキップする
+(setq skippable-buffers '("*Messages*" "*helm mini*" "*Help*" "*helm M-x*" "*Shell Command Output*" "*helm-mode-org-publish*" "*helm-mode-org-insert-link*" "*helm find files*" "*helm kill ring*" "*helm-mode-basic-save-buffer*"))
+
+(defun my-next-buffer ()
+  "next-buffer that skips certain buffers"
+  (interactive)
+  (next-buffer)
+  (while (member (buffer-name) skippable-buffers)
+    (next-buffer)))
+
+(defun my-previous-buffer ()
+  "previous-buffer that skips certain buffers"
+  (interactive)
+  (previous-buffer)
+  (while (member (buffer-name) skippable-buffers)
+    (previous-buffer)))
+
+(global-set-key [remap next-buffer] 'my-next-buffer)
+(global-set-key [remap previous-buffer] 'my-previous-buffer)
+
 ;; ===============================================================
 ;; Key-bind (necessary bind-key.el)
 ;; ===============================================================
