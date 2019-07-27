@@ -1,6 +1,6 @@
-;; ;; Added by Package.el.  This must come before configurations of;
-;; installed packages.  Don't delete this line.  If you don't want it,; ;; just
-
+;; ;; Added by Package.el.  This must come before configurations of
+;; ;; installed packages.  Don't delete this line.  If you don't want it,
+;; ;; just comment it out by adding a semicolon to the start of the line.
 ;; ;; You may delete these explanatory comments.
 
 ;; ;; TODO: abbrevいらないのでは？
@@ -134,7 +134,7 @@
 ;;バックアップファイルとオートセーブファイルを~/.emacs.d/backupsへ集める
 (setq backup-directory-alist
       (cons (cons ".*" (expand-file-name "~/.emacs.d/backup"))
-			backup-directory-alist))
+        backup-directory-alist))
 (setq auto-save-file-name-transforms
       `((".*", (expand-file-name "~/.emacs.d/backup/") t)))
 
@@ -221,16 +221,15 @@
   ("<f8>" . 'neotree-projectile-action)
   )
 
-;; これ何に使っていたか忘れた
-;; (use-package spaceline
-;;   :demand t
-;;   :init
-;;   (setq ns-use-srgb-colorspace nil)
-;;   (setq-default powerline-default-separator 'slant)
-;;   :config
-;;   (require 'spaceline-config)
-;;   (spaceline-emacs-theme)
-;;   (spaceline-helm-mode))
+(use-package spaceline
+  :demand t
+  :init
+  (setq ns-use-srgb-colorspace nil)
+  (setq-default powerline-default-separator 'slant)
+  :config
+  (require 'spaceline-config)
+  (spaceline-emacs-theme)
+  (spaceline-helm-mode))
 
 (setq ispell-program-name "aspell")
 
@@ -244,16 +243,8 @@
   :bind
   ("C-o" . 'avy-goto-word-1)
   ("C-S-o" . 'avy-goto-char-timer)
-  ("C-S-l" . 'avy-goto-line))
-
-(use-package undo-tree
-  :bind
-  ("C-/" . nil)
-  ("s-z" . nil)
-  ("C-z" . undo-tree-undo)
-  ("s-z" . undo-tree-undo)
-  ("C-/" . undo-tree-redo)
-  ("s-S-z" . undo-tree-redo))
+  ("C-S-l" . 'avy-goto-line)
+  )
 
 (use-package company
   :init
@@ -265,17 +256,18 @@
   :config
   (add-hook 'prog-mode-hook 'company-mode)
   ;; (edit-category-table-for-company-dabbrev)
-  (setq company-backends (delete 'company-semantic company-backends)))
+  (setq company-backends (delete 'company-semantic company-backends))
+  )
 
 ;; MEMO: diminish使うとmode-lineの幅がおかしくなる
 (use-package doom-modeline
-  :ensure t
-  :hook (after-init . doom-modeline-mode)
-  :config
-  (setq doom-modeline-bar-width 3)
-  (setq doom-modeline-height 20)
-  (setq doom-modeline-icon t)
-  (setq doom-modeline-minor-modes nil))
+      :ensure t
+      :hook (after-init . doom-modeline-mode)
+     :config
+     (setq doom-modeline-bar-width 3)
+     (setq doom-modeline-height 20)
+     (setq doom-modeline-icon t)
+	 (setq doom-modeline-minor-modes nil))
 
 (use-package company-c-headers
   :config
@@ -324,6 +316,9 @@
                        (,(kbd "ESC ESC") term-send-raw)
                        (,(kbd "C-S-p")   multi-term-prev)
                        (,(kbd "C-S-n")   multi-term-next)
+                       ;; 利用する場合は
+                       ;; helm-shell-historyの記事を参照してください
+                       ;; ("\C-r"           helm-shell-history)
                        )))
                (loop for (keybind function) in key-and-func do
                      (define-key term-raw-map keybind function)))))
@@ -400,16 +395,34 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;;TODO: shackleの方が優秀なのかもしれない(https://qiita.com/fujimotok/items/164cd80b89992eeb4efe)
 ;;TODO: https://github.com/shibayu36/emacs/commit/f096b0ef2698b13a9afa75df588d40695e26b18e
 (use-package popwin
+  :after (helm)
   :config
   (popwin-mode 1)
   (setq helm-display-function #'display-buffer)
   (setq popwin:special-display-config
-		'(("*complitation*" :noselect t)
-		  ("helm" :regexp t :height 0.4)
-		  ))
+    '(("*complitation*" :noselect t)
+      ("helm" :regexp t :height 0.4)
+	  ))
   (push '("*Agenda Commands*" :regexp t) popwin:special-display-config)
   (push '("^\*Org Agenda*" :regexp t :height 0.4) popwin:special-display-config)
   )
+
+;; (use-package shackle
+;;   :init
+;;   (setq shackle-rules
+;; 		'(
+;;           ("*helm mini*" :popup t :align below :ratio 0.5)
+;; 		  ("*Helm Swoop*" :popup t :align below :ratio 0.3)
+;;           ("*helm M-x*" :popup t :align below :ratio 0.5)
+;;           ("*helm find files*" :popup t :align below :ratio 0.5)
+;;           ("*Help*" :popup t :align below :ratio 0.5)
+;;           ("*quickrun*" :popup t :align below :ratio 0.5)
+;; 		  ("*terminal*" :regexp t :popup t :align below :ratio 0.5)
+;; 		  ("*Agenda Commands*" :regexp t :popup t :align below :ratio 0.5)
+;; 		  ("*Org Agenda*" :regexp t :popup t :align below :ratio 0.5)
+;;           ))
+;;   :config
+;;   (shackle-mode 1))
 
 (use-package shell-pop
   :init
@@ -583,377 +596,42 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   )
 
 ;; helmの設定
-;; (use-package helm
-;;   :config
-;;   (helm-mode 1)
-;;   :bind
-;;   ("C-x C-r" . helm-mini)
-;;   ("C-x C-f" . helm-find-files)
-;;   ("M-y" . helm-show-kill-ring)
-;;   ("M-x" . 'helm-M-x)
-;;   (:map helm-map
-;;         ("C-z" . helm-select-action)
-;; 		:map helm-find-files-map
-;;         ("<tab>" . helm-execute-persistent-action)
-;; 		:map helm-read-file-map
-;;         ("<tab>" . helm-execute-persistent-action)))
+(use-package helm
+  :config
+  (helm-mode 1)
+  :bind
+  ("C-x C-r" . helm-mini)
+  ("C-x C-f" . helm-find-files)
+  ("M-y" . helm-show-kill-ring)
+  ("M-x" . 'helm-M-x)
+  (:map helm-map
+        ("C-z" . helm-select-action)
+		:map helm-find-files-map
+        ("<tab>" . helm-execute-persistent-action)
+		:map helm-read-file-map
+        ("<tab>" . helm-execute-persistent-action)))
 
-;; ;;helm-flycheckの設定
-;; (use-package helm-flycheck
-;;   :bind
-;;   (:map flycheck-mode-map
-;;         ("C-c f" . helm-flycheck))
-;;   )
+;;helm-flycheckの設定
+(use-package helm-flycheck
+  :bind
+  (:map flycheck-mode-map
+        ("C-c f" . helm-flycheck))
+  )
 
-;; (use-package helm-swoop
-;;   :init
-;;   (setq helm-swoop-split-window-function 'display-buffer)
-;;   :bind
-;;   ("C-S-s" . helm-swoop)
-;;   )
-
-;; ivyの設定
-(use-package ivy
+(use-package helm-swoop
   :init
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-virtual-abbreviate 'abbreviate)
-  (setq enable-recursive-minibuffers t)
-  (setq ivy-height 20)
-  (setq ivy-format-function #'ivy-format-function-default)
-
-  :config
-  (ivy-mode 1)
-  (minibuffer-depth-indicate-mode 1))
-
-(use-package counsel
-  :after (ivy)
+  (setq helm-swoop-split-window-function 'display-buffer)
   :bind
-  ("M-x" .  counsel-M-x)
-  ("C-M-z" .  counsel-fzf)
-  ("C-M-z" .  counsel-fzf)
-  ("C-x C-r" .  ivy-switch-buffer)
-  ("C-M-f" .  counsel-ag)
-  ("M-y" .  counsel-yank-pop)
-  :config
-  (counsel-mode 1)
-  (setq ivy-initial-inputs-alist
-		'(;; (org-refile . "^")
-          (org-agenda-refile . "^")
-          (org-capture-refile . "^")
-          (counsel-describe-function . "^")
-          (counsel-describe-variable . "^")
-          ;; (counsel-org-capture . "^")
-          (Man-completion-table . "^")
-          (woman . "^"))))
+  ("C-S-s" . helm-swoop)
+  )
 
-(use-package ivy-rich
-  :defines
-  (all-the-icons-icon-alist
-   all-the-icons-dir-icon-alist
-   bookmark-alist)
-
-  :functions
-  (all-the-icons-icon-for-file
-   all-the-icons-icon-for-mode
-   all-the-icons-icon-family
-   all-the-icons-match-to-alist
-   all-the-icons-faicon
-   all-the-icons-octicon
-   all-the-icons-dir-is-submodule)
-
-  :preface
-  (defun ivy-rich-bookmark-name (candidate)
-    (car (assoc candidate bookmark-alist)))
-
-  (defun ivy-rich-buffer-icon (candidate)
-    "Display buffer icons in `ivy-rich'."
-    (when (display-graphic-p)
-      (let* ((buffer (get-buffer candidate))
-             (buffer-file-name (buffer-file-name buffer))
-             (major-mode (buffer-local-value 'major-mode buffer))
-             (icon (if (and buffer-file-name
-                            (all-the-icons-auto-mode-match?))
-                       (all-the-icons-icon-for-file (file-name-nondirectory buffer-file-name) :v-adjust -0.05)
-                     (all-the-icons-icon-for-mode major-mode :v-adjust -0.05))))
-        (if (symbolp icon)
-            (all-the-icons-faicon "file-o" :face 'all-the-icons-dsilver :height 0.8 :v-adjust 0.0)
-          icon))))
-
-  (defun ivy-rich-file-icon (candidate)
-    "Display file icons in `ivy-rich'."
-    (when (display-graphic-p)
-      (let* ((path (file-local-name (concat ivy--directory candidate)))
-             (file (file-name-nondirectory path))
-             (icon (cond
-                    ((file-directory-p path)
-                     (cond
-                      ((and (fboundp 'tramp-tramp-file-p)
-                            (tramp-tramp-file-p default-directory))
-                       (all-the-icons-octicon "file-directory" :height 1.0 :v-adjust 0.01))
-                      ((file-symlink-p path)
-                       (all-the-icons-octicon "file-symlink-directory" :height 1.0 :v-adjust 0.01))
-                      ((all-the-icons-dir-is-submodule path)
-                       (all-the-icons-octicon "file-submodule" :height 1.0 :v-adjust 0.01))
-                      ((file-exists-p (format "%s/.git" path))
-                       (all-the-icons-octicon "repo" :height 1.1 :v-adjust 0.01))
-                      (t (let ((matcher (all-the-icons-match-to-alist path all-the-icons-dir-icon-alist)))
-                           (apply (car matcher) (list (cadr matcher) :v-adjust 0.01))))))
-                    ((string-match "^/.*:$" path)
-                     (all-the-icons-material "settings_remote" :height 1.0 :v-adjust -0.2))
-                    ((not (string-empty-p file))
-                     (all-the-icons-icon-for-file file :v-adjust -0.05)))))
-        (if (symbolp icon)
-            (all-the-icons-faicon "file-o" :face 'all-the-icons-dsilver :height 0.8 :v-adjust 0.0)
-          icon))))
-
-  (defun ivy-rich-dir-icon (candidate)
-    "Display directory icons in `ivy-rich'."
-    (when (display-graphic-p)
-      (all-the-icons-octicon "file-directory" :height 1.0 :v-adjust 0.01)))
-
-  (defun ivy-rich-function-icon (_candidate)
-    "Display function icons in `ivy-rich'."
-    (when (display-graphic-p)
-      (all-the-icons-faicon "cube" :height 0.9 :v-adjust -0.05 :face 'all-the-icons-purple)))
-
-  (defun ivy-rich-variable-icon (_candidate)
-    "Display variable icons in `ivy-rich'."
-    (when (display-graphic-p)
-      (all-the-icons-faicon "tag" :height 0.9 :v-adjust -0.05 :face 'all-the-icons-lblue)))
-
-  (defun ivy-rich-symbol-icon (_candidate)
-    "Display symbol icons in `ivy-rich'."
-    (when (display-graphic-p)
-      (all-the-icons-octicon "gear" :height 0.9 :v-adjust -0.05)))
-
-  (defun ivy-rich-theme-icon (_candidate)
-    "Display theme icons in `ivy-rich'."
-    (when (display-graphic-p)
-      (all-the-icons-material "palette" :height 1.0 :v-adjust -0.2 :face 'all-the-icons-lblue)))
-
-  (defun ivy-rich-keybinding-icon (_candidate)
-    "Display keybindings icons in `ivy-rich'."
-    (when (display-graphic-p)
-      (all-the-icons-material "keyboard" :height 1.0 :v-adjust -0.2)))
-
-  (defun ivy-rich-library-icon (_candidate)
-    "Display library icons in `ivy-rich'."
-    (when (display-graphic-p)
-      (all-the-icons-material "view_module" :height 1.0 :v-adjust -0.2 :face 'all-the-icons-lblue)))
-
-  (defun ivy-rich-package-icon (_candidate)
-    "Display package icons in `ivy-rich'."
-    (when (display-graphic-p)
-      (all-the-icons-faicon "archive" :height 0.9 :v-adjust 0.0 :face 'all-the-icons-silver)))
-
-  (when (display-graphic-p)
-    (defun ivy-rich-bookmark-type-plus (candidate)
-      (let ((filename (file-local-name (ivy-rich-bookmark-filename candidate))))
-        (cond ((null filename)
-               (all-the-icons-material "block" :v-adjust -0.2 :face 'warning))  ; fixed #38
-              ((file-remote-p filename)
-               (all-the-icons-material "wifi_tethering" :v-adjust -0.2 :face 'mode-line-buffer-id))
-              ((not (file-exists-p filename))
-               (all-the-icons-material "block" :v-adjust -0.2 :face 'error))
-              ((file-directory-p filename)
-               (all-the-icons-octicon "file-directory" :height 0.9 :v-adjust -0.05))
-              (t (all-the-icons-icon-for-file (file-name-nondirectory filename) :height 0.9 :v-adjust -0.05)))))
-    (advice-add #'ivy-rich-bookmark-type :override #'ivy-rich-bookmark-type-plus))
-
-  :config
-  (ivy-rich-mode)
-
-  :init
-  ;; For better performance
-  (setq ivy-rich-parse-remote-buffer nil)
-
-  ;; Setting tab size to 1, to insert tabs as delimiters
-  (add-hook 'minibuffer-setup-hook
-            (lambda ()
-              (setq tab-width 1)))
-
-  (setq ivy-rich-display-transformers-list
-        '(ivy-switch-buffer
-          (:columns
-           ((ivy-rich-buffer-icon)
-            (ivy-rich-candidate (:width 30))
-            (ivy-rich-switch-buffer-size (:width 7))
-            (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
-            (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
-            (ivy-rich-switch-buffer-project (:width 15 :face success))
-            (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))
-           :predicate
-           (lambda (cand) (get-buffer cand))
-           :delimiter "\t")
-          ivy-switch-buffer-other-window
-          (:columns
-           ((ivy-rich-buffer-icon)
-            (ivy-rich-candidate (:width 30))
-            (ivy-rich-switch-buffer-size (:width 7))
-            (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
-            (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
-            (ivy-rich-switch-buffer-project (:width 15 :face success))
-            (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))
-           :predicate
-           (lambda (cand) (get-buffer cand))
-           :delimiter "\t")
-          counsel-switch-buffer
-          (:columns
-           ((ivy-rich-buffer-icon)
-            (ivy-rich-candidate (:width 30))
-            (ivy-rich-switch-buffer-size (:width 7))
-            (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
-            (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
-            (ivy-rich-switch-buffer-project (:width 15 :face success))
-            (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))
-           :predicate
-           (lambda (cand) (get-buffer cand))
-           :delimiter "\t")
-          counsel-switch-buffer-other-window
-          (:columns
-           ((ivy-rich-buffer-icon)
-            (ivy-rich-candidate (:width 30))
-            (ivy-rich-switch-buffer-size (:width 7))
-            (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
-            (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
-            (ivy-rich-switch-buffer-project (:width 15 :face success))
-            (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))
-           :predicate
-           (lambda (cand) (get-buffer cand))
-           :delimiter "\t")
-          persp-switch-to-buffer
-          (:columns
-           ((ivy-rich-buffer-icon)
-            (ivy-rich-candidate (:width 30))
-            (ivy-rich-switch-buffer-size (:width 7))
-            (ivy-rich-switch-buffer-indicators (:width 4 :face error :align right))
-            (ivy-rich-switch-buffer-major-mode (:width 12 :face warning))
-            (ivy-rich-switch-buffer-project (:width 15 :face success))
-            (ivy-rich-switch-buffer-path (:width (lambda (x) (ivy-rich-switch-buffer-shorten-path x (ivy-rich-minibuffer-width 0.3))))))
-           :predicate
-           (lambda (cand) (get-buffer cand))
-           :delimiter "\t")
-          counsel-M-x
-          (:columns
-           ((ivy-rich-function-icon)
-            (counsel-M-x-transformer (:width 50))
-            (ivy-rich-counsel-function-docstring (:face font-lock-doc-face))))
-          counsel-describe-function
-          (:columns
-           ((ivy-rich-function-icon)
-            (counsel-describe-function-transformer (:width 50))
-            (ivy-rich-counsel-function-docstring (:face font-lock-doc-face))))
-          counsel-describe-variable
-          (:columns
-           ((ivy-rich-variable-icon)
-            (counsel-describe-variable-transformer (:width 50))
-            (ivy-rich-counsel-variable-docstring (:face font-lock-doc-face))))
-          counsel-apropos
-          (:columns
-           ((ivy-rich-symbol-icon)
-            (ivy-rich-candidate))
-           :delimiter "\t")
-          counsel-info-lookup-symbol
-          (:columns
-           ((ivy-rich-symbol-icon)
-            (ivy-rich-candidate))
-           :delimiter "\t")
-          counsel-descbinds
-          (:columns
-           ((ivy-rich-keybinding-icon)
-            (ivy-rich-candidate))
-           :delimiter "\t")
-          counsel-find-file
-          (:columns
-           ((ivy-rich-file-icon)
-            (ivy-read-file-transformer))
-           :delimiter "\t")
-          counsel-file-jump
-          (:columns
-           ((ivy-rich-file-icon)
-            (ivy-rich-candidate))
-           :delimiter "\t")
-          counsel-dired
-          (:columns
-           ((ivy-rich-file-icon)
-            (ivy-read-file-transformer))
-           :delimiter "\t")
-          counsel-dired-jump
-          (:columns
-           ((ivy-rich-file-icon)
-            (ivy-rich-candidate))
-           :delimiter "\t")
-          counsel-fzf
-          (:columns
-           ((ivy-rich-file-icon)
-            (ivy-rich-candidate))
-           :delimiter "\t")
-          counsel-git
-          (:columns
-           ((ivy-rich-file-icon)
-            (ivy-rich-candidate))
-           :delimiter "\t")
-          counsel-recentf
-          (:columns
-           ((ivy-rich-file-icon)
-            (ivy-rich-candidate (:width 0.8))
-            (ivy-rich-file-last-modified-time (:face font-lock-comment-face)))
-           :delimiter "\t")
-          counsel-bookmark
-          (:columns
-           ((ivy-rich-bookmark-type)
-            (ivy-rich-bookmark-name (:width 40))
-            (ivy-rich-bookmark-info))
-           :delimiter "\t")
-          counsel-package
-          (:columns
-           ((ivy-rich-package-icon)
-            (ivy-rich-candidate))
-           :delimiter "\t")
-          counsel-find-library
-          (:columns
-           ((ivy-rich-library-icon)
-            (ivy-rich-candidate))
-           :delimiter "\t")
-          counsel-load-library
-          (:columns
-           ((ivy-rich-library-icon)
-            (ivy-rich-candidate))
-           :delimiter "\t")
-          counsel-load-theme
-          (:columns
-           ((ivy-rich-theme-icon)
-            (ivy-rich-candidate))
-           :delimiter "\t")
-          counsel-projectile-switch-project
-          (:columns
-           ((ivy-rich-file-icon)
-            (ivy-rich-candidate))
-           :delimiter "\t")
-          counsel-projectile-find-file
-          (:columns
-           ((ivy-rich-file-icon)
-            (counsel-projectile-find-file-transformer))
-           :delimiter "\t")
-          counsel-projectile-find-dir
-          (:columns
-           ((ivy-rich-dir-icon)
-            (counsel-projectile-find-dir-transformer))
-           :delimiter "\t")
-          treemacs-projectile
-          (:columns
-           ((ivy-rich-file-icon)
-            (ivy-rich-candidate))
-           :delimiter "\t"))))
-
-(use-package ivy-yasnippet
-  :after (ivy)
+;; redo+の設定
+(use-package redo+
   :bind
-  ("C-c y" . ivy-yasnippet))
-
-(use-package swiper
-  :bind
-  ("M-s M-s" . swiper-thing-at-point))
+  ("C-/" . redo)
+  :config
+  (setq undo-no-redo t)					;redo+が使えるときにはundoの挙動をストレートにする
+  )
 
 ;; hl-line+の設定
 (use-package hl-line+
@@ -971,7 +649,16 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
         ("<tab>" . nil))
   :config
   (yas-global-mode 1)
-  (push '("emacs.+/snippets/" . snippet-mode) auto-mode-alist))
+  (push '("emacs.+/snippets/" . snippet-mode) auto-mode-alist)
+  )
+
+
+(use-package helm-c-yasnippet
+  :init
+  (setq helm-yas-space-match-any-greedy t)
+  :bind
+  ("C-c y" . helm-yas-complete)
+  )
 
 (defvar company-mode/enable-yas t
   "Enable yasnippet for all backends.")
@@ -1181,6 +868,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;; ===============================================================
 (require 'bind-key)
 ;; 一般的に使うプレフィックスなしキーバインド
+(bind-key "C-z" 'undo)
 (bind-key "M-[" 'replace-string)
 (bind-key "M-d" 'kill-word-at-point)
 (bind-key "M-g" 'goto-line)
