@@ -156,6 +156,13 @@
 (add-hook 'after-save-hook
           'executable-make-buffer-file-executable-if-script-p)
 
+;; qでwindowsを消した時に、bufferを自動で消す
+(defadvice quit-window (before quit-window-always-kill)
+  "When running `quit-window', always kill the buffer."
+  (ad-set-arg 0 t))
+(ad-activate 'quit-window)
+
+
 ;; ===============================================================
 ;; Shell Setting
 ;; ===============================================================
@@ -220,17 +227,6 @@
   :bind
   ("<f8>" . 'neotree-projectile-action)
   )
-
-;; これ何に使っていたか忘れた
-;; (use-package spaceline
-;;   :demand t
-;;   :init
-;;   (setq ns-use-srgb-colorspace nil)
-;;   (setq-default powerline-default-separator 'slant)
-;;   :config
-;;   (require 'spaceline-config)
-;;   (spaceline-emacs-theme)
-;;   (spaceline-helm-mode))
 
 (setq ispell-program-name "aspell")
 
@@ -313,6 +309,7 @@
 (defun term-send-next-line ()
   (interactive)
   (term-send-raw-string "\C-n"))
+
 (add-hook 'term-mode-hook
           '(lambda ()
              (let* ((key-and-func
@@ -396,9 +393,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   ("C-c C-<" . mc/mark-all-like-this)
   )
 
-;; shackleの設定
-;;TODO: shackleの方が優秀なのかもしれない(https://qiita.com/fujimotok/items/164cd80b89992eeb4efe)
-;;TODO: https://github.com/shibayu36/emacs/commit/f096b0ef2698b13a9afa75df588d40695e26b18e
+;; popwinの設定
 (use-package popwin
   :config
   (popwin-mode 1)
@@ -408,8 +403,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 		  ("helm" :regexp t :height 0.4)
 		  ))
   (push '("*Agenda Commands*" :regexp t) popwin:special-display-config)
-  (push '("^\*Org Agenda*" :regexp t :height 0.4) popwin:special-display-config)
-  )
+  (push '("^\*Org Agenda*" :regexp t :height 0.4) popwin:special-display-config))
 
 (use-package shell-pop
   :init
@@ -418,8 +412,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (setq shell-pop-window-height 30)
   (setq shell-pop-window-position "bottom")
   :config
-  (define-key term-raw-map (kbd "M-x") 'nil)
-  )
+  (define-key term-raw-map (kbd "M-x") 'nil))
 
 ;;Shellの設定
 ;; shellの文字化けを回避
