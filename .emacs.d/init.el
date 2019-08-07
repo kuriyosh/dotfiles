@@ -230,6 +230,7 @@
 
 (setq ispell-program-name "aspell")
 
+;; avy
 (use-package avy
   :init
   (setq avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?w ?e ?r ?t ?u ?i ?o ?v ?c ?n ?m))
@@ -242,6 +243,7 @@
   ("C-S-o" . 'avy-goto-char-timer)
   ("C-S-l" . 'avy-goto-line))
 
+;; undo-tree
 (use-package undo-tree
   :bind
   ("C-/" . nil)
@@ -251,6 +253,7 @@
   ("C-/" . undo-tree-redo)
   ("s-S-z" . undo-tree-redo))
 
+;; company
 (use-package company
   :init
   (setq company-idle-delay 0) ; デフォルトは0.5
@@ -263,7 +266,7 @@
   ;; (edit-category-table-for-company-dabbrev)
   (setq company-backends (delete 'company-semantic company-backends)))
 
-;; MEMO: diminish使うとmode-lineの幅がおかしくなる
+;; doom-modeline
 (use-package doom-modeline
   :ensure t
   :hook (after-init . doom-modeline-mode)
@@ -273,6 +276,7 @@
   (setq doom-modeline-icon t)
   (setq doom-modeline-minor-modes nil))
 
+;; company-c-headers
 (use-package company-c-headers
   :config
   (add-to-list 'company-backends 'company-c-headers)
@@ -286,15 +290,29 @@
   (add-to-list 'company-c-headers-path-system "/System/Library/Frameworks")
   (add-to-list 'company-c-headers-path-system "/Library/Frameworks"))
 
-;;recentf-extの設定
-(use-package recentf-ext
+;; recentfの設定
+(use-package recentf
   :init
+  (setq recentf-auto-cleanup 60)
+  (setq recentf-auto-save-timer
+		(run-with-idle-timer 60 t 'recentf-save-list))
+  (setq recentf-auto-save-timer (run-with-idle-timer 30 t 'recentf-save-list))
   (setq recentf-max-saved-items 2000)
   (setq recentf-exclude '(".recentf"))
-  (setq recentf-auto-cleanup 10)
-  (setq recentf-auto-save-timer (run-with-idle-timer 30 t 'recentf-save-list))
+
+  ;; recentf の メッセージをエコーエリア(ミニバッファ)に表示しない
+  ;; (*Messages* バッファには出力される)
+  (defun recentf-save-list-inhibit-message:around (orig-func &rest args)
+	(setq inhibit-message t)
+	(apply orig-func args)
+	(setq inhibit-message nil)
+	'around)
   :config
-  (recentf-mode 1))
+  (recentf-mode 1)
+
+  (advice-add 'recentf-cleanup   :around 'recentf-save-list-inhibit-message:around)
+  (advice-add 'recentf-save-list :around 'recentf-save-list-inhibit-message:around))
+
 
 (require 'multi-term)
 (defun term-send-forward-char ()
@@ -306,6 +324,9 @@
 (defun term-send-previous-line ()
   (interactive)
   (term-send-raw-string "\C-p"))
+(defun term-send-delete-char ()
+  (interactive)
+  (term-send-raw-string "\C-h"))
 (defun term-send-next-line ()
   (interactive)
   (term-send-raw-string "\C-n"))
@@ -317,6 +338,7 @@
                        ("\C-n"           term-send-next-line)
                        ("\C-b"           term-send-backward-char)
                        ("\C-f"           term-send-forward-char)
+					   ("\C-h"           term-send-delete-char)
                        (,(kbd "C-y")     term-paste)
                        (,(kbd "ESC ESC") term-send-raw)
                        (,(kbd "C-S-p")   multi-term-prev)
@@ -337,6 +359,7 @@
 ;;; これがないとemacs -Qでエラーになる。おそらくバグ。
 (require 'compile)
 
+;; dump-jum
 (use-package dumb-jump
   :init
   (setq dumb-jump-default-project "")
@@ -364,25 +387,6 @@
   ("C-c c" . reftex-citation))
 
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex) ;auctexの中に入れたいけど何故か機能しない
-
-;; seqの設定
-(defun count-string-matches (regexp string)
-  (with-temp-buffer
-    (insert string)
-    (count-matches regexp (point-min) (point-max))))
-(defun seq (format-string from to)
-  "Insert sequences with FORMAT-STRING.
-FORMAT-STRING is like `format', but it can have multiple %-sequences."
-  (interactive
-   (list (read-string "Input sequence Format: ")
-         (read-number "From: " 1)
-         (read-number "To: ")))
-  (save-excursion
-    (loop for i from from to to do
-          (insert (apply 'format format-string
-                         (make-list (count-string-matches "%[^%]" format-string) i))
-                  "\n")))
-  (end-of-line))
 
 ;; multiple-cursorsの設定
 (use-package multiple-cursors
@@ -975,31 +979,13 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
             '(:with company-yasnippet))))
 
 ;; hs-modeの設定
-(add-hook 'c++-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'c-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'emacs-lisp-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'lisp-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'python-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'js-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'js2-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
-(add-hook 'ruby-mode-hook
-          '(lambda ()
-             (hs-minor-mode 1)))
+(use-package hs-minor-mode
+  :hook
+  (prog-mode))
 
+(use-package asm-mode
+  :mode
+  ("\\.nas?$" . asm-mode))
 ;; ===============================================================
 ;; org-mode
 ;; ===============================================================
@@ -1075,6 +1061,27 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;; ===============================================================
 ;; Original Function
 ;; ===============================================================
+
+;; seqの設定
+(defun count-string-matches (regexp string)
+  (with-temp-buffer
+    (insert string)
+    (count-matches regexp (point-min) (point-max))))
+
+(defun seq (format-string from to)
+  "Insert sequences with FORMAT-STRING. FORMAT-STRING is like `format', but it can have multiple %-sequences."
+  (interactive
+   (list (read-string "Input sequence Format: ")
+         (read-number "From: " 1)
+         (read-number "To: ")))
+  (save-excursion
+    (loop for i from from to to do
+          (insert (apply 'format format-string
+                         (make-list (count-string-matches "%[^%]" format-string) i))
+                  "\n")))
+  (end-of-line))
+
+;; 単語上にカーソルがある時、実行されるとその単語を削除する関数
 (defun kill-word-at-point ()
   (interactive)
   (let ((char (char-to-string (char-after (point)))))
@@ -1083,8 +1090,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
      ((string-match "[\t\n -@\[-`{-~]" char) (kill-word 1))
      (t (forward-char) (backward-word) (kill-word 1)))))
 
+;; ウィンドウのサイズをhjklで変更する関数
 (defun window-resizer ()
-  "ウィンドウのサイズをhjklで変更する関数"
   (interactive)
   (let ((window-obj (selected-window))
         (current-width (window-width))
@@ -1112,8 +1119,8 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
                (message "Quit")
                (throw 'end-flag t)))))))
 
+;; `ansi-term'内で`term-in-line-mode'と`term-in-char-mode'を入れ替える
 (defun my-term-switch-line-char ()
-  "`ansi-term'内で`term-in-line-mode'と`term-in-char-mode'を入れ替える"
   (interactive)
   (cond
    ((term-in-line-mode)
@@ -1217,6 +1224,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key* "C-t t" 'shell-pop)
 (bind-key* "C-t C-r" 'window-resizer)
 (bind-key* "C-t [" 'my-term-switch-line-char term-raw-map)
+(bind-key* "q" 'my-term-switch-line-char term-mode-map)
 (bind-key* "C-t [" 'my-term-switch-line-char term-mode-map)
                                         ;押しやすいキーなのでプレフィックスにする
 (unbind-key "C-q")		

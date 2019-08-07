@@ -1,0 +1,44 @@
+
+;; ----- smex-history -----
+(
+ asm-mode
+ org-clock-out
+ org-clock-in
+ text-adjust-space
+ org-publish
+ yas-global-mode
+ hexl-mode
+)
+
+;; ----- smex-data -----
+(
+ (add-dir-local-variable . 10)
+ (counsel-describe-variable . 10)
+ (counsel-package . 4)
+ (hs-minor-mode . 3)
+ (describe-key . 2)
+ (php-mode . 3)
+ (yas-new-snippet . 5)
+ (yas-minor-mode . 2)
+ (org-publish . 4)
+ (text-adjust . 2)
+ (org-clock-in . 47)
+ (org-clock-out . 51)
+ (org-mode . 3)
+ (yas-global-mode . 26)
+ (text-adjust-space . 20)
+ (hexl-mode . 23)
+ (hexl-find-file . 3)
+ (hexl-insert-hex-char . 1)
+ (overwrite-mode . 1)
+ (nhexl-mode . 10)
+ (emacs-lisp-mode . 1)
+ (fish-mode . 1)
+ (powershell-mode . 1)
+ (org-clock-report . 6)
+ (toggle-truncate-lines . 1)
+ (rainbow-mode . 1)
+ (nhexl-nibble-edit-mode . 4)
+ (eval-region . 3)
+ (asm-mode . 7)
+)
