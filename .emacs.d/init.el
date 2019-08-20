@@ -21,13 +21,6 @@
 ;; (let ((envs '("PATH" "VIRTUAL_ENV" "GOROOT" "GOPATH")))
 ;;   (exec-path-from-shell-copy-envs envs))
 
-(use-package smart-newline
-  ;; 本当は:hookで書きたかったのに何故かばぐるのでこう書いた
-  :init
-  ;; (add-hook 'org-mode-hook
-  ;;           (lambda ()
-  ;;             (smart-newline-mode t)))
-  )
 
 (defun add-to-load-path (&rest paths)
   (let (path)
@@ -128,7 +121,6 @@
 ;;対応する括弧を強調して表示する
 (show-paren-mode 1)
 (setq show-paren-delay 0) ;表示までの秒数
-(show-paren-mode t) ;有効化
 (setq show-paren-style 'mixed)
 
 ;;バックアップファイルとオートセーブファイルを~/.emacs.d/backupsへ集める
@@ -156,7 +148,10 @@
 (add-hook 'after-save-hook
           'executable-make-buffer-file-executable-if-script-p)
 
-;; qでwindowsを消した時に、bufferを自動で消す
+;; ログファイル(*.log)は読み取り専用で開く
+(add-to-list 'auto-mode-alist '("\\.log$" . read-only-mode))
+
+;; q でwindowsを消した時に、bufferを自動で消す
 (defadvice quit-window (before quit-window-always-kill)
   "When running `quit-window', always kill the buffer."
   (ad-set-arg 0 t))
@@ -264,7 +259,15 @@
   :config
   (add-hook 'prog-mode-hook 'company-mode)
   ;; (edit-category-table-for-company-dabbrev)
-  (setq company-backends (delete 'company-semantic company-backends)))
+  (setq company-backends (delete 'company-semantic company-backends))
+  :bind
+  (:map company-active-map
+		("M-n" . nil)
+		("M-p" . nil)
+		("C-h" . nil)
+		("C-n" . company-select-next)
+		("C-p" . company-select-previous )
+		("<tab>" . company-complete-common-or-cycle )))
 
 ;; doom-modeline
 (use-package doom-modeline
@@ -462,6 +465,15 @@
 
 ;; auto-insert-choose
 (use-package auto-insert-choose)
+
+;; smart-newlineの設定
+(use-package smart-newline
+  ;; 最近はorgも平たく描きたいので余計なTAB入れをさせたくない
+  :init
+  ;; (add-hook 'org-mode-hook
+  ;;           (lambda ()
+  ;;             (smart-newline-mode t)))
+  )
 
 ;;undohistの設定
 (use-package undohist
@@ -1223,9 +1235,9 @@
 (bind-key* "C-t |" 'split-window-right)
 (bind-key* "C-t t" 'shell-pop)
 (bind-key* "C-t C-r" 'window-resizer)
-(bind-key* "C-t [" 'my-term-switch-line-char term-raw-map)
-(bind-key* "q" 'my-term-switch-line-char term-mode-map)
-(bind-key* "C-t [" 'my-term-switch-line-char term-mode-map)
+(bind-key "C-t [" 'my-term-switch-line-char term-raw-map)
+(bind-key "q" 'my-term-switch-line-char term-mode-map)
+(bind-key "C-t [" 'my-term-switch-line-char term-mode-map)
                                         ;押しやすいキーなのでプレフィックスにする
 (unbind-key "C-q")		
 (bind-key "C-q C-q" 'quoted-insert)		 ;押しやすいキーなのでプレフィックスにする
@@ -1236,12 +1248,12 @@
 ;; TODO: MAP依存は各use-package以内に書いたほうが良いかな？
 ;; → あるパッケージを無効化したい時に、複数箇所コメントアウトする必要があるので、use-package内に記述していた方がよい
 ;; → globalな設定もとい、他のパッケージ依存の設定はここに書かない
-(unbind-key "M-n" company-active-map)
-(unbind-key "M-p" company-active-map)
-(unbind-key "C-h" company-active-map)
-(bind-key "C-n" 'company-select-next company-active-map)
-(bind-key "C-p" 'company-select-previous company-active-map)
-(bind-key "<tab>" 'company-complete-common-or-cycle company-active-map)
+;; (unbind-key "M-n" company-active-map)
+;; (unbind-key "M-p" company-active-map)
+;; (unbind-key "C-h" company-active-map)
+;; (bind-key "C-n" 'company-select-next company-active-map)
+;; (bind-key "C-p" 'company-select-previous company-active-map)
+;; (bind-key "<tab>" 'company-complete-common-or-cycle company-active-map)
 
 ;; HACK: 何故か2度呼び出すとうまくいくから書いてる。ちなみに上のやつ消してもだめ、絶対2回
 (exec-path-from-shell-initialize)

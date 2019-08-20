@@ -1,13 +1,13 @@
 
 ;; ----- smex-history -----
 (
- asm-mode
- org-clock-out
- org-clock-in
+ eval-region
+ flycheck-mode
  text-adjust-space
- org-publish
  yas-global-mode
  hexl-mode
+ nhexl-mode
+ add-dir-local-variable
 )
 
 ;; ----- smex-data -----
@@ -16,29 +16,34 @@
  (counsel-describe-variable . 10)
  (counsel-package . 4)
  (hs-minor-mode . 3)
- (describe-key . 2)
+ (describe-key . 4)
  (php-mode . 3)
  (yas-new-snippet . 5)
- (yas-minor-mode . 2)
- (org-publish . 4)
+ (yas-minor-mode . 5)
+ (org-publish . 8)
  (text-adjust . 2)
- (org-clock-in . 47)
- (org-clock-out . 51)
+ (org-clock-in . 72)
+ (org-clock-out . 73)
  (org-mode . 3)
- (yas-global-mode . 26)
- (text-adjust-space . 20)
+ (yas-global-mode . 39)
+ (text-adjust-space . 40)
  (hexl-mode . 23)
  (hexl-find-file . 3)
  (hexl-insert-hex-char . 1)
  (overwrite-mode . 1)
  (nhexl-mode . 10)
  (emacs-lisp-mode . 1)
- (fish-mode . 1)
+ (fish-mode . 2)
  (powershell-mode . 1)
- (org-clock-report . 6)
+ (org-clock-report . 7)
  (toggle-truncate-lines . 1)
  (rainbow-mode . 1)
  (nhexl-nibble-edit-mode . 4)
- (eval-region . 3)
+ (eval-region . 4)
  (asm-mode . 7)
+ (text-mode . 1)
+ (flycheck-mode . 7)
+ (org-html-export-as-html . 1)
+ (org-html-export-to-html . 1)
+ (org-md-export-as-markdown . 1)
 )
