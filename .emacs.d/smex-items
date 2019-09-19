@@ -1,32 +1,32 @@
 
 ;; ----- smex-history -----
 (
- eval-region
- flycheck-mode
  text-adjust-space
- yas-global-mode
- hexl-mode
- nhexl-mode
- add-dir-local-variable
+ yas-reload-all
+ org-html-export-to-html
+ org-publish
+ json-mode
+ my-put-file-name-on-clipboard
+ tetris
 )
 
 ;; ----- smex-data -----
 (
  (add-dir-local-variable . 10)
- (counsel-describe-variable . 10)
- (counsel-package . 4)
+ (counsel-describe-variable . 15)
+ (counsel-package . 9)
  (hs-minor-mode . 3)
- (describe-key . 4)
+ (describe-key . 5)
  (php-mode . 3)
  (yas-new-snippet . 5)
- (yas-minor-mode . 5)
- (org-publish . 8)
+ (yas-minor-mode . 7)
+ (org-publish . 31)
  (text-adjust . 2)
  (org-clock-in . 72)
  (org-clock-out . 73)
- (org-mode . 3)
- (yas-global-mode . 39)
- (text-adjust-space . 40)
+ (org-mode . 14)
+ (yas-global-mode . 49)
+ (text-adjust-space . 118)
  (hexl-mode . 23)
  (hexl-find-file . 3)
  (hexl-insert-hex-char . 1)
@@ -40,10 +40,25 @@
  (rainbow-mode . 1)
  (nhexl-nibble-edit-mode . 4)
  (eval-region . 4)
- (asm-mode . 7)
+ (asm-mode . 10)
  (text-mode . 1)
- (flycheck-mode . 7)
- (org-html-export-as-html . 1)
- (org-html-export-to-html . 1)
+ (flycheck-mode . 13)
+ (org-html-export-as-html . 3)
+ (org-html-export-to-html . 5)
  (org-md-export-as-markdown . 1)
+ (package-install . 2)
+ (minibuffer-line-mode . 7)
+ (doom-modeline-mode . 6)
+ (smart-mode-line-enable . 1)
+ (mini-modeline-mode . 1)
+ (highlight-numbers-mode . 2)
+ (company-mode . 2)
+ (c-mode . 4)
+ (python-mode . 1)
+ (yas/load-directory . 1)
+ (yas-reload-all . 18)
+ (yaml-electric-bar-and-angle . 1)
+ (tetris . 1)
+ (my-put-file-name-on-clipboard . 1)
+ (json-mode . 1)
 )

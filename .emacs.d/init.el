@@ -3,8 +3,6 @@
 
 ;; ;; You may delete these explanatory comments.
 
-;; ;; TODO: abbrevいらないのでは？
-
 ;; ;; ===============================================================
 ;; ;; Global Setting
 ;; ;; ===============================================================
@@ -279,6 +277,11 @@
   (setq doom-modeline-icon t)
   (setq doom-modeline-minor-modes nil))
 
+;; (use-package mini-modeline
+;;   :after smart-mode-line
+;;   :config
+;;   (mini-modeline-mode t))
+
 ;; company-c-headers
 (use-package company-c-headers
   :config
@@ -515,6 +518,10 @@
                       :underline nil)
   )
 
+(use-package yaml-mode
+  :init
+  (setq indent-tabs-mode nil))
+
 (use-package emmet-mode
   :init
   (setq emmet-indentation 2)
@@ -638,7 +645,6 @@
   :after (ivy)
   :bind
   ("M-x" .  counsel-M-x)
-  ("C-M-z" .  counsel-fzf)
   ("C-M-z" .  counsel-fzf)
   ("C-x C-r" .  ivy-switch-buffer)
   ("C-M-f" .  counsel-ag)
@@ -956,7 +962,6 @@
            :delimiter "\t"))))
 
 (use-package ivy-yasnippet
-  :after (ivy)
   :bind
   ("C-c y" . ivy-yasnippet))
 
@@ -974,11 +979,13 @@
   )
 
 (use-package yasnippet
+  :after ivy
   :bind
   ;; companyのtabと競合しているのでC-iと使い分ける
   (:map yas-keymap
         ("<tab>" . nil))
   :config
+										;TODO: 今の設定だとdir-localでsnippetのdirが更新されても、自分でreloadしないといけない
   (yas-global-mode 1)
   (push '("emacs.+/snippets/" . snippet-mode) auto-mode-alist))
 
@@ -995,7 +1002,35 @@
   :hook
   (prog-mode))
 
+(defun my-asm-mode-hook ()
+  ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
+  (local-unset-key (vector asm-comment-char))
+  ;; (local-unset-key "<return>") ; doesn't work. "RET" in a terminal.  http://emacs.stackexchange.com/questions/13286/how-can-i-stop-the-enter-key-from-triggering-a-completion-in-company-mode
+  (electric-indent-local-mode)  ; toggle off
+										;  (setq tab-width 4)
+  (setq indent-tabs-mode nil)
+  ;; asm-mode sets it locally to nil, to "stay closer to the old TAB behaviour".
+  ;; (setq tab-always-indent (default-value 'tab-always-indent))
+
+  (defun asm-calculate-indentation ()
+	(or
+	 ;; Flush labels to the left margin.
+										;   (and (looking-at "\\(\\.\\|\\sw\\|\\s_\\)+:") 0)
+	 (and (looking-at "[.@_[:word:]]+:") 0)
+	 ;; Same thing for `;;;' comments.
+	 (and (looking-at "\\s<\\s<\\s<") 0)
+	 ;; %if nasm macro stuff goes to the left margin
+	 (and (looking-at "%") 0)
+	 (and (looking-at "c?global\\|section\\|default\\|align\\|INIT_..X") 0)
+	 ;; Simple `;' comments go to the comment-column
+										;(and (looking-at "\\s<\\(\\S<\\|\\'\\)") comment-column)
+	 ;; The rest goes at column 4
+	 (or 4))))
+
 (use-package asm-mode
+  :config
+  (setq tab-width 4)
+  (add-hook 'asm-mode-hook #'my-asm-mode-hook)
   :mode
   ("\\.nas?$" . asm-mode))
 ;; ===============================================================
@@ -1069,10 +1104,23 @@
   (c-toggle-auto-hungry-state -1)
   (setq c-basic-offset 4))
 (add-hook 'c++-mode-hook 'my-c-c++-mode-init)
+(add-hook 'c-mode-hook 'my-c-c++-mode-init)
 
 ;; ===============================================================
 ;; Original Function
 ;; ===============================================================
+
+(defun my-put-file-name-on-clipboard ()
+  "クリップボードにアクティブバッファのパスを格納"
+  (interactive)
+  (let ((filename (if (equal major-mode 'dired-mode)
+                      default-directory
+                    (buffer-file-name))))
+    (when filename
+      (with-temp-buffer
+        (insert filename)
+        (clipboard-kill-region (point-min) (point-max)))
+      (message filename))))
 
 ;; seqの設定
 (defun count-string-matches (regexp string)
@@ -1216,6 +1264,7 @@
 (bind-key "M-p" (kbd "M-5 C-p"))
 (bind-key "C-w" 'backward-kill-word minibuffer-local-completion-map)
 (unbind-key "C-\\")				 ;Emacsのレイヤーで日本語の入力サポートされたくない
+(bind-key "<f10>" 'read-only-mode)
 
 ;; Mac 依存のキーバインド
 (bind-key "s-k" 'kill-this-buffer)
@@ -1224,6 +1273,8 @@
 (bind-key "s-," 'previous-buffer)
 (bind-key "s-=" 'text-scale-adjust)
 (bind-key "s--" 'text-scale-adjust)
+(bind-key "s-t" 'find-file)
+(bind-key "s-i" 'my-put-file-name-on-clipboard)
 
 ;; window系とterminal系は共通のプレフィックス `C-t'
 (unbind-key "C-t")
@@ -1235,25 +1286,15 @@
 (bind-key* "C-t |" 'split-window-right)
 (bind-key* "C-t t" 'shell-pop)
 (bind-key* "C-t C-r" 'window-resizer)
-(bind-key "C-t [" 'my-term-switch-line-char term-raw-map)
+(bind-key* "C-t [" 'my-term-switch-line-char term-raw-map)
 (bind-key "q" 'my-term-switch-line-char term-mode-map)
-(bind-key "C-t [" 'my-term-switch-line-char term-mode-map)
+(bind-key* "C-t [" 'my-term-switch-line-char term-mode-map)
                                         ;押しやすいキーなのでプレフィックスにする
-(unbind-key "C-q")		
+(unbind-key "C-q")
 (bind-key "C-q C-q" 'quoted-insert)		 ;押しやすいキーなのでプレフィックスにする
 
 ;; ファイル系のプレフィックス `C-x'
 (bind-key "C-x j" 'open-junk-file)
-
-;; TODO: MAP依存は各use-package以内に書いたほうが良いかな？
-;; → あるパッケージを無効化したい時に、複数箇所コメントアウトする必要があるので、use-package内に記述していた方がよい
-;; → globalな設定もとい、他のパッケージ依存の設定はここに書かない
-;; (unbind-key "M-n" company-active-map)
-;; (unbind-key "M-p" company-active-map)
-;; (unbind-key "C-h" company-active-map)
-;; (bind-key "C-n" 'company-select-next company-active-map)
-;; (bind-key "C-p" 'company-select-previous company-active-map)
-;; (bind-key "<tab>" 'company-complete-common-or-cycle company-active-map)
 
 ;; HACK: 何故か2度呼び出すとうまくいくから書いてる。ちなみに上のやつ消してもだめ、絶対2回
 (exec-path-from-shell-initialize)
