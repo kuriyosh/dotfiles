@@ -12,3 +12,6 @@ git clone https://github.com/torith/dotfiles.git
 cd dotfiles
 ./install.sh
 #+END_SRC
+
+* Memo
+Emacsのversionは26.1.2で安定稼働することを確認
