@@ -1,0 +1,4 @@
+#!/usr/local/bin/fish
+
+cat ~/.ssh/ec2_default.pem | pbcopy
+echo "copy clipboard ec2_default"

@@ -1,0 +1,13 @@
+#!/usr/local/bin/fish
+
+set ip (curl inet-ip.info)
+set sg "sg-084e1f3b975006442"
+aws ec2 revoke-security-group-ingress --group-id $sg --protocol tcp --port 22
+aws ec2 revoke-security-group-ingress --group-id $sg --protocol tcp --port 80
+aws ec2 revoke-security-group-ingress --group-id $sg --protocol tcp --port 443
+aws ec2 authorize-security-group-ingress --group-id $sg --protocol tcp --port 22 --cidr $ip/32
+aws ec2 authorize-security-group-ingress --group-id $sg --protocol tcp --port 80 --cidr $ip/32
+aws ec2 authorize-security-group-ingress --group-id $sg --protocol tcp --port 443 --cidr $ip/32
+
+
+
