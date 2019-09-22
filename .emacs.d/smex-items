@@ -1,32 +1,32 @@
 
 ;; ----- smex-history -----
 (
+ all-the-icons-install-fonts
+ counsel-package
  text-adjust-space
  yas-reload-all
- org-html-export-to-html
- org-publish
+ version
  json-mode
- my-put-file-name-on-clipboard
- tetris
+ yas-global-mode
 )
 
 ;; ----- smex-data -----
 (
  (add-dir-local-variable . 10)
  (counsel-describe-variable . 15)
- (counsel-package . 9)
+ (counsel-package . 23)
  (hs-minor-mode . 3)
  (describe-key . 5)
  (php-mode . 3)
  (yas-new-snippet . 5)
  (yas-minor-mode . 7)
- (org-publish . 31)
+ (org-publish . 32)
  (text-adjust . 2)
  (org-clock-in . 72)
  (org-clock-out . 73)
  (org-mode . 14)
  (yas-global-mode . 49)
- (text-adjust-space . 118)
+ (text-adjust-space . 121)
  (hexl-mode . 23)
  (hexl-find-file . 3)
  (hexl-insert-hex-char . 1)
@@ -56,9 +56,12 @@
  (c-mode . 4)
  (python-mode . 1)
  (yas/load-directory . 1)
- (yas-reload-all . 18)
+ (yas-reload-all . 19)
  (yaml-electric-bar-and-angle . 1)
  (tetris . 1)
  (my-put-file-name-on-clipboard . 1)
  (json-mode . 1)
+ (version . 1)
+ (ivy-rich-mode . 1)
+ (all-the-icons-install-fonts . 1)
 )
