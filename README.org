@@ -11,6 +11,7 @@
 - [[https://kapeli.com/dash][Dash]]
 - [[https://www.dropbox.com/install][Dropbox]]
 - [[https://pilotmoon.com/scrollreverser/][Scroll Reverser]]
+- [[https://apps.apple.com/app/apple-store/id1176895641][Spark]]
 - [[https://www.spectacleapp.com][Spectacle]]
 - [[https://1password.com/jp/][1Password]]
 
