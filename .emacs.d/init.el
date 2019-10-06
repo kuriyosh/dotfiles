@@ -236,6 +236,10 @@
   ("C-S-o" . 'avy-goto-char-timer)
   ("C-S-l" . 'avy-goto-line))
 
+(use-package ox-qmd
+  :init
+  (setq ox-qmd-unfill-paragraph nil))
+
 ;; undo-tree
 (use-package undo-tree
   :bind
@@ -300,11 +304,11 @@
 (use-package recentf
   :init
   (setq recentf-auto-cleanup 60)
+  (setq recentf-exclude '(".recentf" "COMMIT_EDITMSG" "/.?TAGS" "^/sudo:" "/\\.emacs\\.d/games/*-scores" "~/Documents/Case/html"))
   (setq recentf-auto-save-timer
 		(run-with-idle-timer 60 t 'recentf-save-list))
   (setq recentf-auto-save-timer (run-with-idle-timer 30 t 'recentf-save-list))
   (setq recentf-max-saved-items 2000)
-  (setq recentf-exclude '(".recentf"))
 
   ;; recentf の メッセージをエコーエリア(ミニバッファ)に表示しない
   ;; (*Messages* バッファには出力される)
@@ -975,8 +979,11 @@
   (setq hl-line-idle-interval 2)
   :config
   (toggle-hl-line-when-idle)
-  (set-face-background 'hl-line "firebrick")
-  )
+  (set-face-background 'hl-line "firebrick"))
+
+(use-package elmacro
+  :config
+  (elmacro-mode))
 
 (use-package yasnippet
   :after ivy
@@ -1062,8 +1069,7 @@
   (setq org-hide-emphasis-markers t)
   :config
   (add-to-list 'org-emphasis-alist
-               '("*" (:foreground "red")
-				 ))
+               '("*" (:foreground "red")))
   :bind
   ("C-c c" . org-capture)
   ("C-c a" . org-agenda))
@@ -1236,6 +1242,24 @@
 (global-set-key [remap next-buffer] 'my-next-buffer)
 (global-set-key [remap previous-buffer] 'my-previous-buffer)
 
+;; macros
+;; (fset 'org-to-md-for-case
+;; 	  [?\C-c ?\C-p ?\C-n ?\C-  ?\C-n ?\C-c ?\C-n ?\C-p ?\M-x ?o ?r ?g ?- ?q ?m ?d ?- ?c ?o ?n ?v ?e ?r ?t ?- ?r ?e ?g ?o ?i backspace backspace ?i ?o ?n ?- ?t ?o ?- ?m ?d return ?\C-  ?\C-c ?\C-p ?\C-n ?\M-w ?\C-z])
+
+(defun org-to-md-for-case ()
+  (interactive)
+  (org-previous-visible-heading 1)
+  (next-line 1 1)
+  (set-mark-command nil)
+  (org-next-visible-heading 1)
+  (org-qmd-convert-region-to-md)
+  (set-mark-command nil)
+  (org-previous-visible-heading 1)
+  (forward-char 3)
+  (easy-kill 1)
+  (undo-tree-undo nil))
+
+
 ;; ===============================================================
 ;; Key-bind (necessary bind-key.el)
 ;; ===============================================================
@@ -1265,6 +1289,7 @@
 (bind-key "C-w" 'backward-kill-word minibuffer-local-completion-map)
 (unbind-key "C-\\")				 ;Emacsのレイヤーで日本語の入力サポートされたくない
 (bind-key "<f10>" 'read-only-mode)
+(bind-key "<f9>" 'org-to-md-for-case)
 
 ;; Mac 依存のキーバインド
 (bind-key "s-k" 'kill-this-buffer)
