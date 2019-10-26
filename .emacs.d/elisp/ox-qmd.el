@@ -62,7 +62,8 @@
                      (inner-template . org-qmd--inner-template)
                      (keyword . org--qmd-keyword)
                      (strike-through . org-qmd-strike-through)
-                     (src-block . org-qmd--src-block)))
+                     (src-block . org-qmd--src-block)
+					 (example-block . my-org-md-example-block)))
 
 
 
@@ -134,7 +135,15 @@ channel."
 (defun org-qmd-strike-through (strike-through contents info)
   (format "~~%s~~" contents))
 
-
+;; quote
+(defun my-org-md-example-block (example-block _contents info)
+  "Transcode EXAMPLE-BLOCK element into Markdown format.
+CONTENTS is nil.  INFO is a plist used as a communication
+channel."
+  (replace-regexp-in-string
+   "^" "> "
+   (org-remove-indentation
+    (org-export-format-code-default example-block info))))
 
 ;;; Interactive function
 

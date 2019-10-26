@@ -20,6 +20,7 @@ alias cr "cd (git rev-parse --show-toplevel)"
 alias pull "git pull"
 alias push "git push"
 alias gc "cd (ghq root)/(ghq list | peco)"
+alias diff "colordiff"
 
 # AWS CLI
 alias ec2s "aws ec2 describe-instances --query 'Reservations[].Instances[].{Name:Tags[?Key==`Name`].Value,InstanceId:InstanceId,PublicIp:PublicIpAddress}' --output text"

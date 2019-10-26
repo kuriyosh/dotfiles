@@ -23,6 +23,7 @@
 /.emacs.d/elpa/irony-20180519.422/server/*
 /.emacs.d/elpa/irony-20180703.1740/server/*
 .emacs.d/smex-items
+.emacs.d/projectile-bookmarks.eld
 archive-contents
 
 *.elc

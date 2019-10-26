@@ -19,7 +19,6 @@
 ;; (let ((envs '("PATH" "VIRTUAL_ENV" "GOROOT" "GOPATH")))
 ;;   (exec-path-from-shell-copy-envs envs))
 
-
 (defun add-to-load-path (&rest paths)
   (let (path)
     (dolist (path paths paths)
@@ -132,7 +131,9 @@
 (setq trash-directory "~/.Trash")
 (setq delete-by-moving-to-trash t)
 
-(use-package text-adjust)
+(use-package text-adjust
+  :bind
+  ("<f8>" . text-adjust-space))
 
 ;; 自動ファイルリストとロックファイルは生成しない
 (setq auto-save-list-file-prefix nil)
@@ -149,12 +150,13 @@
 ;; ログファイル(*.log)は読み取り専用で開く
 (add-to-list 'auto-mode-alist '("\\.log$" . read-only-mode))
 
-;; q でwindowsを消した時に、bufferを自動で消す
+;; `quit-window' でwindowsを消した時に、bufferを自動で消す
 (defadvice quit-window (before quit-window-always-kill)
-  "When running `quit-window', always kill the buffer."
   (ad-set-arg 0 t))
 (ad-activate 'quit-window)
 
+;; `next-buffer' `before-buffer' について、閲覧する必要がないbufferをスキップする
+(setq skippable-buffers '("*Messages*" "*helm mini*" "*Help*" "*helm M-x*" "*Shell Command Output*" "*helm-mode-org-publish*" "*helm-mode-org-insert-link*" "*helm find files*" "*helm kill ring*" "*helm-mode-basic-save-buffer*"))
 
 ;; ===============================================================
 ;; Shell Setting
@@ -204,22 +206,36 @@
 ;; smartparen
 (use-package smartparens
   :config
-  (smartparens-global-mode t)
   (sp-pair "「" "」")
   (sp-pair "【" "】")
-  (sp-pair "'" "'"))
+  (sp-pair "'" "'")
+  (progn
+    (require 'smartparens-config)
+    (sp-local-pair 'org-mode "$" "$")
+    (eval-after-load 'org-mode     '(require 'smartparens-org))
+    (show-smartparens-global-mode)
+    (smartparens-global-mode)))
 
-;; newtree
+;; neotree
 (use-package neotree
   :commands (projectile)
   :init
   (setq neo-show-hidden-files t)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+  (setq neo-smart-open t)
   :config
   (projectile-global-mode)
   :bind
-  ("<f8>" . 'neotree-projectile-action)
-  )
+  ("C-x C-x" . 'neotree-toggle)
+  (:map neotree-mode-map
+		("a" . 'neotree-hidden-file-toggle)
+		("f" . 'neotree-change-root)
+		("b" . 'neotree-select-up-node)))
+
+;; hide-mode-line
+(use-package hide-mode-line
+  :hook
+  ((neotree-mode imenu-list-minor-mode minimap-mode) . hide-mode-line-mode))
 
 (setq ispell-program-name "aspell")
 
@@ -270,6 +286,9 @@
 		("C-n" . company-select-next)
 		("C-p" . company-select-previous )
 		("<tab>" . company-complete-common-or-cycle )))
+
+(use-package company-box
+  :hook (company-mode . company-box-mode))
 
 ;; doom-modeline
 (use-package doom-modeline
@@ -1040,6 +1059,7 @@
   (add-hook 'asm-mode-hook #'my-asm-mode-hook)
   :mode
   ("\\.nas?$" . asm-mode))
+
 ;; ===============================================================
 ;; org-mode
 ;; ===============================================================
@@ -1048,9 +1068,9 @@
   )
 (use-package org
   :init
-  (setq org-startup-truncated nil)		;org折返し
-  (setq org-use-speed-commands t)		;speed-commandをONにする
-  (setq org-startup-with-inline-images t) ;インラインで画像表示
+  (setq org-startup-truncated nil)
+  (setq org-use-speed-commands t)
+  (setq org-startup-with-inline-images t)
   (setq org-agenda-files '("~/Dropbox/org/todo.org"))
   (setq org-capture-templates
 		'(("t" "Task" entry
@@ -1058,18 +1078,24 @@
            "* TODO %? \n ADDED: %t")
 		  ("m" "Memo" entry
            (file+headline "~/Dropbox/org/memo.org" "Memo")
-           "* %u %?\n%i\n")
-		  ))
-  ;; org-agendaでaを押したら予定表とTODOリストを表示
+           "* %u %?\n%i\n")))
   (setq org-agenda-custom-commands
 		'(("a" "Agenda and TODO"
            ((agenda "")
 			(alltodo "")))))
   (setq org-agenda-start-on-weekday nil)
+  ;; export style setting (https://orgmode.org/manual/Export-settings.html#Export-settings)
   (setq org-hide-emphasis-markers t)
-  :config
-  (add-to-list 'org-emphasis-alist
-               '("*" (:foreground "red")))
+  (setq org-export-with-timestamps nil)
+  (setq org-export-with-sub-superscripts nil)
+  (setq org-emphasis-alist
+		'(("*" (bold :foreground "Orange" ))
+		  ("/" italic)
+		  ("_" underline)
+		  ("=" (org-verbatim verbatim :background "maroon" :foreground "white"))
+		  ("~" (org-code verbatim :background "deep sky blue" :foreground "MidnightBlue"))
+		  ("+" (:strike-through t))))
+
   :bind
   ("C-c c" . org-capture)
   ("C-c a" . org-agenda))
@@ -1087,8 +1113,7 @@
 ;; ===============================================================
 (use-package js2-mode
   :init
-  (setq js2-idle-timer-delay 2)
-  )
+  (setq js2-idle-timer-delay 2))
 
 ;; ===============================================================
 ;; rjsx-mode
@@ -1096,8 +1121,7 @@
 (use-package rjsx-mode
   :init
   (setq js-indent-level 2)
-  (setq js2-strict-missing-semi-warning nil)
-  )
+  (setq js2-strict-missing-semi-warning nil))
 
 ;; ===============================================================
 ;; C/C++ setting
@@ -1221,9 +1245,6 @@
 (defun finder-current-dir-open()
   (interactive)
   (shell-command "open ."))
-
-;; `next-buffer' `before-buffer' について、閲覧する必要がないbufferをスキップする
-(setq skippable-buffers '("*Messages*" "*helm mini*" "*Help*" "*helm M-x*" "*Shell Command Output*" "*helm-mode-org-publish*" "*helm-mode-org-insert-link*" "*helm find files*" "*helm kill ring*" "*helm-mode-basic-save-buffer*"))
 
 (defun my-next-buffer ()
   "next-buffer that skips certain buffers"
