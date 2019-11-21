@@ -34,7 +34,7 @@ archive-contents
 fish/fish_variables
 
 ###########################
-# Script
+# Scripts
 ###########################
-.script/startup
-.script/mcurl
+.scripts/startup
+.scripts/mcurl
