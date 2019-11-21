@@ -78,9 +78,6 @@
 (setq desktop-files-not-to-save "")
 (desktop-save-mode 1)
 
-;;終了時の確認
-(setq confirm-kill-emacs 'y-or-n-p)
-
 ;;メニューバーを消す
 (menu-bar-mode 0)
 
@@ -98,9 +95,6 @@
 
 ;;yes,noをy,nで回答可能にする
 (defalias 'yes-or-no-p 'y-or-n-p)
-
-;;自動インデントモード
-(setq c-tab-always-indent nil)
 
 ;;起動時のメッセージを非表示にする
 (setq inhibit-startup-message t)
@@ -248,7 +242,6 @@
   (setq avy-all-windows nil)
   (setq avy-timeout-seconds 0.4)
   :bind
-  ("C-o" . 'avy-goto-word-1)
   ("C-S-o" . 'avy-goto-char-timer)
   ("C-S-l" . 'avy-goto-line))
 
@@ -272,11 +265,20 @@
   (setq company-idle-delay 0) ; デフォルトは0.5
   (setq company-minimum-prefix-length 1) ; デフォルトは4
   (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
-  ;; (setq company-dabbrev-char-regexp "\\cs")
   (setq company-dabbrev-downcase nil)	;string内で大文字と小文字の区別を行う
+  (defun edit-category-table-for-company-dabbrev (&optional table)
+  (define-category ?s "word constituents for company-dabbrev" table)
+  (let ((i 0))
+    (while (< i 128)
+      (if (equal ?w (char-syntax i))
+      (modify-category-entry i ?s table)
+    (modify-category-entry i ?s table t))
+      (setq i (1+ i)))))
   :config
   (add-hook 'prog-mode-hook 'company-mode)
-  ;; (edit-category-table-for-company-dabbrev)
+  ;; (global-company-mode)
+  (edit-category-table-for-company-dabbrev)
+  (setq company-dabbrev-char-regexp "\\cs")
   (setq company-backends (delete 'company-semantic company-backends))
   :bind
   (:map company-active-map
@@ -299,11 +301,6 @@
   (setq doom-modeline-height 20)
   (setq doom-modeline-icon t)
   (setq doom-modeline-minor-modes nil))
-
-;; (use-package mini-modeline
-;;   :after smart-mode-line
-;;   :config
-;;   (mini-modeline-mode t))
 
 ;; company-c-headers
 (use-package company-c-headers
@@ -618,38 +615,7 @@
 	:modes (c-mode c++-mode))
   (add-hook 'c++-mode-hook				;originalのチェッカーをデフォルトに変更。競プロ用なのでdir-localでもいいかも
 			'(lambda()
-               (flycheck-select-checker 'c/c++11)))
-  )
-
-;; helmの設定
-;; (use-package helm
-;;   :config
-;;   (helm-mode 1)
-;;   :bind
-;;   ("C-x C-r" . helm-mini)
-;;   ("C-x C-f" . helm-find-files)
-;;   ("M-y" . helm-show-kill-ring)
-;;   ("M-x" . 'helm-M-x)
-;;   (:map helm-map
-;;         ("C-z" . helm-select-action)
-;; 		:map helm-find-files-map
-;;         ("<tab>" . helm-execute-persistent-action)
-;; 		:map helm-read-file-map
-;;         ("<tab>" . helm-execute-persistent-action)))
-
-;; ;;helm-flycheckの設定
-;; (use-package helm-flycheck
-;;   :bind
-;;   (:map flycheck-mode-map
-;;         ("C-c f" . helm-flycheck))
-;;   )
-
-;; (use-package helm-swoop
-;;   :init
-;;   (setq helm-swoop-split-window-function 'display-buffer)
-;;   :bind
-;;   ("C-S-s" . helm-swoop)
-;;   )
+               (flycheck-select-checker 'c/c++11))))
 
 ;; ivyの設定
 (use-package ivy
@@ -1246,6 +1212,12 @@
   (interactive)
   (shell-command "open ."))
 
+(defun move-beginning-alt()
+  (interactive)
+  (if (bolp)
+      (back-to-indentation)
+    (beginning-of-line)))
+
 (defun my-next-buffer ()
   "next-buffer that skips certain buffers"
   (interactive)
@@ -1264,9 +1236,6 @@
 (global-set-key [remap previous-buffer] 'my-previous-buffer)
 
 ;; macros
-;; (fset 'org-to-md-for-case
-;; 	  [?\C-c ?\C-p ?\C-n ?\C-  ?\C-n ?\C-c ?\C-n ?\C-p ?\M-x ?o ?r ?g ?- ?q ?m ?d ?- ?c ?o ?n ?v ?e ?r ?t ?- ?r ?e ?g ?o ?i backspace backspace ?i ?o ?n ?- ?t ?o ?- ?m ?d return ?\C-  ?\C-c ?\C-p ?\C-n ?\M-w ?\C-z])
-
 (defun org-to-md-for-case ()
   (interactive)
   (org-previous-visible-heading 1)
@@ -1279,7 +1248,6 @@
   (forward-char 3)
   (easy-kill 1)
   (undo-tree-undo nil))
-
 
 ;; ===============================================================
 ;; Key-bind (necessary bind-key.el)
@@ -1311,6 +1279,7 @@
 (unbind-key "C-\\")				 ;Emacsのレイヤーで日本語の入力サポートされたくない
 (bind-key "<f10>" 'read-only-mode)
 (bind-key "<f9>" 'org-to-md-for-case)
+(bind-key "C-a" 'move-beginning-alt)
 
 ;; Mac 依存のキーバインド
 (bind-key "s-k" 'kill-this-buffer)
@@ -1335,9 +1304,9 @@
 (bind-key* "C-t [" 'my-term-switch-line-char term-raw-map)
 (bind-key "q" 'my-term-switch-line-char term-mode-map)
 (bind-key* "C-t [" 'my-term-switch-line-char term-mode-map)
-                                        ;押しやすいキーなのでプレフィックスにする
+
 (unbind-key "C-q")
-(bind-key "C-q C-q" 'quoted-insert)		 ;押しやすいキーなのでプレフィックスにする
+(bind-key "C-q C-q" 'quoted-insert)
 
 ;; ファイル系のプレフィックス `C-x'
 (bind-key "C-x j" 'open-junk-file)

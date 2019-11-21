@@ -1,6 +1,0 @@
-#!/usr/local/bin/fish
-
-echo '=== 退勤チェックリスト ==='
-echo '[ ] paragonのステータス'
-echo '[ ] Outlook確認'
-echo '[ ] Lobby確認'

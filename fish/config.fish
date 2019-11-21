@@ -23,9 +23,9 @@ alias gc "cd (ghq root)/(ghq list | peco)"
 alias diff "colordiff"
 
 # AWS CLI
-alias ec2s "aws ec2 describe-instances --query 'Reservations[].Instances[].{Name:Tags[?Key==`Name`].Value,InstanceId:InstanceId,PublicIp:PublicIpAddress}' --output text"
-alias enja "pbpaste | xargs -0 -I {} aws translate translate-text --text \"{}\" --source-language-code en --target-language-code ja | jq .TranslatedText"
-alias jaen "pbpaste | xargs -0 -I {} aws translate translate-text --text \"{}\" --source-language-code ja --target-language-code en | jq .TranslatedText"
+alias el ec2-launcher
+alias ej "pbpaste | xargs -0 -I {} aws translate translate-text --text \"{}\" --source-language-code en --target-language-code ja | jq .TranslatedText"
+alias je "pbpaste | xargs -0 -I {} aws translate translate-text --text \"{}\" --source-language-code ja --target-language-code en | jq .TranslatedText"
 
 # functions
 function targz

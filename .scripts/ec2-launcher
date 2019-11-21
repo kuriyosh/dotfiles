@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# 鍵が複数マッチしたときの挙動
+# パスが .ssh になかった時用の設定
+
+trap 'exit 1' 2
+
+rawJson=`aws ec2 describe-instances --filters "Name=instance-state-name, Values=running"`
+instanceId=$(echo $rawJson | jq -r '.Reservations[].Instances[] | [ .InstanceId, (.Tags[]? | select(.Key == "Name")).Value ] | @sh' | sed "s/'//g" | peco | awk '{print $1}')
+selectJson=$(echo $rawJson | jq ".Reservations[].Instances[] | select(.InstanceId == \"${instanceId}\")")
+
+keyName=$(echo $selectJson | jq ".KeyName" | sed "s/\"//g")
+keyPath=$(find ~/.ssh/ -name \*${keyName}\*.pem)
+if [ -z $keyPath ]; then
+	echo "Cannot find key-pair" >&2
+	return 1
+fi
+
+publicIp=$(echo $selectJson | jq ".PublicIpAddress" | sed "s/\"//g")
+if [ -z $keyPath ]; then
+	echo "Instance does not have public IP" >&2
+	return 1
+fi
+
+platform=$(echo $selectJson | jq ".Platform" | sed "s/\"//g")
+
+if [ $platform = "windows" ]; then
+	echo "Platform is Windows"
+    echo "auto connect:i:1" > /tmp/${publicIp}.rdp
+	echo "full address:s:${publicIp}" >> /tmp/${publicIp}.rdp
+	echo "username:s:Administrator" >> /tmp/${publicIp}.rdp
+	pass=$(aws ec2 get-password-data --instance-id $instanceId --priv-launch-key $keyPath --query 'PasswordData' | sed "s/\"//g")
+	if [ -z $pass ]; then
+		echo "Cannot get password" >&2
+		return 1
+	fi
+	echo -n $pass | pbcopy
+	open /tmp/${publicIp}.rdp
+else
+	echo "Platform is Linux"
+	username=$(echo -e "ec2-user\\nubuntu\\ncentos" | peco)
+	ssh -i $keyPath ec2-user@${publicIp}
+fi

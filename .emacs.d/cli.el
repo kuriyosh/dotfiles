@@ -1,26 +1,21 @@
-;; yes/noをy/nで返答
+;; ;; ===============================================================
+;; ;; Global Setting
+;; ;; ===============================================================
 (defalias 'yes-or-no-p 'y-or-n-p)
-
-;; menu bar
-(menu-bar-mode 0)
-
-;; 起動時のメッセージ
-(setq ihibit-startup-message t)
-
-;; tabの幅
-(setq-default tab-width 4)
-
-;; バックアップファイル・自動保存ファイルの保存先
-(setq backup-directory-alist
+(menu-bar-mode 0)						; menu bar off
+(setq ihibit-startup-message t)			; start message off
+(setq-default tab-width 4)				; tab-width = space 4
+(setq backup-directory-alist 			; back up file
 	  '((".*" . "~/.emacs.d/backups/")))
-(setq auto-save-file-name-transforms
+(setq auto-save-file-name-transforms	; auto save file
 	  '((".*" "~/.emacs.d/backups/" t)))
-
-;; 言語周り
-(set-language-environment "Japanese")
+(set-language-environment "Japanese")	; language settings
 (prefer-coding-system 'utf-8)
+(electric-pair-mode t)					; electric-pair-mode
 
-;; autoinsertによるテンプレート
+;; ;; ===============================================================
+;; ;; Advanced
+;; ;; ===============================================================
 (require 'autoinsert)
 (setq auto-insert-directory "~/.emacs.d/template/")
 (setq auto-insert-alist
@@ -31,12 +26,16 @@
 			   ("\\.tex$"   . ["template.tex" my-template])
 			   ("\\.js$"   . ["template.js" my-template])
                ) auto-insert-alist))
+
+;; template replacement for autoinsert
 (defvar template-replacements-alists
   '(("%file%"             . (lambda () (file-name-nondirectory (buffer-file-name))))
     ("%file-without-ext%" . (lambda () (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))))
     ("%time%" . (lambda () (format-time-string "%Y-%m-%d")))
 	("%mtg-timeformat%" . (lambda () (format-time-string "%m%d")))
     ("%include-guard%"    . (lambda () (format "__SCHEME_%s__" (upcase (file-name-sans-extension (file-name-nondirectory buffer-file-name))))))))
+
+;; my-template setting parse for autoinsert
 (defun my-template ()
   (time-stamp)
   (mapc #'(lambda(c)
@@ -48,9 +47,7 @@
   (message "done."))
 (add-hook 'find-file-not-found-hooks 'auto-insert)
 
-;; 括弧の対応
-(electric-pair-mode t)
-
+;; clipboard setting
 (if (eq system-type 'darwin)
     (progn
       (defun copy-from-osx ()
@@ -63,10 +60,12 @@
       (setq interprogram-cut-function 'paste-to-osx)
       (setq interprogram-paste-function 'copy-from-osx)
     )
-    (message "This platform is not mac")
-)
+    (message "This platform is not mac"))
 
-;; Key bindings
+
+;; ;; ===============================================================
+;; ;; Key Setting
+;; ;; ===============================================================
 (global-set-key (kbd "C-z") 'undo)
 (global-set-key (kbd "M-[") 'replace-string)
 (global-set-key (kbd "M-d") 'kill-word-at-point)

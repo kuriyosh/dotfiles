@@ -32,3 +32,8 @@ archive-contents
 # Fish config
 ###########################
 fish/fish_variables
+
+###########################
+# Script
+###########################
+.script/startup
