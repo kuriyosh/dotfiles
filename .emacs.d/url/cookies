@@ -1,16 +1,0 @@
-;; Emacs-W3 HTTP cookies file
-;; Automatically generated file!!! DO NOT EDIT!!!
-
-(setq url-cookie-storage
- 'nil)
-(setq url-cookie-secure-storage
- '(("paragon-fe.amazon.com"
-  [url-cookie "pgn-session-id-pgidfe" "c7Xjw_9lfbfXVAt2Bw7MB6ECfSqe-miVAfGVJAiLPBU" "Tue, 27-Aug-2019 22:02:27 GMT" "/" "paragon-fe.amazon.com" t])
- (".github.com"
-  [url-cookie "logged_in" "no" "Thu, 10 Mar 2039 14:16:40 -0000" "/" ".github.com" t]))
-)
-
-;; Local Variables:
-;; version-control: never
-;; no-byte-compile: t
-;; End:
