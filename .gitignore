@@ -20,6 +20,9 @@
 /.emacs.d/.emacs.desktop
 /.emacs.d/bookmarks
 /.emacs.d/url
+/.emacs.d/games
+/.emacs.d/eshell
+/.emacs.d/transient
 /.emacs.d/elpa/irony-20180519.422/server/*
 /.emacs.d/elpa/irony-20180703.1740/server/*
 .emacs.d/smex-items
