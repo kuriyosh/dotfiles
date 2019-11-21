@@ -37,3 +37,4 @@ fish/fish_variables
 # Script
 ###########################
 .script/startup
+.script/mcurl
