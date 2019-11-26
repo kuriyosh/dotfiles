@@ -320,7 +320,7 @@
 (use-package recentf
   :init
   (setq recentf-auto-cleanup 60)
-  (setq recentf-exclude '(".recentf" "COMMIT_EDITMSG" "/.?TAGS" "^/sudo:" "/\\.emacs\\.d/games/*-scores" "~/Documents/Case/html"))
+  (setq recentf-exclude '(".recentf" "COMMIT_EDITMSG" "/.?TAGS" "^/sudo:" ".emacs.d/games/*-scores" "output-html/*"))
   (setq recentf-auto-save-timer
 		(run-with-idle-timer 60 t 'recentf-save-list))
   (setq recentf-auto-save-timer (run-with-idle-timer 30 t 'recentf-save-list))
@@ -1065,14 +1065,6 @@
   :bind
   ("C-c c" . org-capture)
   ("C-c a" . org-agenda))
-
-(setq org-publish-project-alist
-      '(("Case"
-         :base-directory "~/Documents/Case/Log/"
-         :recursive t
-		 :auto-sitemap t
-         :publishing-directory "~/Documents/Case/html/"
-         :publishing-function org-html-publish-to-html)))
 
 ;; ===============================================================
 ;; js-mode
