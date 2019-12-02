@@ -4,20 +4,15 @@
 ;; ;; You may delete these explanatory comments.
 
 ;; ;; ===============================================================
-;; ;; Global Setting
+;; ;; Package Setting
 ;; ;; ===============================================================
+
 (require 'package)
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")
         ("org" . "http://orgmode.org/elpa/")))
 (package-initialize)
-
-(setq default-directory "~/")
-(setq command-line-default-directory "~/")
-
-;; (let ((envs '("PATH" "VIRTUAL_ENV" "GOROOT" "GOPATH")))
-;;   (exec-path-from-shell-copy-envs envs))
 
 (defun add-to-load-path (&rest paths)
   (let (path)
@@ -28,30 +23,25 @@
 		(if (fboundp 'normal-top-level-add-subdirs-to-load-path)
 			(normal-top-level-add-subdirs-to-load-path))))))
 
-(toggle-truncate-lines 1)
-
-;; Mac専用右コマンドをhyperキーに変更する
-(when (eq system-type 'darwin)
-  (setq mac-right-command-modifier 'hyper))
-
-(use-package subword
-  :diminish subword-mode
-  :config
-  (add-hook 'prog-mode-hook (lambda () (subword-mode 1))))
+;; ;; ===============================================================
+;; ;; Global Setting
+;; ;; ===============================================================
 
 ;;elispをPATHに設定
 (add-to-load-path "elisp")
 (add-to-load-path "elpa")
 
+(setq default-directory "~/")
+(toggle-truncate-lines 1)
+
+;; [Mac専用] 右コマンドをhyperキーに変更する
+(when (eq system-type 'darwin)
+  (setq mac-right-command-modifier 'hyper))
+
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-;; (use-package exec-path-from-shell
-;;   :config
-;;   (exec-path-from-shell-initialize))
-;;                                         ;TODO: 起動にこの処理を反映させたいけどうまくいかない
-
-;; Warningがうざいので出さない
+;; Warningがうるさいので出さない
 (setq warning-minimum-level :error)
 
 ;; 分割したwindowで行の折り返しを
@@ -60,23 +50,19 @@
 ;; ビープ音がうるさい
 (setq ring-bell-function 'ignore)
 
-;; (load-theme 'badwolf t)
+;; Theme の設定
 (load-theme 'dracula t)
-(add-hook 'prog-mode-hook 'highlight-numbers-mode)
 
+;; タイトルバーの色を変更
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-(add-to-list 'default-frame-alist '(ns-appearance . dark)) ;; assuming you are using a dark theme
+(add-to-list 'default-frame-alist '(ns-appearance . dark))
 
 ;; カーソルの点滅を止める
 (blink-cursor-mode 0)
 
-;; Mac用ちらつかせ防止
-(setq redisplay-dont-pause nil)
-
-;; コマンドの履歴を保存する
-(setq desktop-globals-to-save '(extended-command-history))
-(setq desktop-files-not-to-save "")
-(desktop-save-mode 1)
+;; [Mac専用] ちらつかせ防止
+(when (eq system-type 'darwin)
+  (setq redisplay-dont-pause nil))
 
 ;;メニューバーを消す
 (menu-bar-mode 0)
@@ -96,12 +82,13 @@
 ;;yes,noをy,nで回答可能にする
 (defalias 'yes-or-no-p 'y-or-n-p)
 
+;; 終了時に終了してよいか質問
+(setq confirm-kill-emacs 'y-or-n-p)
+
 ;;起動時のメッセージを非表示にする
 (setq inhibit-startup-message t)
 
-;; スクリーンの最大化
-;; (when (eq system-type 'darwin) ; Mac OS
-;;   (set-frame-parameter nil 'fullscreen 'fullboth))
+;; スクリーンの大きさ調整 画面の半分くらいに変更
 (setq frame-resize-pixelwise t)
 (set-frame-position (selected-frame) 0 0)
 (set-frame-size (selected-frame) 942 1024 t)
@@ -125,10 +112,6 @@
 (setq trash-directory "~/.Trash")
 (setq delete-by-moving-to-trash t)
 
-(use-package text-adjust
-  :bind
-  ("<f8>" . text-adjust-space))
-
 ;; 自動ファイルリストとロックファイルは生成しない
 (setq auto-save-list-file-prefix nil)
 (setq create-lockfiles nil)
@@ -140,17 +123,6 @@
 ;;スクリプトファイルに実行権限を与えて保存
 (add-hook 'after-save-hook
           'executable-make-buffer-file-executable-if-script-p)
-
-;; ログファイル(*.log)は読み取り専用で開く
-(add-to-list 'auto-mode-alist '("\\.log$" . read-only-mode))
-
-;; `quit-window' でwindowsを消した時に、bufferを自動で消す
-(defadvice quit-window (before quit-window-always-kill)
-  (ad-set-arg 0 t))
-(ad-activate 'quit-window)
-
-;; `next-buffer' `before-buffer' について、閲覧する必要がないbufferをスキップする
-(setq skippable-buffers '("*Messages*" "*helm mini*" "*Help*" "*helm M-x*" "*Shell Command Output*" "*helm-mode-org-publish*" "*helm-mode-org-insert-link*" "*helm find files*" "*helm kill ring*" "*helm-mode-basic-save-buffer*"))
 
 ;; ===============================================================
 ;; Shell Setting
@@ -164,6 +136,22 @@
 (setq shell-file-name (skt:shell))
 (setenv "SHELL" shell-file-name)
 (setq explicit-shell-file-name shell-file-name)
+
+(use-package multi-term)
+
+(use-package shell-pop
+  :init
+  (setq shell-pop-shell-type (quote ("ansi-term" "*shell-pop-ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
+  (setq shell-pop-term-shell "/usr/local/bin/fish")
+  (setq shell-pop-window-height 30)
+  (setq shell-pop-window-position "bottom")
+  :config
+  (define-key term-raw-map (kbd "M-x") 'nil))
+
+;; shellの文字化けを回避
+(add-hook 'shell-mode-hook
+          (lambda ()
+            (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)))
 
 ;; ===============================================================
 ;; Language Setting
@@ -185,17 +173,31 @@
 
 (setq default-cursor-in-non-selected-windows nil)
 
-;; character code 設定
 (set-keyboard-coding-system 'cp932)
-
 (prefer-coding-system 'utf-8-unix)
-
 (set-file-name-coding-system 'cp932)
 (setq default-process-coding-system '(cp932 . cp932))
 
 ;; ;; ===============================================================
 ;; ;; Various Package Setting
 ;; ;; ===============================================================
+
+(use-package logview
+  :mode
+  ("\\.log$" . logview-mode))
+
+(use-package text-adjust
+  :bind
+  ("<f8>" . text-adjust-space))
+
+(use-package highlight-numbers
+  :config
+  (add-hook 'prog-mode-hook 'highlight-numbers-mode))
+
+(use-package subword
+  :diminish subword-mode
+  :config
+  (add-hook 'prog-mode-hook (lambda () (subword-mode 1))))
 
 ;; smartparen
 (use-package smartparens
@@ -275,8 +277,8 @@
     (modify-category-entry i ?s table t))
       (setq i (1+ i)))))
   :config
-  (add-hook 'prog-mode-hook 'company-mode)
-  ;; (global-company-mode)
+  ;; (add-hook 'prog-mode-hook 'company-mode)
+  (global-company-mode)
   (edit-category-table-for-company-dabbrev)
   (setq company-dabbrev-char-regexp "\\cs")
   (setq company-backends (delete 'company-semantic company-backends))
@@ -339,41 +341,6 @@
   (advice-add 'recentf-cleanup   :around 'recentf-save-list-inhibit-message:around)
   (advice-add 'recentf-save-list :around 'recentf-save-list-inhibit-message:around))
 
-
-(require 'multi-term)
-(defun term-send-forward-char ()
-  (interactive)
-  (term-send-raw-string "\C-f"))
-(defun term-send-backward-char ()
-  (interactive)
-  (term-send-raw-string "\C-b"))
-(defun term-send-previous-line ()
-  (interactive)
-  (term-send-raw-string "\C-p"))
-(defun term-send-delete-char ()
-  (interactive)
-  (term-send-raw-string "\C-h"))
-(defun term-send-next-line ()
-  (interactive)
-  (term-send-raw-string "\C-n"))
-
-(add-hook 'term-mode-hook
-          '(lambda ()
-             (let* ((key-and-func
-                     `(("\C-p"           term-send-previous-line)
-                       ("\C-n"           term-send-next-line)
-                       ("\C-b"           term-send-backward-char)
-                       ("\C-f"           term-send-forward-char)
-					   ("\C-h"           term-send-delete-char)
-                       (,(kbd "C-y")     term-paste)
-                       (,(kbd "ESC ESC") term-send-raw)
-                       (,(kbd "C-S-p")   multi-term-prev)
-                       (,(kbd "C-S-n")   multi-term-next)
-                       )))
-               (loop for (keybind function) in key-and-func do
-                     (define-key term-raw-map keybind function)))))
-
-
 (add-hook 'c++-mode-hook
           '(lambda()
              (c-set-style "stroustrup")
@@ -420,36 +387,16 @@
   ("C-S-c" . mc/edit-lines)
   ("C->" . mc/mark-next-like-this-symbol)
   ("C-<" . mc/mark-previous-like-this-symbol)
-  ("C-c C-<" . mc/mark-all-like-this)
-  )
+  ("C-c C-<" . mc/mark-all-like-this))
 
 ;; popwinの設定
 (use-package popwin
   :config
   (popwin-mode 1)
-  (setq helm-display-function #'display-buffer)
   (setq popwin:special-display-config
-		'(("*complitation*" :noselect t)
-		  ("helm" :regexp t :height 0.4)
-		  ))
+		'(("*complitation*" :noselect t)))
   (push '("*Agenda Commands*" :regexp t) popwin:special-display-config)
   (push '("^\*Org Agenda*" :regexp t :height 0.4) popwin:special-display-config))
-
-(use-package shell-pop
-  :init
-  (setq shell-pop-shell-type (quote ("ansi-term" "*shell-pop-ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
-  (setq shell-pop-term-shell "/usr/local/bin/fish")
-  (setq shell-pop-window-height 30)
-  (setq shell-pop-window-position "bottom")
-  :config
-  (define-key term-raw-map (kbd "M-x") 'nil))
-
-;;Shellの設定
-;; shellの文字化けを回避
-(add-hook 'shell-mode-hook
-          (lambda ()
-            (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)
-            ))
 
 ;; autoinsertの設定
 (use-package autoinsert
@@ -461,21 +408,21 @@
   (setq auto-insert-alist
         (nconc '(
                  ("\\.cpp$" . ["template.cpp" my-template])
-				 ;; ("\\.cpp$" . ["template2.cpp" my-template]) ; プロジェクト毎にテンプレートを変更する、新規ファイル作成時にどのテンプレートを利用するか入力するなどしたいが諦めた
                  ("\\.py$"   . ["template.py" my-template])
                  ("\\.org$"   . ["template.org" my-template])
                  ("\\.tex$"   . ["template.tex" my-template])
                  ("\\.js$"   . ["template.js" my-template])
-                 ) auto-insert-alist))
-  ;; (add-hook 'find-file-not-found-hooks 'auto-insert) ;; HACK: :hookの中に入れたほうがきれい
-  )
+                 ) auto-insert-alist)))
 
+;; autoinsert で利用する変数展開
 (defvar template-replacements-alists
   '(("%file%"             . (lambda () (file-name-nondirectory (buffer-file-name))))
     ("%file-without-ext%" . (lambda () (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))))
     ("%time%" . (lambda () (format-time-string "%Y-%m-%d")))
     ("%mtg-timeformat%" . (lambda () (format-time-string "%m%d")))
     ("%include-guard%"    . (lambda () (format "__SCHEME_%s__" (upcase (file-name-sans-extension (file-name-nondirectory buffer-file-name))))))))
+
+;; 実際に変数展開を行う設定
 (defun my-template ()
   (time-stamp)
   (mapc #'(lambda(c)
@@ -486,23 +433,15 @@
   (goto-char (point-max))
   (message "done."))
 
-;; auto-insert-choose
-(use-package auto-insert-choose)
-
 ;; smart-newlineの設定
-(use-package smart-newline
-  ;; 最近はorgも平たく描きたいので余計なTAB入れをさせたくない
-  :init
-  ;; (add-hook 'org-mode-hook
-  ;;           (lambda ()
-  ;;             (smart-newline-mode t)))
-  )
+(use-package smart-newline)
 
 ;;undohistの設定
 (use-package undohist
   :config
   (undohist-initialize))
 
+;; whitespace の設定
 (use-package whitespace
   :init
   (setq whitespace-style
@@ -535,13 +474,14 @@
   (set-face-attribute 'whitespace-space nil
                       :foreground "gray40"
                       :background "gray20"
-                      :underline nil)
-  )
+                      :underline nil))
 
+;; yaml-mode の設定
 (use-package yaml-mode
   :init
   (setq indent-tabs-mode nil))
 
+;; emmet の設定
 (use-package emmet-mode
   :init
   (setq emmet-indentation 2)
@@ -552,24 +492,12 @@
         ("C-i" . emmet-expand-line)
 		)
   :hook
-  (sgml-mode web-mode css-mode-hook)
-  )
-
-(defun my-wrap-lines-with-html-tag ($tag)
-  (interactive "sTag: ")
-  (if (and mark-active transient-mark-mode)
-      (shell-command-on-region
-       (region-beginning) (region-end)
-       (concat "perl -0 -p -w -e \'"
-               "s/^([^\\S\\r\\n]*)(\\S.*?)[^\\S\\r\\n]*$/$1<"
-               $tag ">$2<\\/" $tag ">/gm\'")
-       nil t)))
+  (sgml-mode web-mode css-mode-hook))
 
 ;;web-modeの設定
 (use-package web-mode
   :bind
   (:map web-mode-map
-        ("C-x i" . my-wrap-lines-with-html-tag)
 		("C-;" . web-mode-fold-or-unfold))
   :config
   (setq web-mode-html-offset   2)
@@ -578,17 +506,10 @@
   (setq web-mode-script-offset 2)
   (setq web-mode-java-offset   2)
   (setq web-mode-asp-offset    2)
-  ;;tag closing
-  ;; 0=no -closing
-  ;; 1=auto-close with </
-  ;; 2=auto-close with > and </
   (setq web-mode-tag-auto-close-style 2)
   :mode
   (("\\.html?$" . web-mode)
    ("\\.php?$" . web-mode)))
-
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode)) ;本当はjs2-modeにしたいけど重すぎる
-;; (add-to-list 'auto-mode-alist '("\\.jsp$"       . web-mode))
 
 ;;flycheckの設定
 (use-package flycheck
@@ -981,8 +902,7 @@
   (yas-global-mode 1)
   (push '("emacs.+/snippets/" . snippet-mode) auto-mode-alist))
 
-(defvar company-mode/enable-yas t
-  "Enable yasnippet for all backends.")
+(defvar company-mode/enable-yas t)
 (defun company-mode/backend-with-yas (backend)
   (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
       backend
@@ -995,28 +915,15 @@
   (prog-mode))
 
 (defun my-asm-mode-hook ()
-  ;; you can use `comment-dwim' (M-;) for this kind of behaviour anyway
   (local-unset-key (vector asm-comment-char))
-  ;; (local-unset-key "<return>") ; doesn't work. "RET" in a terminal.  http://emacs.stackexchange.com/questions/13286/how-can-i-stop-the-enter-key-from-triggering-a-completion-in-company-mode
-  (electric-indent-local-mode)  ; toggle off
-										;  (setq tab-width 4)
+  (electric-indent-local-mode)
   (setq indent-tabs-mode nil)
-  ;; asm-mode sets it locally to nil, to "stay closer to the old TAB behaviour".
-  ;; (setq tab-always-indent (default-value 'tab-always-indent))
-
   (defun asm-calculate-indentation ()
 	(or
-	 ;; Flush labels to the left margin.
-										;   (and (looking-at "\\(\\.\\|\\sw\\|\\s_\\)+:") 0)
 	 (and (looking-at "[.@_[:word:]]+:") 0)
-	 ;; Same thing for `;;;' comments.
 	 (and (looking-at "\\s<\\s<\\s<") 0)
-	 ;; %if nasm macro stuff goes to the left margin
 	 (and (looking-at "%") 0)
 	 (and (looking-at "c?global\\|section\\|default\\|align\\|INIT_..X") 0)
-	 ;; Simple `;' comments go to the comment-column
-										;(and (looking-at "\\s<\\(\\S<\\|\\'\\)") comment-column)
-	 ;; The rest goes at column 4
 	 (or 4))))
 
 (use-package asm-mode
@@ -1129,8 +1036,8 @@
                   "\n")))
   (end-of-line))
 
-;; 単語上にカーソルがある時、実行されるとその単語を削除する関数
 (defun kill-word-at-point ()
+  "単語上にカーソルがある時、実行されるとその単語を削除する関数"
   (interactive)
   (let ((char (char-to-string (char-after (point)))))
     (cond
@@ -1138,8 +1045,8 @@
      ((string-match "[\t\n -@\[-`{-~]" char) (kill-word 1))
      (t (forward-char) (backward-word) (kill-word 1)))))
 
-;; ウィンドウのサイズをhjklで変更する関数
 (defun window-resizer ()
+  "ウィンドウのサイズをhjklで変更する関数"
   (interactive)
   (let ((window-obj (selected-window))
         (current-width (window-width))
@@ -1201,14 +1108,19 @@
 (loop for c from ?! to ?~ do (one-prefix-avy "H-" c))
 
 (defun finder-current-dir-open()
+  "カレントバッファを finder で開く"
   (interactive)
   (shell-command "open ."))
 
 (defun move-beginning-alt()
+  " `C-a' でインデント加味して行頭に移動"
   (interactive)
   (if (bolp)
       (back-to-indentation)
     (beginning-of-line)))
+
+;; `next-buffer' `before-buffer' について、閲覧する必要がないbufferをスキップする
+(setq skippable-buffers '("*Messages*" "*Help*" "*Shell Command Output*"))
 
 (defun my-next-buffer ()
   "next-buffer that skips certain buffers"
@@ -1226,6 +1138,11 @@
 
 (global-set-key [remap next-buffer] 'my-next-buffer)
 (global-set-key [remap previous-buffer] 'my-previous-buffer)
+
+;; `quit-window' でwindowsを消した時に、bufferを自動で消す
+(defadvice quit-window (before quit-window-always-kill)
+  (ad-set-arg 0 t))
+(ad-activate 'quit-window)
 
 ;; macros
 (defun org-to-md-for-case ()
@@ -1245,6 +1162,7 @@
 ;; Key-bind (necessary bind-key.el)
 ;; ===============================================================
 (require 'bind-key)
+
 ;; 一般的に使うプレフィックスなしキーバインド
 (bind-key "M-[" 'replace-string)
 (bind-key "M-d" 'kill-word-at-point)
@@ -1291,8 +1209,8 @@
 (bind-key* "C-t l" 'windmove-right)
 (bind-key* "C-t -" 'split-window-below)
 (bind-key* "C-t |" 'split-window-right)
-(bind-key* "C-t t" 'shell-pop)
 (bind-key* "C-t C-r" 'window-resizer)
+(bind-key* "C-t t" 'shell-pop)
 (bind-key* "C-t [" 'my-term-switch-line-char term-raw-map)
 (bind-key "q" 'my-term-switch-line-char term-mode-map)
 (bind-key* "C-t [" 'my-term-switch-line-char term-mode-map)
@@ -1302,9 +1220,6 @@
 
 ;; ファイル系のプレフィックス `C-x'
 (bind-key "C-x j" 'open-junk-file)
-
-;; HACK: 何故か2度呼び出すとうまくいくから書いてる。ちなみに上のやつ消してもだめ、絶対2回
-(exec-path-from-shell-initialize)
 
 (put 'upcase-region 'disabled nil)
 (put 'set-goal-column 'disabled nil)
