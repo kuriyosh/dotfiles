@@ -1,0 +1,5 @@
+hidenba.open-junkfile
+MS-CEINTL.vscode-language-pack-ja
+ms-python.python
+octref.vetur
+tuttieee.emacs-mcx

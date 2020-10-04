@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# 鍵が複数マッチしたときの挙動
-# パスが .ssh になかった時用の設定
+# TODO: 鍵が複数マッチしたときの挙動
+# TODO: パスが .ssh になかった時用の設定
 
 trap 'exit 1' 2
 
@@ -16,7 +16,7 @@ if [ -z $keyPath ]; then
 	return 1
 fi
 
-publicIp=$(echo $selectJson | jq ".PublicIpAddress" | sed "s/\"//g")
+publicIp=$(echo $selectJson | jq ".PublicDnsName" | sed "s/\"//g")
 if [ -z $keyPath ]; then
 	echo "Instance does not have public IP" >&2
 	return 1
@@ -39,5 +39,5 @@ if [ $platform = "windows" ]; then
 else
 	echo "Platform is Linux"
 	username=$(echo -e "ec2-user\\nubuntu\\ncentos" | peco)
-	ssh -i $keyPath ec2-user@${publicIp}
+	ssh -i $keyPath $username@${publicIp}
 fi

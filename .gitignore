@@ -40,5 +40,4 @@ fish/fishd*
 ###########################
 # Scripts
 ###########################
-.scripts/startup
-.scripts/mcurl
+.scripts/private

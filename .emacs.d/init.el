@@ -8,28 +8,17 @@
 ;; ;; ===============================================================
 
 (require 'package)
-(setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-        ("melpa" . "http://melpa.org/packages/")
-        ("org" . "http://orgmode.org/elpa/")))
+(add-to-list  'package-archives  '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (package-initialize)
-
-(defun add-to-load-path (&rest paths)
-  (let (path)
-    (dolist (path paths paths)
-      (let ((default-directory
-			  (expand-file-name (concat user-emacs-directory path))))
-		(add-to-list 'load-path default-directory)
-		(if (fboundp 'normal-top-level-add-subdirs-to-load-path)
-			(normal-top-level-add-subdirs-to-load-path))))))
+(require 'python)
 
 ;; ;; ===============================================================
 ;; ;; Global Setting
 ;; ;; ===============================================================
 
-;;elispをPATHに設定
-(add-to-load-path "elisp")
-(add-to-load-path "elpa")
+;; elispをPATHに設定
+(add-to-list 'load-path "~/.emacs.d/elisp/")
 
 (setq default-directory "~/")
 (toggle-truncate-lines 1)
@@ -59,10 +48,6 @@
 
 ;; カーソルの点滅を止める
 (blink-cursor-mode 0)
-
-;; [Mac専用] ちらつかせ防止
-(when (eq system-type 'darwin)
-  (setq redisplay-dont-pause nil))
 
 ;;メニューバーを消す
 (menu-bar-mode 0)
@@ -95,6 +80,12 @@
 
 ;;TABの表示幅 初期値は8
 (setq-default tab-width 4)
+
+;; tab はスペースに置き換える
+(setq-default indent-tabs-mode nil)
+
+;; tab 幅はデフォルトは 2 スペース分
+(setq-default tab-width 2)
 
 ;;対応する括弧を強調して表示する
 (show-paren-mode 1)
@@ -139,14 +130,28 @@
 
 (use-package multi-term)
 
+(use-package pyenv-mode
+  :after (pythonic))
+
+(use-package pythonic
+  :after(python))
+
+(defun set-powerline-font-to-major-mode ()
+  (setq buffer-face-mode-face '(:family "Meslo LG S for Powerline" :height 100))
+  (buffer-face-mode))
+
 (use-package shell-pop
   :init
-  (setq shell-pop-shell-type (quote ("ansi-term" "*shell-pop-ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
+  (setq shell-pop-shell-type (quote ("ansi-term" "*shell-pop*" (lambda nil (ansi-term shell-pop-term-shell)))))
   (setq shell-pop-term-shell "/usr/local/bin/fish")
   (setq shell-pop-window-height 30)
   (setq shell-pop-window-position "bottom")
   :config
-  (define-key term-raw-map (kbd "M-x") 'nil))
+  (define-key term-raw-map (kbd "M-x") 'nil)
+  (add-hook 'term-mode-hook 'set-powerline-font-to-major-mode)
+  :bind
+  (:map term-mode-map
+		("C-h" . term-send-backspace)))
 
 ;; shellの文字化けを回避
 (add-hook 'shell-mode-hook
@@ -169,7 +174,7 @@
   (add-to-list 'default-frame-alist '(font . "ricty-13.5")))
 (set-fontset-font
  nil 'japanese-jisx0208
- (font-spec :family "メイリオ"))
+ (font-spec :family "源ノ角ゴシック Code JP"))
 
 (setq default-cursor-in-non-selected-windows nil)
 
@@ -185,10 +190,6 @@
 (use-package logview
   :mode
   ("\\.log$" . logview-mode))
-
-(use-package text-adjust
-  :bind
-  ("<f8>" . text-adjust-space))
 
 (use-package highlight-numbers
   :config
@@ -235,6 +236,11 @@
 
 (setq ispell-program-name "aspell")
 
+(use-package vue-mode
+  :config
+  (setq mmm-js-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
+  (setq mmm-typescript-mode-enter-hook (lambda () (setq syntax-ppss-table nil))))
+
 ;; avy
 (use-package avy
   :init
@@ -259,7 +265,9 @@
   ("C-z" . undo-tree-undo)
   ("s-z" . undo-tree-undo)
   ("C-/" . undo-tree-redo)
-  ("s-S-z" . undo-tree-redo))
+  ("s-Z" . undo-tree-redo)
+  :config
+  (global-undo-tree-mode))
 
 ;; company
 (use-package company
@@ -350,7 +358,7 @@
              ))
 
 ;;; これがないとemacs -Qでエラーになる。おそらくバグ。
-(require 'compile)
+;; (require 'compile)
 
 ;; dump-jum
 (use-package dumb-jump
@@ -463,6 +471,9 @@
   (setq whitespace-action '(auto-cleanup))
   :config
   (global-whitespace-mode)
+  (add-hook 'markdown-mode-hook
+          '(lambda ()
+             (set (make-local-variable 'whitespace-action) nil)))
   (set-face-attribute 'whitespace-trailing nil
                       :foreground "RoyalBlue4"
                       :background "RoyalBlue4"
@@ -481,6 +492,15 @@
   :init
   (setq indent-tabs-mode nil))
 
+;; rust-mode の設定
+(use-package rust-mode
+  :config
+  (add-hook 'rust-mode-hook
+			(lambda ()
+			  (setq tab-width 2)
+			  (setq indent-tabs-mode nil)
+			  )))
+
 ;; emmet の設定
 (use-package emmet-mode
   :init
@@ -489,8 +509,7 @@
   (:map emmet-mode-keymap
         ("C-j" . nil)
         ("<tab>" . indent-for-tab-command)
-        ("C-i" . emmet-expand-line)
-		)
+        ("C-i" . emmet-expand-line))
   :hook
   (sgml-mode web-mode css-mode-hook))
 
@@ -559,6 +578,8 @@
   ("C-x C-r" .  ivy-switch-buffer)
   ("C-M-f" .  counsel-ag)
   ("M-y" .  counsel-yank-pop)
+  (:map ivy-switch-buffer-map
+		("C-k" . ivy-switch-buffer-kill))
   :config
   (counsel-mode 1)
   (setq ivy-initial-inputs-alist
@@ -936,27 +957,13 @@
 ;; ===============================================================
 ;; org-mode
 ;; ===============================================================
-(use-package org-bullets
-  :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-  )
+
 (use-package org
   :init
   (setq org-startup-truncated nil)
   (setq org-use-speed-commands t)
   (setq org-startup-with-inline-images t)
-  (setq org-agenda-files '("~/Dropbox/org/todo.org"))
-  (setq org-capture-templates
-		'(("t" "Task" entry
-           (file+headline "~/Dropbox/org/todo.org" "Task")
-           "* TODO %? \n ADDED: %t")
-		  ("m" "Memo" entry
-           (file+headline "~/Dropbox/org/memo.org" "Memo")
-           "* %u %?\n%i\n")))
-  (setq org-agenda-custom-commands
-		'(("a" "Agenda and TODO"
-           ((agenda "")
-			(alltodo "")))))
-  (setq org-agenda-start-on-weekday nil)
+  (setq org-image-actual-width nil)
   ;; export style setting (https://orgmode.org/manual/Export-settings.html#Export-settings)
   (setq org-hide-emphasis-markers t)
   (setq org-export-with-timestamps nil)
@@ -967,11 +974,10 @@
 		  ("_" underline)
 		  ("=" (org-verbatim verbatim :background "maroon" :foreground "white"))
 		  ("~" (org-code verbatim :background "deep sky blue" :foreground "MidnightBlue"))
-		  ("+" (:strike-through t))))
+		  ("+" (:strike-through t)))))
 
-  :bind
-  ("C-c c" . org-capture)
-  ("C-c a" . org-agenda))
+(use-package org-bullets
+  :init (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
 ;; ===============================================================
 ;; js-mode
@@ -1017,7 +1023,7 @@
         (clipboard-kill-region (point-min) (point-max)))
       (message filename))))
 
-;; seqの設定
+;; seq の設定
 (defun count-string-matches (regexp string)
   (with-temp-buffer
     (insert string)
@@ -1075,14 +1081,16 @@
                (throw 'end-flag t)))))))
 
 ;; `ansi-term'内で`term-in-line-mode'と`term-in-char-mode'を入れ替える
-(defun my-term-switch-line-char ()
+(defun term-switch-line-char ()
   (interactive)
   (cond
    ((term-in-line-mode)
     (term-char-mode)
+	(read-only-mode 0)
     (hl-line-mode -1))
    ((term-in-char-mode)
     (term-line-mode)
+	(read-only-mode 1)
     (hl-line-mode 1))))
 
 (defadvice kill-region (around kill-word-or-kill-region activate)
@@ -1120,7 +1128,7 @@
     (beginning-of-line)))
 
 ;; `next-buffer' `before-buffer' について、閲覧する必要がないbufferをスキップする
-(setq skippable-buffers '("*Messages*" "*Help*" "*Shell Command Output*"))
+(setq skippable-buffers '("*Messages*" "*Help*" "*Shell Command Output*" "shell-pop-?"))
 
 (defun my-next-buffer ()
   "next-buffer that skips certain buffers"
@@ -1169,7 +1177,7 @@
 (bind-key "M-g" 'goto-line)
 (bind-key "M-w" 'easy-kill)
 (bind-key "C-;" 'hs-toggle-hiding)
-(bind-key* "C-h" 'delete-backward-char)
+(bind-key "C-h" 'delete-backward-char)
 (bind-key* "M-h" 'backward-kill-word)
 (bind-key* "C-," 'goto-last-change)
 (bind-key* "C-." 'goto-last-change-reverse)
@@ -1187,7 +1195,7 @@
 (bind-key "M-p" (kbd "M-5 C-p"))
 (bind-key "C-w" 'backward-kill-word minibuffer-local-completion-map)
 (unbind-key "C-\\")				 ;Emacsのレイヤーで日本語の入力サポートされたくない
-(bind-key "<f10>" 'read-only-mode)
+(bind-key "<f1>" 'read-only-mode)
 (bind-key "<f9>" 'org-to-md-for-case)
 (bind-key "C-a" 'move-beginning-alt)
 
@@ -1200,20 +1208,27 @@
 (bind-key "s--" 'text-scale-adjust)
 (bind-key "s-t" 'find-file)
 (bind-key "s-i" 'my-put-file-name-on-clipboard)
+(bind-key "s-t" 'shell-pop)
 
 ;; window系とterminal系は共通のプレフィックス `C-t'
 (unbind-key "C-t")
-(bind-key* "C-t h" 'windmove-left)
-(bind-key* "C-t j" 'windmove-down)
-(bind-key* "C-t k" 'windmove-up)
-(bind-key* "C-t l" 'windmove-right)
-(bind-key* "C-t -" 'split-window-below)
-(bind-key* "C-t |" 'split-window-right)
-(bind-key* "C-t C-r" 'window-resizer)
-(bind-key* "C-t t" 'shell-pop)
-(bind-key* "C-t [" 'my-term-switch-line-char term-raw-map)
-(bind-key "q" 'my-term-switch-line-char term-mode-map)
-(bind-key* "C-t [" 'my-term-switch-line-char term-mode-map)
+(unbind-key "C-t" term-raw-map)
+
+(bind-keys :prefix-map window-prefix
+           :prefix "C-t"
+		   ("h" . windmove-left)
+		   ("j" . windmove-down)
+		   ("k" . windmove-up)
+		   ("l" . windmove-right)
+		   ("-" . split-window-below)
+		   ("|" . split-window-right)
+		   ("C-r" . window-resizer)
+		   ("t" . shell-pop))
+
+;; `bind-keys' 構文の中に複数の map が書けなさそうなので分けて書いてる
+(bind-key "q" 'term-switch-line-char term-mode-map)
+(bind-key "C-t [" 'term-switch-line-char term-raw-map)
+(bind-key "C-t [" 'term-switch-line-char term-mode-map)
 
 (unbind-key "C-q")
 (bind-key "C-q C-q" 'quoted-insert)
@@ -1224,3 +1239,17 @@
 (put 'upcase-region 'disabled nil)
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(flycheck-disabled-checkers '(javascript-jshint javascript-jscs))
+ '(package-selected-packages
+   '(yaml-mode web-mode use-package undohist tablist sudo-edit spaceline-all-the-icons smex smartparens smart-newline smart-mode-line shell-pop shackle rust-mode rjsx-mode request recentf-ext rainbow-mode rainbow-delimiters quickrun projectile powershell pos-tip popwin php-mode page-break-lines org-plus-contrib open-junk-file nhexl-mode neotree narrow-reindent multi-term mozc minibuffer-line migemo markdown-mode magit-popup magit logview latex-math-preview json-mode js2-refactor js-doc ivy-yasnippet ivy-rich ivy-hydra ivy-dired-history htmlize highlight-numbers highlight-indentation hide-mode-line hide-comnt graphql goto-chg go-mode ghub flycheck fish-mode exec-path-from-shell epc emmet-mode elmacro eldoc-eval easy-kill dumb-jump dracula-theme doom-modeline dockerfile-mode diminish csharp-mode company-c-headers company-box avy all-the-icons-ivy ace-jump-mode)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

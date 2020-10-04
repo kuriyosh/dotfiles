@@ -214,13 +214,12 @@ channel."
 
 ;; quote
 (defun my-org-md-example-block (example-block _contents info)
-  "Transcode EXAMPLE-BLOCK element into Markdown format.
-CONTENTS is nil.  INFO is a plist used as a communication
-channel."
   (replace-regexp-in-string
    "^" "> "
-   (org-remove-indentation
-    (org-export-format-code-default example-block info))))
+   (replace-regexp-in-string
+	"\n\\'" ""
+	(org-remove-indentation
+	 (org-export-format-code-default example-block info)))))
 
 ;;; Interactive function
 

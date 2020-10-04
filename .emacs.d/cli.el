@@ -1,14 +1,15 @@
 ;; ;; ===============================================================
 ;; ;; Global Setting
 ;; ;; ===============================================================
+
 (defalias 'yes-or-no-p 'y-or-n-p)
 (menu-bar-mode 0)						; menu bar off
 (setq ihibit-startup-message t)			; start message off
 (setq-default tab-width 4)				; tab-width = space 4
 (setq backup-directory-alist 			; back up file
-	  '((".*" . "~/.emacs.d/backups/")))
+	  '((".*" . "~/.emacs.d/backup/")))
 (setq auto-save-file-name-transforms	; auto save file
-	  '((".*" "~/.emacs.d/backups/" t)))
+	  '((".*" "~/.emacs.d/backup/" t)))
 (set-language-environment "Japanese")	; language settings
 (prefer-coding-system 'utf-8)
 (electric-pair-mode t)					; electric-pair-mode

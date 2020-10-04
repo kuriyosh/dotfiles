@@ -1,0 +1,235 @@
+// Place your key bindings in this file to override the defaultsauto[]
+[
+    {
+        "key": "ctrl+z",
+        "command": "undo",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+/",
+        "command": "-undo",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+/",
+        "command": "redo",
+        "when": "textInputFocus && !editorReadonly"
+    },
+    {
+        "key": "shift+cmd+z",
+        "command": "-redo",
+        "when": "textInputFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+x [",
+        "command": "cursorTop",
+        "when": "textInputFocus"
+    },
+    {
+        "key": "cmd+up",
+        "command": "-cursorTop",
+        "when": "textInputFocus"
+    },
+    {
+        "key": "ctrl+x ]",
+        "command": "cursorBottom",
+        "when": "textInputFocus"
+    },
+    {
+        "key": "cmd+down",
+        "command": "-cursorBottom",
+        "when": "textInputFocus"
+    },
+    {
+        "key": "ctrl+tab",
+        "command": "-workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup"
+    },
+    {
+        "key": "ctrl+tab",
+        "command": "-workbench.action.quickOpenNavigateNextInEditorPicker",
+        "when": "inEditorsPicker && inQuickOpen"
+    },
+    {
+        "key": "ctrl+tab",
+        "command": "workbench.action.nextEditor"
+    },
+    {
+       "key": "cmd+.",
+        "command": "workbench.action.nextEditor"
+    },
+    {
+        "key": "shift+cmd+]",
+        "command": "-workbench.action.nextEditor"
+    },
+    {
+        "key": "alt+cmd+right",
+        "command": "-workbench.action.nextEditor"
+    },
+    {
+        "key": "cmd+,",
+        "command": "-workbench.action.openSettings"
+    },
+    {
+        "key": "ctrl+shift+tab",
+        "command": "workbench.action.previousEditor"
+    },
+    {
+        "key": "cmd+,",
+        "command": "workbench.action.previousEditor"
+    },
+    {
+        "key": "shift+cmd+[",
+        "command": "-workbench.action.previousEditor"
+    },
+    {
+        "key": "alt+cmd+left",
+        "command": "-workbench.action.previousEditor"
+    },
+    {
+        "key": "cmd+.",
+        "command": "-editor.action.quickFix",
+        "when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+.",
+        "command": "-problems.action.showQuickFixes",
+        "when": "problemFocus"
+    },
+    {
+        "key": "cmd+j",
+        "command": "-workbench.action.togglePanel"
+    },
+    {
+        "key": "ctrl+,",
+        "command": "cursorUndo",
+        "when": "textInputFocus"
+    },
+    {
+        "key": "cmd+u",
+        "command": "-cursorUndo",
+        "when": "textInputFocus"
+    },
+    {
+        "key": "alt+h",
+        "command": "deleteWordLeft",
+        "when": "textInputFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+.",
+        "command": "cursorRedo"
+    },
+    {
+        "key": "cmd+j",
+        "command": "findThenJump.initiate"
+    },
+    {
+        "key": "ctrl+t -",
+        "command": "workbench.action.splitEditorDown"
+    },
+    {
+        "key": "ctrl+x 2",
+        "command": "-workbench.action.splitEditorDown"
+    },
+    {
+        "key": "ctrl+t j",
+        "command": "workbench.action.navigateDown"
+    },
+    {
+        "key": "ctrl+t k",
+        "command": "workbench.action.navigateUp"
+    },
+    {
+        "key": "ctrl+t h",
+        "command": "workbench.action.navigateLeft"
+    },
+    {
+        "key": "ctrl+t l",
+        "command": "workbench.action.navigateRight"
+    },
+    {
+        "key": "ctrl+x j",
+        "command": "extension.openJunkfile"
+    },
+    {
+        "key": "ctrl+cmd+space",
+        "command": "-workbench.action.toggleSidebarVisibility",
+        "when": "config.emacs-mcx.useMetaPrefixMacCmd"
+    },
+    {
+        "key": "ctrl+x ctrl+x",
+        "command": "workbench.action.toggleSidebarVisibility",
+        "when": "!config.emacs-mcx.useMetaPrefixMacCmd"
+    },
+    {
+        "key": "ctrl+alt+space",
+        "command": "-workbench.action.toggleSidebarVisibility",
+        "when": "!config.emacs-mcx.useMetaPrefixMacCmd"
+    },
+    {
+        "key": "cmd+b",
+        "command": "-workbench.action.toggleSidebarVisibility"
+    },
+    {
+        "key": "escape ctrl+space",
+        "command": "-workbench.action.toggleSidebarVisibility",
+        "when": "config.emacs-mcx.useMetaPrefixEscape"
+    },
+    {
+        "key": "ctrl+x ctrl+r",
+        "command": "workbench.action.quickOpen",
+        "when": "!terminalFocus"
+    },
+    {
+        "key": "ctrl+x ctrl+f",
+        "command": "-workbench.action.quickOpen",
+        "when": "!terminalFocus"
+    },
+    {
+        "key": "ctrl+x ctrl+f",
+        "command": "workbench.explorer.fileView.focus"
+    },
+    // ディレクトリはEnterで開く
+    {
+        "key": "enter",
+        "command": "list.toggleExpand",
+        "when": "listFocus && !inputFocus && explorerViewletVisible && filesExplorerFocus && explorerResourceIsFolder"
+    },
+    // C-oするとFiles Explorerにフォーカスしたままファイルを開く
+    {
+        "key": "ctrl+o",
+        "command": "filesExplorer.openFilePreserveFocus",
+        "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsFolder && !inputFocus"
+    },
+    // Files Explorerのディレクトリにフォーカスした状態でC-x C-fするとNew Fileする
+    {
+        "key": "ctrl+x ctrl+f",
+        "command": "explorer.newFile",
+        "when": "listFocus && !inputFocus && explorerViewletVisible && filesExplorerFocus && explorerResourceIsFolder"
+    },
+    // Enterにrenameが割り当てられていると、Enterでファイルを開けないのでRenameのキーバインドから外す
+    {
+        "key": "enter",
+        "command": "-renameFile",
+        "when": "explorerViewletVisible && filesExplorerFocus && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
+    },
+    {
+        "key": "cmd+t",
+        "command": "-workbench.action.showAllSymbols"
+    },
+    {
+        "key": "cmd+t",
+        "command": "workbench.action.terminal.toggleTerminal"
+    },
+    {
+        "key": "ctrl+`",
+        "command": "-workbench.action.terminal.toggleTerminal"
+    },
+    {
+        "key": "cmd+g",
+        "command": "workbench.view.scm"
+    },
+    {
+        "key": "ctrl+shift+g",
+        "command": "-workbench.view.scm"
+    }
+]

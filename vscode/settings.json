@@ -1,0 +1,8 @@
+{
+    "workbench.statusBar.visible": true,
+    "workbench.activityBar.visible": true,
+    "editor.minimap.enabled": false,
+    "workbench.sideBar.location": "left",
+    "editor.copyWithSyntaxHighlighting": false,
+    "terminal.integrated.shell.osx": "/usr/local/bin/fish",
+}
