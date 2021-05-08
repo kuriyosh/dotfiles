@@ -1,7 +1,6 @@
 ############################
 # Set Path
 ############################
-set PATH ~/.nodebrew/current/bin $PATH
 set PATH ~/.scripts $PATH
 set PATH ~/.scripts/private $PATH
 set -x ANDROID_HOME $HOME/Library/Android/sdk
@@ -13,10 +12,11 @@ set PATH /usr/local/opt/mysql@5.7/bin/ $PATH
 set PATH ~/.cargo/bin $PATH
 set -x JAVA_HOME (/usr/libexec/java_home -v1.8)
 set -x PATH $HOME/.pyenv/bin $PATH
+set -x PATH $HOME/.anyenv/envs/nodenv/bin $PATH
+set -x PATH $HOME/.anyenv/envs/ $PATH
 
-
-set -x LESSOPEN "| /usr/local/bin/src-hilite-lesspipe.sh %s"
-set -x LESS "-R"
+set -x PATH ~/.anyenv/bin $PATH
+anyenv init - fish | source
 
 set -x PATH (echo $PATH | tr ' ' '\n' | sort -u)
 
@@ -24,7 +24,6 @@ set -x PATH (echo $PATH | tr ' ' '\n' | sort -u)
 # alias
 ############################
 alias rm "rmtrash"
-alias emacs "/Applications/Emacs.app/Contents/MacOS/Emacs -nw -q -l ~/.emacs.d/cli.el"
 alias o "open"
 alias g++ "g++-8"
 alias cr "cd (git rev-parse --show-toplevel)"
