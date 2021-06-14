@@ -1,1 +1,0 @@
-/Users/kuriyosh/.config/fisherman/coffeeandcode/fish_prompt.fish
