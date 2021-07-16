@@ -23,6 +23,9 @@ ln -s ~/.zprofile $SCRIPT_DIR/.zprofile
 mkdir ~/.config
 ln -s ~/.config/fish $SCRIPT_DIR/fish
 
+## omf
+curl -L https://get.oh-my.fish | fish
+
 # Keybind
 mkdir -p ~/Library/KeyBindings
 ln -s ~/Library/KeyBindings/DefaultKeyBinding.dict $SCRIPT_DIR/DefaultKeyBinding.dict
