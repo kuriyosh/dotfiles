@@ -25,6 +25,8 @@ ln -s ~/.config/fish $SCRIPT_DIR/fish
 
 ## omf
 curl -L https://get.oh-my.fish | fish
+ln -s ~/Development/dotfiles/omf ~/.config/omf
+omf install
 
 # Keybind
 mkdir -p ~/Library/KeyBindings
