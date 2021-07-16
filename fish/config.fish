@@ -6,18 +6,6 @@
 set PATH ~/.scripts $PATH
 set PATH ~/.scripts/private $PATH
 
-# anyenv
-set -x PATH ~/.anyenv/bin $PATH
-eval (anyenv init - | source)
-
-# nodenv
-nodenv rehash
-
-# pyenv
-set -x PYENV_ROOT $HOME/.anyenv/envs/pyenv
-set -x PATH $PYENV_ROOT/bin $PATH
-eval (pyenv init --path)
-
 set -x PATH (echo $PATH | tr ' ' '\n' | sort -u)
 
 ############################
