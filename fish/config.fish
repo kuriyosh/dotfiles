@@ -35,8 +35,8 @@ alias ag 'ag --pager="less -R"'
 
 # AWS CLI
 alias el ec2-launcher
-alias ej "pbpaste | trans :ja -b"
-alias je "pbpaste | trans :en -b"
+alias ej "english_to_japanese | less"
+alias je "japanese_to_english | less"
 
 # complete
 complete -c aws -f -a '(begin; set -lx COMP_SHELL fish; set -lx COMP_LINE (commandline); aws_completer; end)'
