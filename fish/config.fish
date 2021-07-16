@@ -2,7 +2,7 @@
 # init setting
 ############################
 
-# Paths
+# Path
 set PATH ~/.scripts $PATH
 set PATH ~/.scripts/private $PATH
 
