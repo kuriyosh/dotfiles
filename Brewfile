@@ -30,7 +30,6 @@ cask "visual-studio-code"
 cask "dropbox"
 cask "alfred"
 cask "slack"
-cask "figma"
 
 # mas
 mas 'LINE', id: 539883307
