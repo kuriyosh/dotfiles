@@ -1,6 +1,6 @@
 {
     "~d" = "deleteWordForward:";
-    "^w" = "deleteWordBackward:";
+    "~h" = "deleteWordBackward:";
     "~f" = "moveWordForward:";
     "~b" = "moveWordBackward:";
 }
