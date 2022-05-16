@@ -1,10 +1,16 @@
 [user]
-	name = yosyos36
+	name = kuriyosh
 	email = yosyos0306@gmail.com
 [core]
 	quotepath = false
 	editor = emacs
 [alias]
 	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-[commit]
-	template = /Users/yoshiki/.gitmessage
+	co = checkout
+[init]
+	defaultBranch = main
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f

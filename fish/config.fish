@@ -5,8 +5,18 @@
 # Path
 set PATH ~/.scripts $PATH
 set PATH ~/.scripts/private $PATH
+set PATH /opt/homebrew/opt/mysql-client/bin $PATH
 
 set -x PATH (echo $PATH | tr ' ' '\n' | sort -u)
+
+pyenv init - | source
+
+function nvm
+   bass source (brew --prefix nvm)/nvm.sh --no-use ';' nvm $argv
+end
+
+set -x NVM_DIR ~/.nvm
+nvm use default --silent
 
 ############################
 # alias
@@ -20,6 +30,7 @@ alias push "git push"
 alias gc "cd (ghq root)/(ghq list | peco)"
 alias diff colordiff
 alias ag 'ag --pager="less -R"'
+alias lifelog 'code ~/Documents/Life/lifelog.md'
 
 # AWS CLI
 alias el ec2-launcher

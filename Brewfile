@@ -16,6 +16,7 @@ brew "the_silver_searcher"
 brew "tree"
 brew "anyenv"
 brew "mas"
+brew "git-lfs"
 
 # cask
 cask "docker"
