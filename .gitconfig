@@ -3,7 +3,7 @@
 	email = yosyos0306@gmail.com
 [core]
 	quotepath = false
-	editor = emacs
+	editor = vim
 [alias]
 	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 	co = checkout
