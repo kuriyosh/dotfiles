@@ -14,23 +14,23 @@ brew "source-highlight"
 brew "telnet"
 brew "the_silver_searcher"
 brew "tree"
-brew "anyenv"
 brew "mas"
 brew "git-lfs"
+brew "pyenv"
+brew "nvm"
 
 # cask
 cask "docker"
 cask "1password"
 cask "google-chrome"
 cask "google-japanese-ime"
-cask "spectacle"
 cask "contexts"
 cask "iterm2"
 cask "scroll-reverser"
 cask "visual-studio-code"
 cask "dropbox"
-cask "alfred"
 cask "slack"
+cask "raycast"
 
 # mas
 mas 'LINE', id: 539883307
