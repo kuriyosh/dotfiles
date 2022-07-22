@@ -9,6 +9,9 @@ set PATH /opt/homebrew/opt/mysql-client/bin $PATH
 
 set -x PATH (echo $PATH | tr ' ' '\n' | sort -u)
 
+# https://github.com/withfig/fig/issues/1620
+set -Ux FIG_WORKFLOWS_KEYBIND
+
 pyenv init - | source
 
 function nvm

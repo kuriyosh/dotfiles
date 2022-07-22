@@ -4,9 +4,11 @@
 [core]
 	quotepath = false
 	editor = vim
+	ignorecase = false
 [alias]
 	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 	co = checkout
+	c = commit
 [init]
 	defaultBranch = main
 [filter "lfs"]
@@ -14,3 +16,5 @@
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
+[push]
+	default = current

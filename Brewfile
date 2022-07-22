@@ -31,6 +31,7 @@ cask "visual-studio-code"
 cask "dropbox"
 cask "slack"
 cask "raycast"
+cask "fig"
 
 # mas
 mas 'LINE', id: 539883307
