@@ -18,19 +18,7 @@ brew bundle --file $DOTFILE_DIR/Brewfile
 
 # zsh
 ln -s $DOTFILE_DIR/.zprofile ~/.zprofile
-
-# fish
-mkdir ~/.config
-ln -s $DOTFILE_DIR/fish ~/.config/fish
-
-git clone https://github.com/edc/bass.git
-cd bass
-make install
-
-## omf (https://github.com/oh-my-fish/oh-my-fish)
-curl https://raw.githubusercontent.com/oh-my-fish/oh-my-fish/master/bin/install | fish
-ln -s $DOTFILE_DIR/omf ~/.config/omf
-omf install
+ln -s $DOTFILE_DIR/.zshrc ~/.zshrc
 
 # Keybind
 mkdir -p ~/Library/KeyBindings

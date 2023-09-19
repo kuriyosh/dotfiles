@@ -1,0 +1,64 @@
+#!/usr/bin/env node
+
+const fs = require("node:fs");
+const path = require("node:path");
+
+const generateSolverFile = () => `use proconio::input;
+
+fn main() {
+}`;
+
+const generateTesterFile = (title) => `use cli_test_dir::*;
+
+const BIN: &'static str = "./${title}";
+
+fn test_runner(input: &str, expected: &str) {
+    let test_dir = TestDir::new(BIN, "");
+    let output = test_dir
+        .cmd()
+        .output_with_stdin(input)
+        .tee_output()
+        .expect_success();
+    assert_eq!(output.stdout_str(), expected);
+    assert!(output.stderr_str().is_empty());
+}
+
+#[test]
+fn sample1() {
+    test_runner(r"", "\\n")
+}
+
+#[test]
+fn sample2() {
+    test_runner(r"", "\\n")
+}
+
+#[test]
+fn sample3() {
+    test_runner(r"", "\n")
+}`;
+
+const name = process.argv[2];
+
+if (!name) {
+  new Error("Insufficient arguments.");
+}
+
+if (fs.existsSync(path.join(process.cwd(), "Cargo.toml"))) {
+  new Error("Insufficient arguments.");
+}
+
+fs.writeFileSync(
+  path.join(process.cwd(), "src", `${name}.rs`),
+  generateSolverFile()
+);
+fs.writeFileSync(
+  path.join(process.cwd(), "tests", `${name}.rs`),
+  generateTesterFile(name)
+);
+
+console.log(`add below section to Cargo.toml
+[[bin]]
+name = "${name}"
+path = "src/${name}.rs"
+`);

@@ -6,6 +6,7 @@
 set PATH ~/.scripts $PATH
 set PATH ~/.scripts/private $PATH
 set PATH /opt/homebrew/opt/mysql-client/bin $PATH
+set PATH ~/.amplify/bin $PATH
 
 set -x PATH (echo $PATH | tr ' ' '\n' | sort -u)
 
@@ -54,3 +55,6 @@ end
 # Appearance
 ############################
 set -Ux LSCOLORS gxfxbEaEBxxEhEhBaDaCaD
+# tabtab source for packages
+# uninstall by removing these lines
+[ -f ~/.config/tabtab/fish/__tabtab.fish ]; and . ~/.config/tabtab/fish/__tabtab.fish; or true

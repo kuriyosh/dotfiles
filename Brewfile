@@ -5,7 +5,6 @@ tap "homebrew/services"
 
 # brew
 brew "colordiff"
-brew "fish"
 brew "jq"
 brew "lesspipe"
 brew "nkf"
@@ -18,6 +17,9 @@ brew "mas"
 brew "git-lfs"
 brew "pyenv"
 brew "nvm"
+brew "gh"
+brew "duckdb"
+brew "direnv"
 
 # cask
 cask "docker"
@@ -31,7 +33,8 @@ cask "visual-studio-code"
 cask "dropbox"
 cask "slack"
 cask "raycast"
-cask "fig"
+cask "beekeeper-studio"
+cask "warp"
 
 # mas
 mas 'LINE', id: 539883307

@@ -1,10 +1,10 @@
 # ==== Prefix ====
 # fix: bug fix
-# hotfilx: crtical bug fix
+# hotfix: critical bug fix
 # add: add new file
-# update: udpate existing feature
+# update: update existing feature
 # change: change specification
-# clean: refactaring
+# clean: refactoring
 # disable: disable some feature (ex. comment out)
 # remove: delete some file
 # upgrade: version up
