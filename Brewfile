@@ -20,6 +20,7 @@ brew "nvm"
 brew "gh"
 brew "duckdb"
 brew "direnv"
+brew "awscli"
 
 # cask
 cask "docker"
@@ -34,7 +35,9 @@ cask "dropbox"
 cask "slack"
 cask "raycast"
 cask "beekeeper-studio"
-cask "warp"
+cask "session-manager-plugin"
+cask "fig"
+cask "hyper"
 
 # mas
 mas 'LINE', id: 539883307
