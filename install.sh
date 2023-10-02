@@ -32,7 +32,7 @@ ln -s $DOTFILE_DIR/.gitconfig ~/.gitconfig
 ln -s $DOTFILE_DIR/.gitmessage ~/.gitmessage
 
 # hyper
-ln -s $DOTFILE_DIR/.hyperjs ~/.hyper.js
+ln -s $DOTFILE_DIR/.hyper.js ~/.hyper.js
 
 # nvm (https://github.com/nvm-sh/nvm)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
