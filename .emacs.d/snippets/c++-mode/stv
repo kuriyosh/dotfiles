@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: vector
-# key: stv
-# --
-`(progn (goto-char (point-min)) (unless (re-search-forward
-"^using\\s-+namespace std;" nil 'no-errer) "std::"))
-`vector<$1> $2;$0

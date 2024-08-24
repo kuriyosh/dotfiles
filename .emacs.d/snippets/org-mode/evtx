@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: evtx
-# key: evtx
-# --
-- アプリケーションログ: %windir%\System32\winevt\Logs\Application.evtx
-- システムログ: %windir%\System32\winevt\Logs\System.evtx

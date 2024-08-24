@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: text source
-# key: <st
-# --
-#+BEGIN_SRC text
-$0
-#+END_SRC

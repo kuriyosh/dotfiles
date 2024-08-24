@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: inn
-# key: inn
-# --
-int $1; cin >> $1;$0

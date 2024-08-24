@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: map
-# key: map
-# --
-`(progn (goto-char (point-min)) (unless (re-search-forward
-"^using\\s-+namespace std;" nil 'no-errer) "std::"))
-`map<${1:type1}> ${2:var};$0

@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: listin
-# key: listin
-# --
-$0 = list(map(int, input().split()))

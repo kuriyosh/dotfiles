@@ -43,3 +43,9 @@ fish/functions
 # Scripts
 ###########################
 .scripts/private
+
+###########################
+# Emacs
+###########################
+.emacs.d/elpa
+.emacs.d/auto-save-list

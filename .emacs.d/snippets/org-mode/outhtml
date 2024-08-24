@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: outhtml
-# key: outhtml
-# --
-#+SETUPFILE: https://fniessen.github.io/org-html-themes/setup/theme-readtheorg.setup
-#+HTML_HEAD: <style>pre.src{background:#343131;color:white;} </style>

@@ -6,7 +6,6 @@
 
 ;; Author: rubikitch <rubikitch@ruby-lang.org>
 ;; Keywords: convenience, tools
-;; Package-Version: 20161210.1114
 ;; URL: http://www.emacswiki.org/cgi-bin/wiki/download/open-junk-file.el
 
 ;; This file is free software; you can redistribute it and/or modify

@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: ssmlog
-# key: ssmlog
-# --
-- SSM エージェントのログ: %PROGRAMDATA%\Amazon\SSM\Logs\amazon-ssm-agent.log
