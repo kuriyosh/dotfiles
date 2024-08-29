@@ -140,6 +140,11 @@
   :config
   (load-theme 'dracula t))
 
+(use-package markdown-mode :ensure t)
+
+;; https://github.com/emacs-helm/helm/issues/2683
+(defvar helm-ff-edit-marked-files-fn #'helm-ff-wfnames)
+
 (use-package helm
   :ensure t
   :config
@@ -147,7 +152,7 @@
   :bind
   ("M-x" . helm-M-x)
   ("C-x C-f" . helm-find-files)
-  ("C-x C-r" . helm-recentf)
+  ("C-x C-r" . helm-mini)
 )
 
 ;; logview
@@ -311,14 +316,7 @@
 (bind-key* "C-." 'goto-last-change-reverse)
 (bind-key "C-M-l" 'hs-show-block)
 (bind-key "C-M-h" 'hs-hide-block)
-(bind-key "C-S-n" (lambda () (interactive) (scroll-up 3)))
-(bind-key "C-S-p" (lambda () (interactive) (scroll-down 3)))
 (bind-key "C-:" 'toggle-truncate-lines)
-(bind-key "C-S-a" 'back-to-indentation)
-(bind-key "C-S-b" 'backward-word)
-(bind-key "C-S-f" 'forward-word)
-(bind-key* "C-S-h" 'backward-kill-word)
-(bind-key* "C-S-d" 'kill-word-at-point)
 (bind-key "M-n" (kbd "M-5 C-n"))
 (bind-key "M-p" (kbd "M-5 C-p"))
 (bind-key "C-w" 'backward-kill-word minibuffer-local-completion-map)
@@ -326,17 +324,9 @@
 (bind-key "<f1>" 'read-only-mode)
 (bind-key "<f9>" 'org-to-md-for-case)
 (bind-key "C-a" 'move-beginning-alt)
-
-;; Mac 依存のキーバインド
-(bind-key "s-k" 'kill-this-buffer)
-(bind-key "s-o" 'finder-current-dir-open)
-(bind-key "s-." 'next-buffer)
-(bind-key "s-," 'previous-buffer)
-(bind-key "s-=" 'text-scale-adjust)
-(bind-key "s--" 'text-scale-adjust)
-(bind-key "s-t" 'find-file)
-(bind-key "s-i" 'my-put-file-name-on-clipboard)
-(bind-key "s-t" 'shell-pop)
+(bind-key "C-z" 'undo)
+(bind-key "C-\\" 'undo-redo)
+(unbind-key "M-[")
 
 ;; window系とterminal系は共通のプレフィックス `C-t'
 (unbind-key "C-t")
