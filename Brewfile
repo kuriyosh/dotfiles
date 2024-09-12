@@ -21,6 +21,7 @@ brew "gh"
 brew "duckdb"
 brew "direnv"
 brew "awscli"
+brew "bat"
 
 # cask
 cask "docker"
@@ -28,7 +29,7 @@ cask "1password"
 cask "google-chrome"
 cask "google-japanese-ime"
 cask "contexts"
-cask "iterm2"
+cask "warp"
 cask "scroll-reverser"
 cask "visual-studio-code"
 cask "dropbox"
@@ -36,8 +37,6 @@ cask "slack"
 cask "raycast"
 cask "beekeeper-studio"
 cask "session-manager-plugin"
-cask "fig"
-cask "hyper"
 
 # mas
 mas 'LINE', id: 539883307
