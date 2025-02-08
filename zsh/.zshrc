@@ -19,7 +19,6 @@ alias o="open"
 alias pull="git pull"
 alias push="git push"
 alias diff="colordiff"
-alias ag='ag --pager="less -R"'
 alias rm="trash -r"
 
 # keybindings

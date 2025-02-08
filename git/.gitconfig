@@ -10,6 +10,8 @@
 	co = checkout
 	c = commit
 	sw = switch
+	st = status
+	b = branch
 [init]
 	defaultBranch = main
 [filter "lfs"]
