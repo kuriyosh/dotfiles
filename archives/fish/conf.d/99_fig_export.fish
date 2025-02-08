@@ -1,1 +1,0 @@
-/Users/yoshiki/fig-export/dotfiles/dotfile.fish

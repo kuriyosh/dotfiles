@@ -1,5 +1,5 @@
 # dotenv
 
 ```console
-sh install.sh
+./install
 ```
