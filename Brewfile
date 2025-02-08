@@ -29,7 +29,6 @@ cask "1password"
 cask "google-chrome"
 cask "google-japanese-ime"
 cask "contexts"
-cask "warp"
 cask "scroll-reverser"
 cask "visual-studio-code"
 cask "dropbox"
@@ -37,7 +36,12 @@ cask "slack"
 cask "raycast"
 cask "beekeeper-studio"
 cask "session-manager-plugin"
+cask "orbstack"
+cask "warp"
 
 # mas
 mas 'LINE', id: 539883307
 mas 'Spark', id: 1176895641
+mas "Toggl Track", id: 1291898086
+mas "Kindle", id: 405399194
+mas "Pixelmator Pro", id: 1289583905
