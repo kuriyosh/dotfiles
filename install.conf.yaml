@@ -8,6 +8,9 @@
 - link:
     ~/.gitconfig: git/.gitconfig
     ~/.gitmessage: git/.gitmessage
+    ~/.config/git/ignore:
+      path: git/ignore
+      create: true
     ~/.zprofile: zsh/.zprofile
     ~/.zshrc: zsh/.zshrc
     ~/Library/KeyBindings/DefaultKeyBinding.dict:

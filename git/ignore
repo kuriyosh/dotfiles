@@ -2,3 +2,4 @@
 venv
 .kuriyosh
 mise.local.toml
+.DS_Store
