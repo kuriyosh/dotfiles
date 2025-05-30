@@ -1,0 +1,18 @@
+---
+"terminal:executing_command_move_cursor_word_left": meta-left
+"editor_view:move_backward_one_word": alt-b
+"ai_assistant_panel:reset_context": none
+"workspace:toggle_launch_config_palette": none
+"workspace:toggle_ai_assistant": none
+"ai_assistant_panel:focus_terminal_input": none
+"editor_view:cut_word_right": none
+"pane_group:navigate_down": cmd-j
+"pane_group:navigate_right": ctrl-cmd-l
+"terminal:clear_blocks": none
+"pane_group:navigate_up": cmd-k
+"workspace:toggle_command_palette": alt-x
+"editor:delete_word_right": meta-d
+"terminal:executing_command_move_cursor_word_right": meta-right
+"pane_group:navigate_left": ctrl-cmd-h
+"editor_view:move_forward_one_word": meta-f
+"editor:delete_word_left": meta-h

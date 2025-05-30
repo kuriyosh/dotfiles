@@ -19,7 +19,7 @@ alias o="open"
 alias pull="git pull"
 alias push="git push"
 alias diff="colordiff"
-alias rm="trash -r"
+alias rm="trash"
 
 # keybindings
 bindkey -r "^G"

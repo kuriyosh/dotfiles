@@ -13,6 +13,7 @@
       create: true
     ~/.zprofile: zsh/.zprofile
     ~/.zshrc: zsh/.zshrc
+    ~/.warp/keybindings.yaml: warp/keybindings.yaml
     ~/Library/KeyBindings/DefaultKeyBinding.dict:
       path: macOS/DefaultKeyBinding.dict
       create: true
