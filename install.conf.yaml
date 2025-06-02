@@ -18,6 +18,8 @@
       path: macOS/DefaultKeyBinding.dict
       create: true
     ~/.emacs.d: .emacs.d
+    ~/Library/Application Support/Cursor/User/keybindings.json: cursor/keybindings.json
+    ~/Library/Application Support/Cursor/User/settings.json: cursor/settings.json
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
