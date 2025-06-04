@@ -1,8 +1,3 @@
-tap "homebrew/bundle"
-tap "homebrew/cask"
-tap "homebrew/core"
-tap "homebrew/services"
-
 # brew
 brew "colordiff"
 brew "jq"
@@ -25,7 +20,6 @@ brew "mise"
 cask "docker"
 cask "1password"
 cask "google-chrome"
-cask "google-japanese-ime"
 cask "contexts"
 cask "scroll-reverser"
 cask "visual-studio-code"
@@ -38,8 +32,8 @@ cask "orbstack"
 cask "warp"
 
 # mas
-mas 'LINE', id: 539883307
-mas 'Spark', id: 1176895641
-mas "Toggl Track", id: 1291898086
-mas "Kindle", id: 405399194
-mas "Pixelmator Pro", id: 1289583905
+# mas 'LINE', id: 539883307
+# mas 'Spark', id: 1176895641
+# mas "Toggl Track", id: 1291898086
+# mas "Kindle", id: 405399194
+# mas "Pixelmator Pro", id: 1289583905
