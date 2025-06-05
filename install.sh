@@ -14,7 +14,18 @@ if !(command brew -v > /dev/null 2>&1); then
 fi
 
 cd $DOTFILE_DIR
+
+# run dotbot
+./install
+
+# brew
 brew bundle --file $DOTFILE_DIR/Brewfile
 
 # oh-my-zsh (https://github.com/ohmyzsh/ohmyzsh)
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# install cursor extensions
+cat ./cursor/extensions.txt | xargs -I {} cursor --install-extension {}
+
+# install
+defaults write com.apple.dock autohide -bool true

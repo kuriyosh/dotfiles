@@ -23,12 +23,10 @@ cask "google-chrome"
 cask "contexts"
 cask "scroll-reverser"
 cask "visual-studio-code"
-cask "dropbox"
 cask "slack"
 cask "raycast"
 cask "beekeeper-studio"
 cask "session-manager-plugin"
-cask "orbstack"
 cask "warp"
 
 # mas

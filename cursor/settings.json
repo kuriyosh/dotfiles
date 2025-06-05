@@ -143,12 +143,12 @@
         "git show"
     ],
     "cursor.cpp.disabledLanguages": [
-        "plaintext",
         "markdown",
-        "scminput",
+        "plaintext",
         "yaml"
     ],
     "cursor.composer.textSizeScale": 0.85,
     "workbench.colorTheme": "Default Dark Modern",
     "workbench.activityBar.orientation": "vertical",
+    "window.commandCenter": true,
 }

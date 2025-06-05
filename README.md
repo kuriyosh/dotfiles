@@ -1,12 +1,17 @@
 # dotenv
 
-```console
-./install
-```
+This repository contains my dotfiles and development environment setup. It includes configurations for:
 
-Install package from homebrew
+- Shell (zsh) with oh-my-zsh
+- Homebrew packages and applications
+- VS Code/Cursor settings and keybindings
+- Development tools and utilities
+
+## Setup
+
+1. Clone this repository
+2. Run the installation script:
 
 ```console
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-sudo brew bundle
+./install.sh
 ```
