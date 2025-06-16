@@ -28,8 +28,9 @@ cask "raycast"
 cask "beekeeper-studio"
 cask "session-manager-plugin"
 cask "warp"
+cask "kap"
 
-# mas
+# mas (only private mac)
 # mas 'LINE', id: 539883307
 # mas 'Spark', id: 1176895641
 # mas "Toggl Track", id: 1291898086
