@@ -20,6 +20,7 @@ alias pull="git pull"
 alias push="git push"
 alias diff="colordiff"
 alias rm="trash"
+alias c="cursor"
 
 # keybindings
 bindkey -r "^G"
