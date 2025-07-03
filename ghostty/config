@@ -1,3 +1,5 @@
+theme = Dracula
+
 # Pane
 keybind = ctrl+t>-=new_split:down
 keybind = ctrl+t>\=new_split:right
@@ -9,3 +11,5 @@ keybind = ctrl+t>l=goto_split:right
 # Cursor
 keybind = alt+f=esc:f
 keybind = alt+b=esc:b
+
+font-size = 15
