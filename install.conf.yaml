@@ -11,7 +11,9 @@
     ~/.config/git/ignore:
       path: git/ignore
       create: true
-    ~/.zprofile: zsh/.zprofile
+    ~/.config/ghostty/config:
+      path: ghostty/config
+      create: true
     ~/.zshrc: zsh/.zshrc
     ~/.warp/keybindings.yaml: warp/keybindings.yaml
     ~/Library/KeyBindings/DefaultKeyBinding.dict:

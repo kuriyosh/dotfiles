@@ -151,4 +151,5 @@
     "workbench.colorTheme": "Default Dark Modern",
     "workbench.activityBar.orientation": "vertical",
     "window.commandCenter": true,
+    "docker.extension.enableComposeLanguageServer": false,
 }

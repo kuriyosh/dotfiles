@@ -15,6 +15,7 @@ brew "duckdb"
 brew "awscli"
 brew "bat"
 brew "mise"
+brew "amazon-q"
 
 # cask
 cask "docker"
@@ -29,6 +30,7 @@ cask "beekeeper-studio"
 cask "session-manager-plugin"
 cask "warp"
 cask "kap"
+cask "ghostty"
 
 # mas (only private mac)
 # mas 'LINE', id: 539883307

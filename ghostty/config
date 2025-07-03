@@ -1,0 +1,11 @@
+# Pane
+keybind = ctrl+t>-=new_split:down
+keybind = ctrl+t>\=new_split:right
+keybind = ctrl+t>h=goto_split:left
+keybind = ctrl+t>j=goto_split:down
+keybind = ctrl+t>k=goto_split:up
+keybind = ctrl+t>l=goto_split:right
+
+# Cursor
+keybind = alt+f=esc:f
+keybind = alt+b=esc:b
