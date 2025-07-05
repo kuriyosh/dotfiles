@@ -32,8 +32,8 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 
-# prompt
-## TODO: prompt をカスタマイズしたい
-
 # mise
 eval "$(mise activate zsh)"
+
+# starship
+eval "$(starship init zsh)"

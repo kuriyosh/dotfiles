@@ -30,3 +30,6 @@ cat ./cursor/extensions.txt | xargs -I {} cursor --install-extension {}
 # install
 defaults write com.apple.dock autohide -bool true
 defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
+
+
+curl -sS https://starship.rs/install.sh | sh
