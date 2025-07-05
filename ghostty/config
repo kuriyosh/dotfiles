@@ -7,9 +7,18 @@ keybind = ctrl+t>h=goto_split:left
 keybind = ctrl+t>j=goto_split:down
 keybind = ctrl+t>k=goto_split:up
 keybind = ctrl+t>l=goto_split:right
+keybind = alt+h=text:\x1b\x7f
 
 # Cursor
 keybind = alt+f=esc:f
 keybind = alt+b=esc:b
 
+# Appearance
 font-size = 15
+unfocused-split-opacity = 0.3
+background-opacity = 0.95
+
+# General
+font-feature = -dlig
+window-inherit-working-directory = true
+macos-titlebar-style = transparent
