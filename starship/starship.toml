@@ -12,3 +12,6 @@ truncate_to_repo = false
 [aws]
 format = '[($symbol\($profile\))(\[$duration\])]($style)'
 symbol = '☁️'
+
+[cmd_duration]
+disabled = true

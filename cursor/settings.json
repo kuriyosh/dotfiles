@@ -152,4 +152,5 @@
     "workbench.activityBar.orientation": "vertical",
     "window.commandCenter": true,
     "docker.extension.enableComposeLanguageServer": false,
+    "cursor.composer.shouldChimeAfterChatFinishes": true,
 }

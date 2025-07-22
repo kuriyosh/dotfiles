@@ -21,6 +21,7 @@ alias push="git push"
 alias diff="colordiff"
 alias rm="trash"
 alias c="cursor"
+alias rgf='rg --files | rg'
 
 # keybindings
 bindkey -r "^G"
