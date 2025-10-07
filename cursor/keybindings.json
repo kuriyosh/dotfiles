@@ -355,5 +355,10 @@
   {
     "key": "cmd+i",
     "command": "composerMode.agent"
+  },
+  {
+    "key": "alt+h",
+    "command": "-editor.action.inlineDiffs.previousDiffFile",
+    "when": "editorTextFocus && @inlineDiffs.previousDiffFile.hasInlineDiffsInAnyEditor"
   }
 ]

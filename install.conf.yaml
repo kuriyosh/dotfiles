@@ -22,9 +22,10 @@
     ~/Library/KeyBindings/DefaultKeyBinding.dict:
       path: macOS/DefaultKeyBinding.dict
       create: true
-    ~/.emacs.d: .emacs.d
+    ~/.emacs.d/init.el: .emacs.d/cli.el
     ~/Library/Application Support/Cursor/User/keybindings.json: cursor/keybindings.json
     ~/Library/Application Support/Cursor/User/settings.json: cursor/settings.json
+    ~/.default-npm-packages: .default-npm-packages
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
