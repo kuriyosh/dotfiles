@@ -49,19 +49,17 @@
 (add-hook 'find-file-not-found-hooks 'auto-insert)
 
 ;; clipboard setting
-(if (eq system-type 'darwin)
-    (progn
-      (defun copy-from-osx ()
-        (shell-command-to-string "reattach-to-user-namespace pbpaste"))
-      (defun paste-to-osx (text &optional push)
-      (let ((process-connection-type nil))
-        (let ((proc (start-process "pbcopy" "*Messages*" "reattach-to-user-namespace" "pbcopy")))
-          (process-send-string proc text)
-          (process-send-eof proc))))
-      (setq interprogram-cut-function 'paste-to-osx)
-      (setq interprogram-paste-function 'copy-from-osx)
-    )
-    (message "This platform is not mac"))
+(defun copy-from-osx ()
+  (shell-command-to-string "pbpaste"))
+
+(defun paste-to-osx (text &optional push)
+  (let ((process-connection-type nil))
+    (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
+      (process-send-string proc text)
+      (process-send-eof proc))))
+
+(setq interprogram-cut-function 'paste-to-osx)
+(setq interprogram-paste-function 'copy-from-osx)
 
 ;; ;; ===============================================================
 ;; ;; Key Setting
