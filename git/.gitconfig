@@ -1,6 +1,7 @@
 [user]
 	name = kuriyosh
-	email = yosyos0306@gmail.com
+	email = yoshiki.kurihara@nxt-fintech.com
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJWSr+IAxFWhQcgJcbQ6mYIZuIL4hjgyvSR9FKflvr5F
 [core]
 	quotepath = false
 	editor = vim
@@ -21,3 +22,9 @@
 	clean = git-lfs clean -- %f
 [push]
 	default = current
+[gpg]
+  format = ssh
+[gpg "ssh"]
+  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+[commit]
+  gpgsign = true
