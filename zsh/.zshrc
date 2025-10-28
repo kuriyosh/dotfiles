@@ -38,3 +38,5 @@ eval "$(mise activate zsh)"
 
 # starship
 eval "$(starship init zsh)"
+
+export EDITOR=vim
