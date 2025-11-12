@@ -175,4 +175,5 @@
     },
     "json.schemaDownload.enable": true,
     "javascript.updateImportsOnFileMove.enabled": "never",
+    "debug.disassemblyView.showSourceCode": false,
 }
