@@ -1,0 +1,138 @@
+// Zed keymap
+//
+// For information on binding keys, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+//
+// To see the default key bindings run `zed: open default keymap`
+// from the command palette.
+[
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-g": ["workspace::SendKeystrokes", "escape"]
+    }
+  },
+  {
+    "context": "Editor && vim_mode == insert",
+    "bindings": {
+      // "j k": "vim::NormalBefore"
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "alt-x": "command_palette::Toggle"
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "ctrl-g": ["workspace::SendKeystrokes", "escape"]
+    }
+  },
+  {
+    "context": "(Editor && mode == full)",
+    "bindings": {
+      "cmd-g": "go_to_line::Toggle"
+    }
+  },
+  {
+    "context": "(Editor && mode == full)",
+    "bindings": {
+      "ctrl-g": null
+    }
+  },
+  {
+    "context": "Pane",
+    "bindings": {
+      "ctrl-t |": "pane::SplitLeft"
+    }
+  },
+  {
+    "context": "Pane",
+    "bindings": {
+      "cmd-k left": null
+    }
+  },
+  {
+    "context": "Pane",
+    "bindings": {
+      "ctrl-t -": "pane::SplitDown"
+    }
+  },
+  {
+    "context": "Pane",
+    "bindings": {
+      "cmd-k down": null
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "ctrl-/": "editor::Redo"
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "ctrl-z": "editor::Undo"
+    }
+  },
+  {
+    "context": "BufferSearchBar",
+    "bindings": {
+      "ctrl-g": "buffer_search::Dismiss"
+    }
+  },
+  {
+    "bindings": {
+      "ctrl-g": ["workspace::SendKeystrokes", "escape"]
+    }
+  },
+  {
+    "context": "RateCompletionModal > Editor",
+    "bindings": {
+      "ctrl-g": "zeta::FocusCompletions"
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-x ctrl-f": "project_panel::ToggleFocus"
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-x ctrl-r": "file_finder::Toggle"
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-g": "git_panel::ToggleFocus"
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "alt-h": "editor::DeleteToPreviousWordStart"
+    }
+  },
+  {
+    "context": "(ProjectPanel && not_editing)",
+    "bindings": {
+      "enter": ["workspace::SendKeystrokes", "space cmd-shift-e"]
+    }
+  },
+  {
+    "bindings": {
+      "ctrl-t h": "workspace::MovePaneLeft"
+    }
+  },
+  {
+    "bindings": {
+      "ctrl-t l": "workspace::MovePaneRight"
+    }
+  }
+]

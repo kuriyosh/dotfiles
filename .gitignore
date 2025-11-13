@@ -49,3 +49,9 @@ fish/functions
 ###########################
 .emacs.d/elpa
 .emacs.d/auto-save-list
+
+###########################
+# zed
+###########################
+zed/prompts
+zed/conversations
