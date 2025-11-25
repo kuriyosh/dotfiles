@@ -13,6 +13,7 @@
 	sw = switch
 	st = status
 	b = branch
+	aicm = "!f() { COMMITMSG=$(claude -p 'Generate ONLY a one-line Git commit message in English, using imperative mood, summarizing what was changed and why, based strictly on the contents of `git diff --cached`. You MUST follow the conventional commit format. Do not add explanation or a body. Output only the commit summary line.'); git commit -m \"$COMMITMSG\" -e; }; f"
 [init]
 	defaultBranch = main
 [filter "lfs"]
