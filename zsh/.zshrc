@@ -17,6 +17,7 @@ source $ZSH/oh-my-zsh.sh
 
 # aliases
 alias cr='cd $(git rev-parse --show-toplevel)'
+alias ccr='cursor $(git rev-parse --show-toplevel)'
 alias o="open"
 alias pull="git pull"
 alias push="git push"

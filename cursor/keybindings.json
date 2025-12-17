@@ -360,5 +360,15 @@
     "key": "alt+h",
     "command": "-editor.action.inlineDiffs.previousDiffFile",
     "when": "editorTextFocus && @inlineDiffs.previousDiffFile.hasInlineDiffsInAnyEditor"
+  },
+  {
+    "key": "alt+h",
+    "command": "deleteWordLeft",
+    "when": "editorTextFocus && !editorReadonly"
+  },
+  {
+    "key": "alt+h",
+    "command": "-editor.action.inlineDiffs.previousDiffFile",
+    "when": "editorTextFocus && inlineDiffs.hasInlineDiffsInAnyEditor"
   }
 ]
