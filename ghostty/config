@@ -1,4 +1,4 @@
-theme = Dracula
+theme = Dark Pastel
 
 # Pane
 keybind = ctrl+t>-=new_split:down
@@ -8,13 +8,14 @@ keybind = ctrl+t>j=goto_split:down
 keybind = ctrl+t>k=goto_split:up
 keybind = ctrl+t>l=goto_split:right
 keybind = alt+h=text:\x1b\x7f
+keybind = shift+enter=text:\x1b\r
 
 # Cursor
 keybind = alt+f=esc:f
 keybind = alt+b=esc:b
 
 # Appearance
-font-size = 15
+font-size = 14
 unfocused-split-opacity = 0.3
 background-opacity = 0.95
 
