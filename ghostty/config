@@ -23,3 +23,6 @@ background-opacity = 0.95
 font-feature = -dlig
 window-inherit-working-directory = true
 macos-titlebar-style = transparent
+
+# SSH
+shell-integration-features = ssh-env,ssh-terminfo
