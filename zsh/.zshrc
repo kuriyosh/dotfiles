@@ -25,6 +25,7 @@ alias diff="colordiff"
 alias rm="trash"
 alias c="cursor"
 alias rgf='rg --files | rg'
+alias ssh-pass='ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no'
 
 # keybindings
 bindkey -r "^G"
