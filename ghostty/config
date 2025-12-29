@@ -25,4 +25,4 @@ window-inherit-working-directory = true
 macos-titlebar-style = transparent
 
 # SSH
-shell-integration-features = ssh-env,ssh-terminfo
+shell-integration-features = cursor,sudo,title,ssh-env,ssh-terminfo
