@@ -1,0 +1,38 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "cursor_shape": "bar",
+  "cursor_blink": false,
+  "base_keymap": "VSCode",
+  "ssh_connections": [
+    {
+      "host": "192.168.100.23",
+      "username": "kuriyosh",
+      "args": [],
+      "port_forwards": [
+        { "local_port": 18488, "remote_port": 18488 },
+        { "local_port": 8899, "remote_port": 8899 },
+        { "local_port": 8900, "remote_port": 8900 },
+      ],
+      "projects": [
+        {
+          "paths": ["/home/kuriyosh"],
+        },
+        {
+          "paths": ["/home/kuriyosh/solana-learn"],
+        },
+      ],
+      "nickname": "dev",
+    },
+  ],
+  "vim_mode": true,
+  "ui_font_size": 16.0,
+  "buffer_font_size": 14.0,
+  "theme": "One Dark",
+}
