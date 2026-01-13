@@ -19,6 +19,21 @@
     },
   },
   {
+    "context": "Editor && vim_mode == normal",
+    "bindings": {
+      "d": ["workspace::SendKeystrokes", "\" _ d"],
+      "D": ["workspace::SendKeystrokes", "\" _ D"],
+      "x": "vim::DeleteRight",
+    },
+  },
+  {
+    "context": "Editor && vim_mode == visual",
+    "bindings": {
+      "d": ["workspace::SendKeystrokes", "\" _ d"],
+      "x": "vim::VisualDelete",
+    },
+  },
+  {
     "context": "Pane",
     "bindings": {
       "ctrl-shift-tab": "pane::ActivatePrevItem",

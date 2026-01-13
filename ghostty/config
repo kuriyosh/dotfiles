@@ -1,8 +1,8 @@
 theme = Dark Pastel
 
 # Pane
-keybind = ctrl+t>-=new_split:down
-keybind = ctrl+t>\=new_split:right
+# keybind = ctrl+t>-=new_split:down
+# keybind = ctrl+t>\=new_split:right
 keybind = ctrl+t>h=goto_split:left
 keybind = ctrl+t>j=goto_split:down
 keybind = ctrl+t>k=goto_split:up
