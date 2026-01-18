@@ -44,9 +44,12 @@ eval "$(starship init zsh)"
 export EDITOR=vim
 
 # zsh completions
+# TODO: まだライブラリを選定中 (zsh-completion or zsh-autocomplete)
 if type brew &>/dev/null; then
-  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-  source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-  autoload -Uz compinit
-  compinit
+  # FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+  # source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  # autoload -Uz compinit
+  # compinit
+
+  source $(brew --prefix)/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 fi
