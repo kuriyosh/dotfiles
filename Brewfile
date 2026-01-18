@@ -15,7 +15,6 @@ brew "duckdb"
 brew "awscli"
 brew "bat"
 brew "mise"
-brew "amazon-q"
 
 # cask
 cask "docker"
