@@ -7,6 +7,11 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "icon_theme": {
+    "mode": "dark",
+    "light": "Zed (Default)",
+    "dark": "Zed (Default)"
+  },
   "cursor_shape": "bar",
   "cursor_blink": false,
   "base_keymap": "VSCode",
@@ -15,24 +20,53 @@
       "host": "192.168.100.23",
       "username": "kuriyosh",
       "args": [],
-      "port_forwards": [
-        { "local_port": 18488, "remote_port": 18488 },
-        { "local_port": 8899, "remote_port": 8899 },
-        { "local_port": 8900, "remote_port": 8900 },
-      ],
       "projects": [
         {
-          "paths": ["/home/kuriyosh"],
+          "paths": [
+            "/home/kuriyosh"
+          ]
         },
         {
-          "paths": ["/home/kuriyosh/solana-learn"],
-        },
+          "paths": [
+            "/home/kuriyosh/solana-learn"
+          ]
+        }
       ],
       "nickname": "dev",
+      "port_forwards": [
+        {
+          "local_port": 18488,
+          "remote_port": 18488
+        },
+        {
+          "local_port": 8899,
+          "remote_port": 8899
+        },
+        {
+          "local_port": 8900,
+          "remote_port": 8900
+        }
+      ]
     },
+    {
+      "host": "52.69.187.241",
+      "username": "ec2-user",
+      "args": [],
+      "projects": [
+        {
+          "paths": [
+            "/home/ec2-user/canton-wallet-switcher"
+          ]
+        }
+      ]
+    }
   ],
   "vim_mode": true,
   "ui_font_size": 16.0,
   "buffer_font_size": 14.0,
-  "theme": "One Dark",
+  "theme": {
+    "mode": "light",
+    "light": "One Dark",
+    "dark": "One Dark"
+  },
 }
