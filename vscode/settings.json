@@ -1,8 +1,179 @@
 {
-    "workbench.statusBar.visible": true,
-    "workbench.activityBar.visible": true,
-    "editor.minimap.enabled": false,
-    "workbench.sideBar.location": "left",
+    "[astro]": {
+        "editor.defaultFormatter": "astro-build.astro-vscode"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[markdown]": {
+        "files.trimTrailingWhitespace": false
+    },
+    "[prisma]": {
+        "editor.defaultFormatter": "Prisma.prisma"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python"
+    },
+    "[rust]": {
+        "editor.defaultFormatter": "rust-lang.rust-analyzer"
+    },
+    "[solidity]": {
+        "editor.defaultFormatter": "JuanBlanco.solidity"
+    },
+    "[sql]": {
+        "editor.defaultFormatter": "adpyke.vscode-sql-formatter"
+    },
+    "[terraform]": {
+        "editor.defaultFormatter": "hashicorp.terraform"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[xml]": {
+        "editor.defaultFormatter": "DotJoshJohnson.xml"
+    },
+    "css.validate": false,
+    "diffEditor.ignoreTrimWhitespace": true,
+    "editor.accessibilitySupport": "off",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit",
+        "source.fixAll.stylelint": "explicit"
+    },
     "editor.copyWithSyntaxHighlighting": false,
-    "terminal.integrated.shell.osx": "/usr/local/bin/fish",
+    "editor.cursorStyle": "block",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.find.cursorMoveOnType": false,
+    "editor.find.seedSearchStringFromSelection": "never",
+    "editor.formatOnSave": true,
+    "editor.inlineSuggest.enabled": true,
+    "editor.minimap.enabled": false,
+    "editor.suggestSelection": "first",
+    "editor.unicodeHighlight.ambiguousCharacters": false,
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+        "*.cts": "${capture}.typegen.ts",
+        "*.mts": "${capture}.typegen.ts",
+        "*.ts": "${capture}.typegen.ts",
+        "*.tsx": "${capture}.typegen.ts",
+        "Cargo.toml": "Cargo.lock"
+    },
+    "files.associations": {
+        ".env": "dotenv"
+    },
+    "files.trimTrailingWhitespace": true,
+    "git.confirmSync": false,
+    "github.copilot.editor.enableAutoCompletions": true,
+    "github.copilot.enable": {
+        "*": true,
+        "markdown": false,
+        "plaintext": false,
+        "yaml": false
+    },
+    "jest.autoRevealOutput": "off",
+    "jest.autoRun": "off",
+    "less.validate": false,
+    "notebook.cellToolbarLocation": {
+        "default": "right",
+        "jupyter-notebook": "left"
+    },
+    "playwright.reuseBrowser": false,
+    "python.languageServer": "Pylance",
+    "rust-analyzer.inlayHints.chainingHints.enable": false,
+    "rust-analyzer.inlayHints.closingBraceHints.enable": false,
+    "rust-analyzer.inlayHints.parameterHints.enable": false,
+    "rust-analyzer.inlayHints.renderColons": false,
+    "rust-analyzer.inlayHints.typeHints.enable": false,
+    "scss.validate": false,
+    "security.workspace.trust.banner": "never",
+    "security.workspace.trust.enabled": false,
+    "security.workspace.trust.untrustedFiles": "open",
+    "terminal.external.osxExec": "warp.app",
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.env.osx": {
+        "CW_NEW_SESSION": "1",
+        "FIG_NEW_SESSION": "1",
+        "Q_NEW_SESSION": "1"
+    },
+    "terminal.integrated.profiles.osx": {
+        "/opt/homebrew/bin/fish (migrated)": {
+            "args": [
+                "-l"
+            ],
+            "path": "/opt/homebrew/bin/fish"
+        }
+    },
+    "todohighlight.keywords": [
+        {
+            "backgroundColor": "green",
+            "color": "white",
+            "overviewRulerColor": "grey",
+            "text": "READ:"
+        }
+    ],
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "vsicons.dontShowNewVersionMessage": true,
+    "window.clickThroughInactive": false,
+    "window.closeWhenEmpty": true,
+    "workbench.colorCustomizations": {
+        "editorCursor.foreground": "#ffff00"
+    },
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter-notebook"
+    },
+    "workbench.iconTheme": "vscode-icons",
+    "workbench.sideBar.location": "left",
+    "workbench.startupEditor": "none",
+    "workbench.statusBar.visible": true,
+    "security.promptForLocalFileProtocolHandling": false,
+    "[terraform-vars]": {
+        "editor.defaultFormatter": "hashicorp.terraform"
+    },
+    "roo-cline.allowedCommands": [
+        "npm test",
+        "npm install",
+        "tsc",
+        "git log",
+        "git diff",
+        "git show"
+    ],
+    "cursor.cpp.disabledLanguages": [
+        "markdown",
+        "plaintext",
+        "yaml"
+    ],
+    "cursor.composer.textSizeScale": 0.85,
+    "workbench.colorTheme": "GitHub Dark",
+    "workbench.activityBar.orientation": "vertical",
+    "window.commandCenter": true,
+    "docker.extension.enableComposeLanguageServer": false,
+    "cursor.composer.shouldChimeAfterChatFinishes": true,
+    "cursor.general.disableHttp2": true,
+    "cursor.general.disableHttp1SSE": true,
+    "files.watcherExclude": {
+        "**/.bloop": true,
+        "**/.metals": true
+    },
+    "[dockercompose]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.autoIndent": "advanced",
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": false,
+            "strings": true
+        },
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "[github-actions-workflow]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "json.schemaDownload.enable": true,
+    "javascript.updateImportsOnFileMove.enabled": "never",
+    "debug.disassemblyView.showSourceCode": false,
+    "claudeCode.preferredLocation": "panel",
 }

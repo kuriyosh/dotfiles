@@ -31,6 +31,8 @@
     ~/.emacs.d/init.el: .emacs.d/cli.el
     ~/Library/Application Support/Cursor/User/keybindings.json: cursor/keybindings.json
     ~/Library/Application Support/Cursor/User/settings.json: cursor/settings.json
+    ~/Library/Application Support/Code/User/settings.json: vscode/settings.json
+    ~/Library/Application Support/Code/User/keybindings.json: vscode/keybindings.json
     ~/.default-npm-packages: .default-npm-packages
 
 - shell:
