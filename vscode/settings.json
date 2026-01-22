@@ -176,4 +176,6 @@
     "javascript.updateImportsOnFileMove.enabled": "never",
     "debug.disassemblyView.showSourceCode": false,
     "claudeCode.preferredLocation": "panel",
+    "gitlens.ai.model": "vscode",
+    "gitlens.ai.vscode.model": "copilot:gpt-4.1",
 }
