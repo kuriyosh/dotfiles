@@ -270,15 +270,6 @@
     "when": "textInputFocus"
   },
   {
-    "key": "cmd+j",
-    "command": "extension.jumpy-word"
-  },
-  {
-    "key": "Escape",
-    "command": "extension.jumpy-exit",
-    "when": "editorTextFocus && jumpy.isJumpyMode"
-  },
-  {
     "key": "enter",
     "command": "-renameFile",
     "when": "filesExplorerFocus && foldersViewVisible && !explorerResourceIsRoot && !explorerResourceReadonly && !inputFocus"
@@ -338,11 +329,6 @@
     "when": "editorHasDefinitionProvider && editorTextFocus && !isInEmbeddedEditor"
   },
   {
-    "key": "ctrl+g",
-    "command": "extension.jumpy-exit",
-    "when": "editorTextFocus && jumpy.isJumpyMode"
-  },
-  {
     "key": "alt+2",
     "command": "editor.action.rename",
     "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
@@ -370,5 +356,44 @@
     "key": "alt+h",
     "command": "-editor.action.inlineDiffs.previousDiffFile",
     "when": "editorTextFocus && inlineDiffs.hasInlineDiffsInAnyEditor"
+  },
+  {
+    "key": "cmd+l",
+    "command": "-expandLineSelection",
+    "when": "textInputFocus"
+  },
+  {
+    "key": "cmd+l",
+    "command": "claude-vscode.focus",
+    "when": "editorTextFocus && !config.claudeCode.useTerminal && editorHasSelection"
+  },
+  {
+    "key": "cmd+l",
+    "command": "claude-vscode.insertAtMention",
+    "when": "editorTextFocus && !config.claudeCode.useTerminal && !editorHasSelection"
+  },
+  {
+    "key": "cmd+escape",
+    "command": "-claude-vscode.focus",
+    "when": "editorTextFocus && !config.claudeCode.useTerminal"
+  },
+  {
+    "key": "cmd+j",
+    "command": "jump-extension.jump-to-the-start-of-a-word",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "alt+q alt+q",
+    "command": "-jump-extension.jump-to-the-start-of-a-word",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "cmd+j",
+    "command": "-editsHistory.moveCursorToPreviousEdit"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "jump-extension.exit",
+    "when": "editorTextFocus && jump.isInJumpMode"
   }
 ]
