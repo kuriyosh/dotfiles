@@ -147,7 +147,7 @@
         "yaml"
     ],
     "cursor.composer.textSizeScale": 0.85,
-    "workbench.colorTheme": "GitHub Dark",
+    "workbench.colorTheme": "GitHub Dark Default",
     "workbench.activityBar.orientation": "vertical",
     "window.commandCenter": true,
     "docker.extension.enableComposeLanguageServer": false,
@@ -175,7 +175,8 @@
     "json.schemaDownload.enable": true,
     "javascript.updateImportsOnFileMove.enabled": "never",
     "debug.disassemblyView.showSourceCode": false,
-    "claudeCode.preferredLocation": "panel",
+    "claudeCode.preferredLocation": "sidebar",
     "gitlens.ai.model": "vscode",
     "gitlens.ai.vscode.model": "copilot:gpt-4.1",
+    "workbench.activityBar.location": "bottom",
 }
