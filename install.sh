@@ -27,9 +27,11 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 # install cursor extensions
 cat ./cursor/extensions.txt | xargs -I {} cursor --install-extension {}
 
-# install
+# macOS settings
 defaults write com.apple.dock autohide -bool true
 defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
+defaults -currentHost write -globalDomain NSStatusItemSelectionPadding -int 6
+defaults -currentHost write -globalDomain NSStatusItemSpacing -int 6
 
 
 curl -sS https://starship.rs/install.sh | sh
