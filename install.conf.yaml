@@ -34,6 +34,7 @@
     ~/Library/Application Support/Code/User/settings.json: vscode/settings.json
     ~/Library/Application Support/Code/User/keybindings.json: vscode/keybindings.json
     ~/.default-npm-packages: .default-npm-packages
+    ~/Library/Keyboard Layouts/kuriyosh.keylayout: macOS/kuriyosh.keylayout
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]

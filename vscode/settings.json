@@ -180,5 +180,15 @@
     "gitlens.ai.vscode.model": "copilot:gpt-4.1",
     "workbench.activityBar.location": "bottom",
     "jump.display.backgroundColor": "#c9d1d9",
-    "jump.display.color": "⁠#0d1117"
+    "jump.display.color": "⁠#0d1117",
+    "keyboard.dispatch": "keyCode",
+    "json.schemaDownload.trustedDomains": {
+        "https://schemastore.azurewebsites.net/": true,
+        "https://raw.githubusercontent.com/": true,
+        "https://www.schemastore.org/": true,
+        "https://json.schemastore.org/": true,
+        "https://json-schema.org/": true,
+        "https://biomejs.dev": true,
+        "https://unpkg.com": true
+    }
 }

@@ -1,0 +1,87 @@
+{
+  "title": "Emacs風 Option+キー で単語操作（DefaultKeyBinding.dict 代替）",
+  "rules": [
+    {
+      "description": "Option+F で単語単位で前に移動 (moveWordForward)",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "f",
+            "modifiers": {
+              "mandatory": ["option"],
+              "optional": ["shift"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "right_arrow",
+              "modifiers": ["option"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Option+B で単語単位で後ろに移動 (moveWordBackward)",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "b",
+            "modifiers": {
+              "mandatory": ["option"],
+              "optional": ["shift"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "left_arrow",
+              "modifiers": ["option"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Option+D で単語を前方削除 (deleteWordForward)",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "d",
+            "modifiers": {
+              "mandatory": ["option"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "delete_forward",
+              "modifiers": ["option"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Option+H で単語を後方削除 (deleteWordBackward)",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "h",
+            "modifiers": {
+              "mandatory": ["option"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "delete_or_backspace",
+              "modifiers": ["option"]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

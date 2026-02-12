@@ -395,5 +395,25 @@
     "key": "ctrl+g",
     "command": "jump-extension.exit",
     "when": "editorTextFocus && jump.isInJumpMode"
-  }
+  },
+  {
+    "key": "alt+n",
+    "command": "cursorMove",
+    "when": "editorTextFocus",
+    "args": {
+      "to": "down",
+      "by": "line",
+      "value": 5
+    }
+  },
+  {
+    "key": "alt+p",
+    "command": "cursorMove",
+    "when": "editorTextFocus",
+    "args": {
+      "to": "up",
+      "by": "line",
+      "value": 5
+    }
+  },
 ]
