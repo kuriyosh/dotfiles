@@ -32,6 +32,6 @@ defaults write com.apple.dock autohide -bool true
 defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
 defaults -currentHost write -globalDomain NSStatusItemSelectionPadding -int 6
 defaults -currentHost write -globalDomain NSStatusItemSpacing -int 6
-
+defaults write com.apple.dock wvous-br-corner -int 0
 
 curl -sS https://starship.rs/install.sh | sh
