@@ -24,9 +24,6 @@ brew bundle --file $DOTFILE_DIR/Brewfile
 # oh-my-zsh (https://github.com/ohmyzsh/ohmyzsh)
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-# install cursor extensions
-cat ./cursor/extensions.txt | xargs -I {} cursor --install-extension {}
-
 # macOS settings
 defaults write com.apple.dock autohide -bool true
 defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
