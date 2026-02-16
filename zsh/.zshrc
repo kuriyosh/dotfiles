@@ -3,6 +3,7 @@
 
 # completion
 source /opt/homebrew/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+source ~/.pnpm-completion.zsh
 
 # theme
 ZSH_THEME="robbyrussell"
@@ -21,13 +22,13 @@ source $ZSH/oh-my-zsh.sh
 
 # aliases
 alias cr='cd $(git rev-parse --show-toplevel)'
-alias ccr='cursor $(git rev-parse --show-toplevel)'
+alias ccr='code $(git rev-parse --show-toplevel)'
 alias o="open"
 alias pull="git pull"
 alias push="git push"
 alias diff="colordiff"
 alias rm="trash"
-alias c="cursor"
+alias c="code"
 alias rgf='rg --files | rg'
 alias ssh-pass='ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no'
 
