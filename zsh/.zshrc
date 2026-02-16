@@ -1,11 +1,12 @@
 # completion
 autoload -U compinit; compinit
-source /opt/homebrew/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-zstyle ':autocomplete:*complete*:*' insert-unambiguous yes
-zstyle ':autocomplete:*history*:*' insert-unambiguous yes
-zstyle ':autocomplete:menu-search:*' insert-unambiguous yes
-
+export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
+zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+source <(carapace _carapace)
 source ~/.pnpm-completion.zsh
+zstyle ':completion:*' menu select
+zmodload zsh/complist
+bindkey '^n' menu-complete
 
 # theme
 ZSH_THEME="robbyrussell"
