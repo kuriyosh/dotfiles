@@ -1,8 +1,8 @@
-theme = Dark Pastel
+theme = GitHub Dark High Contrast
 
 # Pane
-# keybind = ctrl+t>-=new_split:down
-# keybind = ctrl+t>\=new_split:right
+keybind = ctrl+t>-=new_split:down
+keybind = ctrl+t>\=new_split:right
 keybind = ctrl+t>h=goto_split:left
 keybind = ctrl+t>j=goto_split:down
 keybind = ctrl+t>k=goto_split:up
@@ -17,7 +17,7 @@ keybind = alt+b=esc:b
 # Appearance
 font-size = 14
 unfocused-split-opacity = 0.3
-background-opacity = 0.95
+background-opacity = 0.9
 
 # General
 font-feature = -dlig

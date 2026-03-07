@@ -44,3 +44,11 @@ eval "$(mise activate zsh)"
 eval "$(starship init zsh)"
 
 export EDITOR=vim
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/yoshiki/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/yoshiki/.cache/lm-studio/bin"
