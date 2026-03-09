@@ -25,4 +25,4 @@ window-inherit-working-directory = true
 macos-titlebar-style = transparent
 
 # SSH
-shell-integration-features = cursor,no-sudo,title,path
+shell-integration-features = no-cursor,no-sudo,title,path
