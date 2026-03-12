@@ -43,7 +43,7 @@ eval "$(mise activate zsh)"
 # starship
 eval "$(starship init zsh)"
 
-export EDITOR=vim
+export EDITOR=emacs
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
 fpath=(/Users/yoshiki/.docker/completions $fpath)
 autoload -Uz compinit

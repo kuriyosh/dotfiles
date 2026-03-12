@@ -15,3 +15,7 @@ symbol = '☁️'
 
 [cmd_duration]
 disabled = true
+
+[gcloud]
+symbol = 'G'
+disabled = true
