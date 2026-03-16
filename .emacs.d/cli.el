@@ -13,59 +13,31 @@
 (set-language-environment "Japanese")	; language settings
 (prefer-coding-system 'utf-8)
 (electric-pair-mode t)					; electric-pair-mode
+(load-theme 'misterioso t)				; dark theme
 
 ;; ;; ===============================================================
 ;; ;; Advanced
 ;; ;; ===============================================================
-(require 'autoinsert)
-(setq auto-insert-directory "~/.emacs.d/template/")
-(setq auto-insert-alist
-      (nconc '(
-               ("\\.cpp$" . ["template.cpp" my-template])
-               ("\\.py$"   . ["template.py" my-template])
-			   ("\\.org$"   . ["template.org" my-template])
-			   ("\\.tex$"   . ["template.tex" my-template])
-			   ("\\.js$"   . ["template.js" my-template])
-               ) auto-insert-alist))
 
-;; template replacement for autoinsert
-(defvar template-replacements-alists
-  '(("%file%"             . (lambda () (file-name-nondirectory (buffer-file-name))))
-    ("%file-without-ext%" . (lambda () (file-name-sans-extension (file-name-nondirectory (buffer-file-name)))))
-    ("%time%" . (lambda () (format-time-string "%Y-%m-%d")))
-	("%mtg-timeformat%" . (lambda () (format-time-string "%m%d")))
-    ("%include-guard%"    . (lambda () (format "__SCHEME_%s__" (upcase (file-name-sans-extension (file-name-nondirectory buffer-file-name))))))))
-
-;; my-template setting parse for autoinsert
-(defun my-template ()
-  (time-stamp)
-  (mapc #'(lambda(c)
-        (progn
-          (goto-char (point-min))
-          (replace-string (car c) (funcall (cdr c)) nil)))
-    template-replacements-alists)
-  (goto-char (point-max))
-  (message "done."))
-(add-hook 'find-file-not-found-hooks 'auto-insert)
-
-;; clipboard setting
-(defun copy-from-osx ()
-  (shell-command-to-string "pbpaste"))
-
-(defun paste-to-osx (text &optional push)
-  (let ((process-connection-type nil))
-    (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
-      (process-send-string proc text)
-      (process-send-eof proc))))
-
-(setq interprogram-cut-function 'paste-to-osx)
-(setq interprogram-paste-function 'copy-from-osx)
+;; clipboard setting (macOS terminal)
+(when (and (not (display-graphic-p))
+           (executable-find "pbcopy"))
+  (setq interprogram-cut-function
+        (lambda (text &rest _)
+          (with-temp-buffer
+            (insert text)
+            (call-process-region (point-min) (point-max) "pbcopy")))
+        interprogram-paste-function
+        (lambda ()
+          (let ((clip (shell-command-to-string "pbpaste")))
+            (unless (string= clip (car kill-ring))
+              clip)))))
 
 ;; ;; ===============================================================
 ;; ;; Key Setting
 ;; ;; ===============================================================
 (global-set-key (kbd "C-z") 'undo)
-(global-set-key (kbd "M-[") 'replace-string)
+(global-set-key (kbd "C-c r") 'replace-string)
 (global-set-key (kbd "M-d") 'kill-word-at-point)
 (global-set-key (kbd "M-g") 'goto-line)
 (global-set-key (kbd "C-;") 'hs-toggle-hiding)
