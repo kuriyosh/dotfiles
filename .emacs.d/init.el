@@ -10,13 +10,18 @@
 (require 'package)
 
 ;; list the repositories containing them
-(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(add-to-list 'package-archives '("elpa" . "http://tromey.com/elpa/") t)
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+(setq package-archives
+      '(("melpa" . "https://melpa.org/packages/")
+        ("melpa-stable" . "https://stable.melpa.org/packages/")
+        ("gnu" . "https://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 
-; activate all the packages (in particular autoloads)
-(package-initialize)
+;; パッケージアーカイブが未取得の場合は取得する
+(unless package-archive-contents
+  (package-refresh-contents))
+
+;; use-package: auto ensure
+(setq use-package-always-ensure t)
 
 ;; ;; ===============================================================
 ;; ;; Global Setting
@@ -52,7 +57,8 @@
 (menu-bar-mode 0)
 
 ;;ツールバーを消す
-(tool-bar-mode 0)
+(when (fboundp 'tool-bar-mode)
+  (tool-bar-mode 0))
 
 ;; 選択範囲を上書き
 (delete-selection-mode t)
@@ -129,7 +135,6 @@
 
 ;; open-junk-file
 (use-package open-junk-file
-  :ensure t
   :config
   (setq open-junk-file-format "~/junk/%Y-%m-%d-%H%M%S.")
   :bind
@@ -137,17 +142,15 @@
 
 ;; theme
 (use-package dracula-theme
-  :ensure t
   :config
   (load-theme 'dracula t))
 
-(use-package markdown-mode :ensure t)
+(use-package markdown-mode)
 
 ;; https://github.com/emacs-helm/helm/issues/2683
 (defvar helm-ff-edit-marked-files-fn #'helm-ff-wfnames)
 
 (use-package helm
-  :ensure t
   :config
   (helm-mode 1)
   :bind
@@ -163,7 +166,6 @@
 
 ;; smartparen
 (use-package smartparens
-  :ensure t
   :config
   (sp-pair "「" "」")
   (sp-pair "【" "】")
@@ -177,7 +179,6 @@
 
 ;; recentfの設定
 (use-package recentf
-  :ensure t
   :init
   (setq recentf-auto-cleanup 60)
   (setq recentf-exclude '(".recentf" "COMMIT_EDITMSG" "/.?TAGS" "^/sudo:" ".emacs.d/games/*-scores" "output-html/*"))
@@ -201,7 +202,6 @@
 
 ;; multiple-cursorsの設定
 (use-package multiple-cursors
-  :ensure t
   :bind
   ("C-S-c" . mc/edit-lines)
   ("C->" . mc/mark-next-like-this-symbol)

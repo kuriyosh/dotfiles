@@ -28,7 +28,7 @@
     ~/Library/KeyBindings/DefaultKeyBinding.dict:
       path: macOS/DefaultKeyBinding.dict
       create: true
-    ~/.emacs.d/init.el: .emacs.d/cli.el
+    ~/.emacs.d/init.el: .emacs.d/init.el
     ~/Library/Application Support/Cursor/User/keybindings.json: cursor/keybindings.json
     ~/Library/Application Support/Cursor/User/settings.json: cursor/settings.json
     ~/Library/Application Support/Code/User/settings.json: vscode/settings.json

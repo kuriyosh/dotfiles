@@ -23,6 +23,7 @@ background-opacity = 0.9
 font-feature = -dlig
 window-inherit-working-directory = true
 macos-titlebar-style = transparent
+macos-option-as-alt = left
 
 # SSH
 shell-integration-features = no-cursor,no-sudo,title,path
