@@ -16,11 +16,14 @@
         ("gnu" . "https://elpa.gnu.org/packages/")
         ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 
+(package-initialize)
+
 ;; パッケージアーカイブが未取得の場合は取得する
 (unless package-archive-contents
   (package-refresh-contents))
 
 ;; use-package: auto ensure
+(require 'use-package)
 (setq use-package-always-ensure t)
 
 ;; ;; ===============================================================
