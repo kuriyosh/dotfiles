@@ -1,12 +1,6 @@
 theme = GitHub Dark High Contrast
 
 # Pane
-keybind = ctrl+t>-=new_split:down
-keybind = ctrl+t>\=new_split:right
-keybind = ctrl+t>h=goto_split:left
-keybind = ctrl+t>j=goto_split:down
-keybind = ctrl+t>k=goto_split:up
-keybind = ctrl+t>l=goto_split:right
 keybind = alt+h=text:\x1b\x7f
 keybind = shift+enter=text:\x1b\r
 

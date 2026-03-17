@@ -23,6 +23,7 @@ export ZSH="$HOME/.oh-my-zsh"
 source $ZSH/oh-my-zsh.sh
 
 # aliases
+alias e='emacs -nw'
 alias cr='cd $(git rev-parse --show-toplevel)'
 alias ccr='code $(git rev-parse --show-toplevel)'
 alias o="open"

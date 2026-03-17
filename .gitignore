@@ -55,3 +55,8 @@ fish/functions
 ###########################
 zed/prompts
 zed/conversations
+
+###########################
+# tmux
+###########################
+tmux/plugins
