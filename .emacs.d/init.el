@@ -16,6 +16,7 @@
         '(("gnu"    . "https://elpa.gnu.org/packages/")
           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
           ("melpa"  . "https://melpa.org/packages/")))
+(package-initialize)
 (require 'use-package)
 (setopt use-package-always-ensure t) ; use-package で自動インストール
 
@@ -71,7 +72,8 @@
   (global-auto-revert-mode 1)       ; 外部変更を自動で反映
   (winner-mode 1)                   ; ウィンドウレイアウトの undo/redo
   (repeat-mode 1)                   ; リピートキーで prefix 省略可能に
-  (pixel-scroll-precision-mode 1)   ; 高精度スクロール (トラックパッド向け)
+  (when (display-graphic-p)
+    (pixel-scroll-precision-mode 1))  ; 高精度スクロール (トラックパッド向け・GUI専用)
 
   (when (fboundp 'editorconfig-mode)
     (editorconfig-mode 1))          ; .editorconfig を自動適用 (Emacs 30+)
@@ -89,9 +91,10 @@
   (add-hook 'after-save-hook
             #'executable-make-buffer-file-executable-if-script-p)
 
-  ;; スクリーンの大きさ調整
-  (set-frame-position (selected-frame) 0 0)
-  (set-frame-size (selected-frame) 942 1024 t)
+  ;; スクリーンの大きさ調整 (GUI専用)
+  (when (display-graphic-p)
+    (set-frame-position (selected-frame) 0 0)
+    (set-frame-size (selected-frame) 942 1024 t))
 
   ;; recentf の保存メッセージを抑制
   (advice-add 'recentf-cleanup   :around
@@ -240,7 +243,7 @@
 ;; Theme
 ;; ===============================================================
 
-(load-theme 'modus-vivendi t) ; built-in のダークテーマ
+(load-theme 'tsdh-dark t)
 
 ;; ===============================================================
 ;; Original Functions
