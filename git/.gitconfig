@@ -4,7 +4,7 @@
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJWSr+IAxFWhQcgJcbQ6mYIZuIL4hjgyvSR9FKflvr5F
 [core]
 	quotepath = false
-	editor = vim
+	editor = emacs
 	ignorecase = false
 [alias]
 	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
