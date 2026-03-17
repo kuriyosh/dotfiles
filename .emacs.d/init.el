@@ -1,4 +1,4 @@
-;;; init.el --- Emacs 30.x / macOS GUI  -*- lexical-binding: t; -*-
+;;; init.el --- Emacs 30.x  -*- lexical-binding: t; -*-
 
 ;; ===============================================================
 ;; Custom file
@@ -72,8 +72,6 @@
   (global-auto-revert-mode 1)       ; 外部変更を自動で反映
   (winner-mode 1)                   ; ウィンドウレイアウトの undo/redo
   (repeat-mode 1)                   ; リピートキーで prefix 省略可能に
-  (when (display-graphic-p)
-    (pixel-scroll-precision-mode 1))  ; 高精度スクロール (トラックパッド向け・GUI専用)
 
   (when (fboundp 'editorconfig-mode)
     (editorconfig-mode 1))          ; .editorconfig を自動適用 (Emacs 30+)
@@ -90,11 +88,6 @@
   ;; スクリプトファイルに実行権限を与えて保存
   (add-hook 'after-save-hook
             #'executable-make-buffer-file-executable-if-script-p)
-
-  ;; スクリーンの大きさ調整 (GUI専用)
-  (when (display-graphic-p)
-    (set-frame-position (selected-frame) 0 0)
-    (set-frame-size (selected-frame) 942 1024 t))
 
   ;; recentf の保存メッセージを抑制
   (advice-add 'recentf-cleanup   :around
@@ -115,6 +108,7 @@
 
 ;; GUI Emacs on macOS は system clipboard と統合済み。
 ;; terminal Emacs 用の pbcopy/pbpaste ブリッジ。
+;; TODO: 別の方法で管理可能そう
 (when (and (eq system-type 'darwin) (not (display-graphic-p)))
   (defun copy-from-osx ()
     (shell-command-to-string "pbpaste"))
@@ -365,7 +359,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "C-z" 'undo)                                                 ; 元に戻す
 (bind-key "C-\\" 'undo-redo)                                           ; やり直し
 
-(unbind-key "C-t")              ; プレフィックスとして解放
 (unbind-key "C-q")              ; プレフィックスとして解放
 (bind-key "C-q C-q" 'quoted-insert) ; 制御文字の直接入力
 
