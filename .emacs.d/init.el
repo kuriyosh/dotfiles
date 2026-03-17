@@ -135,8 +135,6 @@
   :custom
   (open-junk-file-format "~/junk/%Y-%m-%d-%H%M%S."))
 
-(use-package markdown-mode) ; Markdown ファイルのメジャーモード
-
 (use-package logview ; ログファイルの閲覧用モード
   :mode ("\\.log\\'" . logview-mode))
 
@@ -220,6 +218,9 @@
   :config
   (treesit-auto-add-to-auto-mode-alist 'all) ; 全言語で ts-mode を優先
   (global-treesit-auto-mode))
+
+(use-package markdown-mode ; Markdown ファイルのメジャーモード
+  :mode ("\\.md\\'" . gfm-mode))
 
 (use-package eglot ; LSP クライアント (補完・定義ジャンプ・診断等)
   :ensure nil
