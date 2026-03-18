@@ -357,7 +357,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "<f1>" 'read-only-mode)                                      ; 読み取り専用モード切替
 (bind-key "C-a" 'move-beginning-alt)                                   ; インデント考慮の行頭移動
 (bind-key "C-z" 'undo)                                                 ; 元に戻す
-(bind-key "C-\\" 'undo-redo)                                           ; やり直し
+(bind-key "C-/" 'undo-redo)                                           ; やり直し
 
 (unbind-key "C-q")              ; プレフィックスとして解放
 (bind-key "C-q C-q" 'quoted-insert) ; 制御文字の直接入力
