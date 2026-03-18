@@ -133,7 +133,13 @@
 
 (use-package doom-modeline ; doom-modeline は nerd-icons を自動利用
   :ensure t
-  :init (doom-modeline-mode 1))
+  :init (doom-modeline-mode 1)
+  :custom
+  (doom-modeline-height 18)
+  (doom-modeline-bar-width 3)
+  (doom-modeline-minor-modes nil)
+  (doom-modeline-enable-word-count nil)
+  (doom-modeline-buffer-file-name-style 'truncate-upto-project))
 
 (use-package doom-themes
   :ensure t
@@ -144,7 +150,11 @@
   ;; for treemacs users
                                         ; (doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
   :config
-  (load-theme 'doom-dark+ t)
+  (load-theme 'doom-one t)
+
+  ;; ターミナルの背景色をそのまま使う
+  (unless (display-graphic-p)
+    (set-face-background 'default "unspecified-bg"))
 
   ; (doom-themes-visual-bell-config) ; Enable flashing mode-line on errors
   (doom-themes-treemacs-config) ; or for treemacs users
@@ -186,12 +196,18 @@
   (treemacs-width 35)
   (treemacs-no-png-images nil)
   :config
+  (treemacs-project-follow-mode 1) ; カレントプロジェクトに自動追従
   ;; ファイル選択後に treemacs ウィンドウを自動で閉じる
   (advice-add 'treemacs-visit-node-default :after
               (lambda (&rest _)
                 (when-let* ((w (treemacs-get-local-window)))
                   (unless (eq (selected-window) w) ; ディレクトリ展開時は閉じない
                     (delete-window w))))))
+
+(use-package treemacs-nerd-icons ; treemacs に nerd-icons アイコンを表示
+  :after treemacs
+  :config
+  (treemacs-load-theme "nerd-icons"))
 
 (use-package avy ; 画面内の任意の位置にジャンプ
   :bind (("M-j" . avy-goto-char-timer)   ; 文字入力で候補を絞りジャンプ
