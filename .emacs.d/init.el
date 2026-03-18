@@ -148,7 +148,7 @@
   (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
   (doom-themes-enable-italic t) ; if nil, italics is universally disabled
   ;; for treemacs users
-                                        ; (doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-treemacs-theme "doom-atom")
   :config
   (load-theme 'doom-one t)
 
@@ -212,6 +212,11 @@
 (use-package avy ; 画面内の任意の位置にジャンプ
   :bind (("M-j" . avy-goto-char-timer)   ; 文字入力で候補を絞りジャンプ
          ("M-l" . avy-goto-line)))        ; 行番号でジャンプ
+
+(use-package undo-fu-session ; ファイルを閉じても undo 履歴を保持
+  :init
+  (undo-fu-session-global-mode 1))
+
 
 (use-package goto-chg ; 最後の変更箇所にジャンプ
   :bind (("C-," . goto-last-change)))
@@ -453,7 +458,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "C-/" 'undo-redo)                                           ; やり直し
 
 (unbind-key "C-t")              ; tmux プレフィックスと競合しないように解放
-;; (unbind-key "C-q")              ; プレフィックスとして解放
-;; (bind-key "C-q C-q" 'quoted-insert) ; 制御文字の直接入力
+(unbind-key "C-q")              ; プレフィックスとして解放
+(bind-key "C-q C-q" 'quoted-insert) ; 制御文字の直接入力
 
 ;;; init.el ends here

@@ -11,7 +11,7 @@ keybind = alt+b=esc:b
 # Appearance
 font-size = 14
 unfocused-split-opacity = 0.9
-background-opacity = 0.9
+background-opacity = 0.95
 
 # General
 font-feature = -dlig
