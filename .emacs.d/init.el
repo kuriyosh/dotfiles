@@ -56,8 +56,7 @@
                             ".emacs.d/games/.*-scores"
                             "output-html/.*")
           tab-always-indent 'complete                 ; TABでまずインデント、次に補完
-          tab-first-completion 'eol                   ; 行末でのみ補完を開始
-          completion-auto-help 'lazy                  ; 補完候補ウィンドウの表示を控えめに
+          completion-auto-help 'always                ; 補完候補を常に表示
           global-auto-revert-non-file-buffers t)      ; Dired等の非ファイルバッファも自動更新
 
   :config
@@ -113,6 +112,45 @@
   (xclip-mode 1))
 
 ;; ===============================================================
+;; Appearance settings
+;; ===============================================================
+
+(use-package nerd-icons) ; Nerd Fonts アイコン表示
+
+(use-package nerd-icons-dired ; Dired にアイコン表示
+  :hook (dired-mode . nerd-icons-dired-mode))
+
+(use-package nerd-icons-completion ; Vertico/Marginalia にアイコン表示
+  :after marginalia
+  :config
+  (nerd-icons-completion-mode 1)
+  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+
+(use-package nerd-icons-corfu ; Corfu 補完候補にアイコン表示
+  :after corfu
+  :config
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
+(use-package doom-modeline ; doom-modeline は nerd-icons を自動利用
+  :ensure t
+  :init (doom-modeline-mode 1))
+
+(use-package doom-themes
+  :ensure t
+  :custom
+  ;; Global settings (defaults)
+  (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
+  (doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;; for treemacs users
+                                        ; (doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  :config
+  (load-theme 'doom-dark+ t)
+
+  ; (doom-themes-visual-bell-config) ; Enable flashing mode-line on errors
+  (doom-themes-treemacs-config) ; or for treemacs users
+  )
+
+;; ===============================================================
 ;; Various Package Setting
 ;; ===============================================================
 
@@ -141,6 +179,10 @@
   (eval-after-load 'org-mode '(require 'smartparens-org))
   (show-smartparens-global-mode) ; 対応する括弧をハイライト
   (smartparens-global-mode))     ; 全バッファで有効化
+
+(use-package avy ; 画面内の任意の位置にジャンプ
+  :bind (("M-j" . avy-goto-char-timer)   ; 文字入力で候補を絞りジャンプ
+         ("M-l" . avy-goto-line)))        ; 行番号でジャンプ
 
 (use-package goto-chg ; 最後の変更箇所にジャンプ
   :bind (("C-," . goto-last-change)))
@@ -180,8 +222,19 @@
 ;; ===============================================================
 
 (use-package corfu ; バッファ内補完のポップアップ UI
-  :init
+  :demand t
+  :custom
+  (corfu-auto t)           ; 入力中に自動で補完候補を表示
+  (corfu-auto-delay 0.2)   ; 表示までの遅延 (秒)
+  (corfu-auto-prefix 2)    ; 2文字入力で補完開始
+  :config
   (global-corfu-mode 1))
+
+(use-package corfu-terminal ; ターミナル Emacs で Corfu ポップアップを表示
+  :unless (display-graphic-p)
+  :after corfu
+  :config
+  (corfu-terminal-mode 1))
 
 (use-package cape ; 補完ソースの拡張 (ファイルパス、dabbrev 等)
   :init
@@ -197,13 +250,36 @@
 ;; Programming: Eglot + tree-sitter
 ;; ===============================================================
 
-(use-package treesit-auto ; tree-sitter grammar の自動管理・モード切り替え
-  :vc (:url "https://github.com/renzmann/treesit-auto.git")
+(use-package treesit ; tree-sitter grammar の管理・モード切り替え
+  :ensure nil
   :custom
-  (treesit-auto-install 'prompt) ; grammar 未導入時にプロンプト表示
+  (treesit-language-source-alist
+   '((python     "https://github.com/tree-sitter/tree-sitter-python")
+     (go         "https://github.com/tree-sitter/tree-sitter-go")
+     (gomod      "https://github.com/camdencheek/tree-sitter-go-mod")
+     (rust       "https://github.com/tree-sitter/tree-sitter-rust")
+     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+     (tsx        "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+     (toml       "https://github.com/tree-sitter/tree-sitter-toml")
+     (yaml       "https://github.com/tree-sitter/tree-sitter-yaml")
+     (json       "https://github.com/tree-sitter/tree-sitter-json")
+     (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")))
+  (major-mode-remap-alist              ; 従来モード → ts-mode へのリマップ
+   '((python-mode     . python-ts-mode)
+     (go-mode         . go-ts-mode)
+     (rust-mode       . rust-ts-mode)
+     (typescript-mode . typescript-ts-mode)
+     (json-mode       . json-ts-mode)
+     (yaml-mode       . yaml-ts-mode)
+     (toml-mode       . toml-ts-mode)
+     (dockerfile-mode . dockerfile-ts-mode)))
   :config
-  (treesit-auto-add-to-auto-mode-alist 'all) ; 全言語で ts-mode を優先
-  (global-treesit-auto-mode))
+  ;; 未インストールの grammar を自動インストール
+  (dolist (lang (mapcar #'car treesit-language-source-alist))
+    (unless (treesit-language-available-p lang)
+      (treesit-install-language-grammar lang)))
+  ;; tsx は auto-mode-alist で直接設定
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode)))
 
 (use-package markdown-mode ; Markdown ファイルのメジャーモード
   :mode ("\\.md\\'" . gfm-mode))
@@ -226,11 +302,14 @@
 (use-package magit ; Git の操作を Emacs 内で完結させる
   :bind ("C-x g" . magit-status))
 
-;; ===============================================================
-;; Theme
-;; ===============================================================
-
-(load-theme 'tsdh-dark t)
+(use-package diff-hl ; 変更行をフリンジにカラー表示
+  :hook
+  ((magit-pre-refresh  . diff-hl-magit-pre-refresh)   ; magit 操作前に更新
+   (magit-post-refresh . diff-hl-magit-post-refresh)) ; magit 操作後に更新
+  :init
+  (global-diff-hl-mode)
+  (diff-hl-flydiff-mode)
+  (diff-hl-margin-mode))
 
 ;; ===============================================================
 ;; Original Functions
@@ -345,7 +424,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "C-/" 'undo-redo)                                           ; やり直し
 
 (unbind-key "C-t")              ; tmux プレフィックスと競合しないように解放
-(unbind-key "C-q")              ; プレフィックスとして解放
-(bind-key "C-q C-q" 'quoted-insert) ; 制御文字の直接入力
+;; (unbind-key "C-q")              ; プレフィックスとして解放
+;; (bind-key "C-q C-q" 'quoted-insert) ; 制御文字の直接入力
 
 ;;; init.el ends here
