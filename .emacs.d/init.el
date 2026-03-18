@@ -106,19 +106,11 @@
     (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)) ; タイトルバーを透過
     (add-to-list 'default-frame-alist '(ns-appearance . dark))))      ; ダークモード外観
 
-;; GUI Emacs on macOS は system clipboard と統合済み。
-;; terminal Emacs 用の pbcopy/pbpaste ブリッジ。
-;; TODO: 別の方法で管理可能そう
-(when (and (eq system-type 'darwin) (not (display-graphic-p)))
-  (defun copy-from-osx ()
-    (shell-command-to-string "pbpaste"))
-  (defun paste-to-osx (text &optional push)
-    (let ((process-connection-type nil))
-      (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
-        (process-send-string proc text)
-        (process-send-eof proc))))
-  (setq interprogram-cut-function 'paste-to-osx)
-  (setq interprogram-paste-function 'copy-from-osx))
+;; terminal Emacs 用のクリップボード連携 (GUI は標準で統合済み)
+(use-package xclip
+  :unless (display-graphic-p)
+  :config
+  (xclip-mode 1))
 
 ;; ===============================================================
 ;; Various Package Setting
@@ -294,13 +286,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
       (backward-kill-word 1)
     (apply orig-fn beg end args)))
 
-(define-advice kill-line (:before (&rest _) fixup)
-  "kill-line 後に次の行のインデントを減らす."
-  (when (and (not (bolp)) (eolp))
-    (forward-char)
-    (fixup-whitespace)
-    (backward-char)))
-
 (define-advice quit-window (:around (orig-fn &optional _kill window) always-kill)
   "quit-window 時にバッファを常に kill する."
   (funcall orig-fn t window))
@@ -351,14 +336,15 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "C-M-l" 'hs-show-block)                                     ; コードブロックを展開
 (bind-key "C-M-h" 'hs-hide-block)                                     ; コードブロックを折りたたむ
 (bind-key "C-:" 'toggle-truncate-lines)                                ; 行の折り返し切替
-(bind-key "M-n" (kbd "M-5 C-n"))                                      ; 5行下へ移動
-(bind-key "M-p" (kbd "M-5 C-p"))                                      ; 5行上へ移動
+(bind-key "M-n" (lambda () (interactive) (forward-line 5)))            ; 5行下へ移動
+(bind-key "M-p" (lambda () (interactive) (forward-line -5)))           ; 5行上へ移動
 (bind-key "C-w" 'backward-kill-word minibuffer-local-completion-map)   ; ミニバッファで前方単語削除
 (bind-key "<f1>" 'read-only-mode)                                      ; 読み取り専用モード切替
 (bind-key "C-a" 'move-beginning-alt)                                   ; インデント考慮の行頭移動
 (bind-key "C-z" 'undo)                                                 ; 元に戻す
 (bind-key "C-/" 'undo-redo)                                           ; やり直し
 
+(unbind-key "C-t")              ; tmux プレフィックスと競合しないように解放
 (unbind-key "C-q")              ; プレフィックスとして解放
 (bind-key "C-q C-q" 'quoted-insert) ; 制御文字の直接入力
 
