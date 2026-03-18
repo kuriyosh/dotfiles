@@ -180,6 +180,19 @@
   (show-smartparens-global-mode) ; 対応する括弧をハイライト
   (smartparens-global-mode))     ; 全バッファで有効化
 
+(use-package treemacs ; ファイルツリー (必要時にポップアップ、ファイル選択後に自動クローズ)
+  :bind ("M-0" . treemacs-select-window)
+  :custom
+  (treemacs-width 35)
+  (treemacs-no-png-images nil)
+  :config
+  ;; ファイル選択後に treemacs ウィンドウを自動で閉じる
+  (advice-add 'treemacs-visit-node-default :after
+              (lambda (&rest _)
+                (when-let* ((w (treemacs-get-local-window)))
+                  (unless (eq (selected-window) w) ; ディレクトリ展開時は閉じない
+                    (delete-window w))))))
+
 (use-package avy ; 画面内の任意の位置にジャンプ
   :bind (("M-j" . avy-goto-char-timer)   ; 文字入力で候補を絞りジャンプ
          ("M-l" . avy-goto-line)))        ; 行番号でジャンプ
