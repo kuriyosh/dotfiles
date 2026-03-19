@@ -77,7 +77,7 @@
   (when (fboundp 'which-key-mode)
     (which-key-mode 1))             ; プレフィックスキーの続き候補を表示 (Emacs 30+)
 
-  (add-hook 'prog-mode-hook #'display-line-numbers-mode) ; プログラミング時に行番号表示
+  (global-display-line-numbers-mode 1) ; 全モードで行番号表示
   (add-hook 'prog-mode-hook #'hs-minor-mode)             ; プログラミング時にコード折りたたみ有効化
 
   ;; scratch バッファーは削除させない
