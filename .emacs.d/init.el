@@ -184,7 +184,9 @@
   (smartparens-global-mode))       ; 全バッファで有効化
 
 (use-package treemacs ; ファイルツリー (必要時にポップアップ、ファイル選択後に自動クローズ)
-  :bind ("M-0" . treemacs-select-window)
+  :bind ((:map treemacs-mode-map
+         ("C-f" . treemacs-toggle-node)
+         ("C-b" . treemacs-toggle-node)))
   :custom
   (treemacs-width 35)
   :config
@@ -323,14 +325,20 @@
          (rust-mode         . eglot-ensure)
          (rust-ts-mode      . eglot-ensure)
          (typescript-ts-mode . eglot-ensure)
-         (tsx-ts-mode        . eglot-ensure)))
+         (tsx-ts-mode        . eglot-ensure)
+         (terraform-mode     . eglot-ensure)))
 
 ;; ===============================================================
 ;; Git
 ;; ===============================================================
 
+(use-package terraform-mode
+  :hook (terraform-mode . terraform-format-on-save-mode))
+
 (use-package magit ; Git の操作を Emacs 内で完結させる
-  :bind ("C-x g" . magit-status))
+  :bind ("C-x g" . magit-status)
+  :config
+  (bind-key "C-h" 'transient-help transient-map)) ; transient 内では C-h をヘルプに戻す
 
 (use-package diff-hl ; 変更行をフリンジにカラー表示
   :hook
@@ -345,15 +353,28 @@
 ;; Original Functions
 ;; ===============================================================
 
-(defun my-put-file-name-on-clipboard ()
-  "クリップボードにアクティブバッファのパスを格納."
+(defun my:copy-relative-filename-with-line ()
+  "Copy the buffer's project-relative path to the kill ring.
+When a region is active, append #L<start>-L<end> line range."
   (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (kill-new filename)
-      (message filename))))
+  (let* ((filename (if (equal major-mode 'dired-mode)
+                       default-directory
+                     (buffer-file-name)))
+         (root (when filename
+                 (if-let ((proj (project-current)))
+                     (project-root proj)
+                   (file-name-directory filename))))
+         (relpath (when filename
+                    (file-relative-name filename root)))
+         (result (when relpath
+                   (if (use-region-p)
+                       (format "%s#L%d-L%d" relpath
+                               (line-number-at-pos (region-beginning))
+                               (line-number-at-pos (region-end)))
+                     relpath))))
+    (when result
+      (kill-new result)
+      (message result))))
 
 (defun count-string-matches (regexp string)
   (with-temp-buffer
@@ -450,6 +471,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (bind-key "C-a" 'move-beginning-alt)                                   ; インデント考慮の行頭移動
 (bind-key "C-z" 'undo)                                                 ; 元に戻す
 (bind-key "C-/" 'undo-redo)                                           ; やり直し
+(bind-key* "C-o" 'treemacs-select-window)                              ; treemacs を全モードで優先
 
 (unbind-key "C-t")              ; tmux プレフィックスと競合しないように解放
 (unbind-key "C-q")              ; プレフィックスとして解放
