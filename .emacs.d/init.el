@@ -132,7 +132,6 @@
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 (use-package doom-modeline ; doom-modeline は nerd-icons を自動利用
-  :ensure t
   :init (doom-modeline-mode 1)
   :custom
   (doom-modeline-height 18)
@@ -142,23 +141,16 @@
   (doom-modeline-buffer-file-name-style 'truncate-upto-project))
 
 (use-package doom-themes
-  :ensure t
   :custom
   ;; Global settings (defaults)
   (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
   (doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  ;; for treemacs users
-  (doom-themes-treemacs-theme "doom-atom")
   :config
   (load-theme 'doom-one t)
 
   ;; ターミナルの背景色をそのまま使う
   (unless (display-graphic-p)
-    (set-face-background 'default "unspecified-bg"))
-
-  ; (doom-themes-visual-bell-config) ; Enable flashing mode-line on errors
-  (doom-themes-treemacs-config) ; or for treemacs users
-  )
+    (set-face-background 'default "unspecified-bg")))
 
 ;; ===============================================================
 ;; Various Package Setting
@@ -186,21 +178,21 @@
   (sp-pair "【" "】") ; 日本語すみ付き括弧
   (sp-pair "'" "'")   ; シングルクォート
   (sp-local-pair 'org-mode "$" "$") ; Org mode で数式用
-  (eval-after-load 'org-mode '(require 'smartparens-org))
-  (show-smartparens-global-mode) ; 対応する括弧をハイライト
-  (smartparens-global-mode))     ; 全バッファで有効化
+  (with-eval-after-load 'org-mode (require 'smartparens-org))
+  (show-paren-mode -1)             ; smartparens 側でハイライトするため無効化
+  (show-smartparens-global-mode)   ; 対応する括弧をハイライト
+  (smartparens-global-mode))       ; 全バッファで有効化
 
 (use-package treemacs ; ファイルツリー (必要時にポップアップ、ファイル選択後に自動クローズ)
   :bind ("M-0" . treemacs-select-window)
   :custom
   (treemacs-width 35)
-  (treemacs-no-png-images nil)
   :config
   (treemacs-project-follow-mode 1) ; カレントプロジェクトに自動追従
   ;; ファイル選択後に treemacs ウィンドウを自動で閉じる
   (advice-add 'treemacs-visit-node-default :after
               (lambda (&rest _)
-                (when-let* ((w (treemacs-get-local-window)))
+                (when-let ((w (treemacs-get-local-window)))
                   (unless (eq (selected-window) w) ; ディレクトリ展開時は閉じない
                     (delete-window w))))))
 
@@ -356,9 +348,7 @@
                       default-directory
                     (buffer-file-name))))
     (when filename
-      (with-temp-buffer
-        (insert filename)
-        (clipboard-kill-region (point-min) (point-max)))
+      (kill-new filename)
       (message filename))))
 
 (defun count-string-matches (regexp string)
