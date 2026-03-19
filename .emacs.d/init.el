@@ -100,7 +100,7 @@
 ;; ===============================================================
 
 (when (eq system-type 'darwin)
-  (setq mac-right-command-modifier 'hyper) ; 右コマンドキーを Hyper に
+  (setq dired-use-ls-dired nil)            ; macOS の ls は --dired 非対応
   (when (display-graphic-p)
     (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)) ; タイトルバーを透過
     (add-to-list 'default-frame-alist '(ns-appearance . dark))))      ; ダークモード外観
@@ -202,8 +202,12 @@
   (treemacs-load-theme "nerd-icons"))
 
 (use-package avy ; 画面内の任意の位置にジャンプ
-  :bind (("M-j" . avy-goto-char-timer)   ; 文字入力で候補を絞りジャンプ
-         ("M-l" . avy-goto-line)))        ; 行番号でジャンプ
+  :bind (("C-j" . avy-goto-word-1)   ; 文字入力で候補を絞りジャンプ
+         ("M-l" . avy-goto-line))  ; 行番号でジャンプ
+  :custom
+  (avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l
+                 ?w ?e ?r ?u ?i ?o
+                 ?x ?c ?v ?n ?m)))
 
 (use-package undo-fu-session ; ファイルを閉じても undo 履歴を保持
   :init
