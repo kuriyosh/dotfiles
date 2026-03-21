@@ -35,6 +35,7 @@
          ("C-z"   . undo)                     ; 元に戻す
          ("C-/"   . undo-redo)                ; やり直し
          ("C-q C-q" . quoted-insert)          ; 制御文字の直接入力
+         ("C-q f"   . project-find-file)      ; プロジェクト横断ファイル名検索
          :map minibuffer-local-completion-map
          ("C-w" . backward-kill-word))        ; ミニバッファで前方単語削除
   :bind* (("M-h" . backward-kill-word))       ; 前方の単語を削除 (全モード優先)
@@ -166,6 +167,9 @@
   :config
   (load-theme 'doom-one t)
 
+  ;; カレント行の行番号を特別扱いしない
+  (face-spec-set 'line-number-current-line '((t (:inherit line-number))))
+
   ;; ターミナルの背景色をそのまま使う
   (unless (display-graphic-p)
     (set-face-background 'default "unspecified-bg")))
@@ -263,7 +267,9 @@
 (use-package consult ; 高機能な検索・移動コマンド集
   :bind (("C-s"   . consult-line)       ; バッファ内インクリメンタル検索
          ("C-x b" . consult-buffer)     ; バッファ切り替え (プレビュー付き)
-         ("M-y"   . consult-yank-pop))) ; kill-ring からヤンク
+         ("M-y"   . consult-yank-pop)   ; kill-ring からヤンク
+         ("C-q s" . consult-ripgrep))   ; プロジェクト横断テキスト検索
+  )
 
 (use-package embark ; 補完候補に対するアクションメニュー
   :bind (("C-." . embark-act))
