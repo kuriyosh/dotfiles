@@ -26,6 +26,18 @@
 
 (use-package emacs
   :ensure nil
+  :bind (("M-d"   . kill-word-at-point)       ; カーソル上の単語を削除
+         ("M-g"   . goto-line)                ; 指定行へジャンプ
+         ("C-h"   . delete-backward-char)     ; Backspace として使用
+         ("C-:"   . toggle-truncate-lines)    ; 行の折り返し切替
+         ("<f1>"  . read-only-mode)           ; 読み取り専用モード切替
+         ("C-a"   . move-beginning-alt)       ; インデント考慮の行頭移動
+         ("C-z"   . undo)                     ; 元に戻す
+         ("C-/"   . undo-redo)                ; やり直し
+         ("C-q C-q" . quoted-insert)          ; 制御文字の直接入力
+         :map minibuffer-local-completion-map
+         ("C-w" . backward-kill-word))        ; ミニバッファで前方単語削除
+  :bind* (("M-h" . backward-kill-word))       ; 前方の単語を削除 (全モード優先)
   :init
   (add-to-list 'load-path (locate-user-emacs-file "elisp")) ; 自作 elisp の読み込みパス
   (make-directory (locate-user-emacs-file "backup/") t)      ; バックアップ用ディレクトリを作成
@@ -77,8 +89,8 @@
   (when (fboundp 'which-key-mode)
     (which-key-mode 1))             ; プレフィックスキーの続き候補を表示 (Emacs 30+)
 
-  (global-display-line-numbers-mode 1) ; 全モードで行番号表示
-  (add-hook 'prog-mode-hook #'hs-minor-mode)             ; プログラミング時にコード折りたたみ有効化
+  (show-paren-mode -1)                   ; smartparens 側でハイライトするため無効化
+  (global-display-line-numbers-mode 1)   ; 全モードで行番号表示
 
   ;; scratch バッファーは削除させない
   (with-current-buffer "*scratch*"
@@ -93,7 +105,13 @@
               (lambda (fn &rest args) (let ((inhibit-message t)) (apply fn args))))
   (advice-add 'recentf-save-list :around
               (lambda (fn &rest args) (let ((inhibit-message t)) (apply fn args))))
-  (setq recentf-auto-save-timer (run-with-idle-timer 30 t #'recentf-save-list))) ; 30秒アイドルで自動保存
+  (defvar recentf-auto-save-timer nil)
+  (setq recentf-auto-save-timer (run-with-idle-timer 30 t #'recentf-save-list)) ; 30秒アイドルで自動保存
+
+  (unbind-key "C-t")   ; tmux プレフィックスと競合しないように解放
+  (unbind-key "C-q")   ; プレフィックスとして解放
+  (bind-key "M-n" (lambda () (interactive) (forward-line 5)))   ; 5行下へ移動
+  (bind-key "M-p" (lambda () (interactive) (forward-line -5)))) ; 5行上へ移動
 
 ;; ===============================================================
 ;; macOS specific
@@ -156,6 +174,12 @@
 ;; Various Package Setting
 ;; ===============================================================
 
+(use-package hideshow ; コードブロックの折りたたみ
+  :hook (prog-mode . hs-minor-mode)    ; プログラミング時にコード折りたたみ有効化
+  :bind (("C-;"   . hs-toggle-hiding)  ; 折りたたみ切替
+         ("C-M-l" . hs-show-block)     ; 展開
+         ("C-M-h" . hs-hide-block)))   ; 折りたたむ
+
 (use-package open-junk-file ; 日付付きの一時ファイルを素早く作成
   :bind ("C-x j" . open-junk-file)
   :custom
@@ -179,22 +203,20 @@
   (sp-pair "'" "'")   ; シングルクォート
   (sp-local-pair 'org-mode "$" "$") ; Org mode で数式用
   (with-eval-after-load 'org-mode (require 'smartparens-org))
-  (show-paren-mode -1)             ; smartparens 側でハイライトするため無効化
   (show-smartparens-global-mode)   ; 対応する括弧をハイライト
   (smartparens-global-mode))       ; 全バッファで有効化
 
 (use-package treemacs ; ファイルツリー (必要時にポップアップ、ファイル選択後に自動クローズ)
-  :bind ((:map treemacs-mode-map
-         ("C-f" . treemacs-toggle-node)
-         ("C-b" . treemacs-toggle-node)))
+  :bind* (("C-o" . treemacs-select-window)) ; 全モードで優先
   :custom
+  (treemacs-position 'right)
   (treemacs-width 35)
   :config
   (treemacs-project-follow-mode 1) ; カレントプロジェクトに自動追従
   ;; ファイル選択後に treemacs ウィンドウを自動で閉じる
   (advice-add 'treemacs-visit-node-default :after
               (lambda (&rest _)
-                (when-let ((w (treemacs-get-local-window)))
+                (when-let* ((w (treemacs-get-local-window)))
                   (unless (eq (selected-window) w) ; ディレクトリ展開時は閉じない
                     (delete-window w))))))
 
@@ -244,7 +266,11 @@
          ("M-y"   . consult-yank-pop))) ; kill-ring からヤンク
 
 (use-package embark ; 補完候補に対するアクションメニュー
-  :bind (("C-." . embark-act)))
+  :bind (("C-." . embark-act))
+  ;; MEMO: embark の操作に慣れたらいくつか外す
+  ;; :custom
+  ;; (embark-confirm-act-all nil) ; act-all 実行時の確認を省略
+  )
 
 (use-package embark-consult ; Embark と Consult の連携
   :after (embark consult))
@@ -310,11 +336,15 @@
   (dolist (lang (mapcar #'car treesit-language-source-alist))
     (unless (treesit-language-available-p lang)
       (treesit-install-language-grammar lang)))
-  ;; tsx は auto-mode-alist で直接設定
+  ;; ts/tsx は auto-mode-alist で直接設定
+  (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode)))
 
 (use-package markdown-mode ; Markdown ファイルのメジャーモード
   :mode ("\\.md\\'" . gfm-mode))
+
+(use-package terraform-mode
+  :hook (terraform-mode . terraform-format-on-save-mode))
 
 (use-package eglot ; LSP クライアント (補完・定義ジャンプ・診断等)
   :ensure nil
@@ -331,9 +361,6 @@
 ;; ===============================================================
 ;; Git
 ;; ===============================================================
-
-(use-package terraform-mode
-  :hook (terraform-mode . terraform-format-on-save-mode))
 
 (use-package magit ; Git の操作を Emacs 内で完結させる
   :bind ("C-x g" . magit-status)
@@ -436,45 +463,22 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (defun my-next-buffer ()
   "next-buffer that skips certain buffers."
   (interactive)
-  (next-buffer)
-  (while (member (buffer-name) skippable-buffers)
-    (next-buffer)))
+  (let ((start (current-buffer)))
+    (next-buffer)
+    (while (and (member (buffer-name) skippable-buffers)
+                (not (eq (current-buffer) start)))
+      (next-buffer))))
 
 (defun my-previous-buffer ()
   "previous-buffer that skips certain buffers."
   (interactive)
-  (previous-buffer)
-  (while (member (buffer-name) skippable-buffers)
-    (previous-buffer)))
+  (let ((start (current-buffer)))
+    (previous-buffer)
+    (while (and (member (buffer-name) skippable-buffers)
+                (not (eq (current-buffer) start)))
+      (previous-buffer))))
 
 (global-set-key [remap next-buffer] #'my-next-buffer)
 (global-set-key [remap previous-buffer] #'my-previous-buffer)
-
-;; ===============================================================
-;; Key-bind
-;; ===============================================================
-
-(require 'bind-key)
-
-(bind-key "M-d" 'kill-word-at-point)                                  ; カーソル上の単語を削除
-(bind-key "M-g" 'goto-line)                                           ; 指定行へジャンプ
-(bind-key "C-;" 'hs-toggle-hiding)                                    ; コードブロックの折りたたみ切替
-(bind-key "C-h" 'delete-backward-char)                                ; Backspace として使用
-(bind-key* "M-h" 'backward-kill-word)                                 ; 前方の単語を削除
-(bind-key "C-M-l" 'hs-show-block)                                     ; コードブロックを展開
-(bind-key "C-M-h" 'hs-hide-block)                                     ; コードブロックを折りたたむ
-(bind-key "C-:" 'toggle-truncate-lines)                                ; 行の折り返し切替
-(bind-key "M-n" (lambda () (interactive) (forward-line 5)))            ; 5行下へ移動
-(bind-key "M-p" (lambda () (interactive) (forward-line -5)))           ; 5行上へ移動
-(bind-key "C-w" 'backward-kill-word minibuffer-local-completion-map)   ; ミニバッファで前方単語削除
-(bind-key "<f1>" 'read-only-mode)                                      ; 読み取り専用モード切替
-(bind-key "C-a" 'move-beginning-alt)                                   ; インデント考慮の行頭移動
-(bind-key "C-z" 'undo)                                                 ; 元に戻す
-(bind-key "C-/" 'undo-redo)                                           ; やり直し
-(bind-key* "C-o" 'treemacs-select-window)                              ; treemacs を全モードで優先
-
-(unbind-key "C-t")              ; tmux プレフィックスと競合しないように解放
-(unbind-key "C-q")              ; プレフィックスとして解放
-(bind-key "C-q C-q" 'quoted-insert) ; 制御文字の直接入力
 
 ;;; init.el ends here
