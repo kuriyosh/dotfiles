@@ -321,7 +321,8 @@
      (toml       "https://github.com/tree-sitter/tree-sitter-toml")
      (yaml       "https://github.com/tree-sitter/tree-sitter-yaml")
      (json       "https://github.com/tree-sitter/tree-sitter-json")
-     (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")))
+     (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
+     (prisma     "https://github.com/victorhqc/tree-sitter-prisma")))
   (major-mode-remap-alist              ; 従来モード → ts-mode へのリマップ
    '((python-mode     . python-ts-mode)
      (go-mode         . go-ts-mode)
@@ -339,6 +340,9 @@
   ;; ts/tsx は auto-mode-alist で直接設定
   (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode)))
+
+(use-package prisma-ts-mode ; Prisma schema ファイルのメジャーモード
+  :mode "\\.prisma\\'")
 
 (use-package markdown-mode ; Markdown ファイルのメジャーモード
   :mode ("\\.md\\'" . gfm-mode))
