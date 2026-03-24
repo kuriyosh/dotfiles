@@ -168,8 +168,10 @@
   :config
   (load-theme 'doom-one t)
 
-  ;; カレント行の行番号を特別扱いしない
-  (face-spec-set 'line-number-current-line '((t (:inherit line-number))))
+  ;; 全行番号を見やすい色にし、カレント行だけ強調
+  (let ((bright-fg (face-foreground 'line-number-current-line nil t)))
+    (set-face-attribute 'line-number nil :foreground bright-fg)
+    (set-face-attribute 'line-number-current-line nil :foreground "#da8548"))  ; オレンジ
 
   ;; ターミナルの背景色をそのまま使う
   (unless (display-graphic-p)
