@@ -70,7 +70,8 @@
                             "output-html/.*")
           tab-always-indent 'complete                 ; TABでまずインデント、次に補完
           completion-auto-help 'always                ; 補完候補を常に表示
-          global-auto-revert-non-file-buffers t)      ; Dired等の非ファイルバッファも自動更新
+          global-auto-revert-non-file-buffers t       ; Dired等の非ファイルバッファも自動更新
+          split-width-threshold nil)                  ; ウィンドウ分割を常に横割り (上下) にする
 
   :config
   (blink-cursor-mode -1)            ; カーソルの点滅を止める
@@ -325,7 +326,7 @@
      (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
      (tsx        "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
      (toml       "https://github.com/tree-sitter/tree-sitter-toml")
-     (yaml       "https://github.com/tree-sitter/tree-sitter-yaml")
+     (yaml       "https://github.com/tree-sitter-grammars/tree-sitter-yaml")
      (json       "https://github.com/tree-sitter/tree-sitter-json")
      (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
      (prisma     "https://github.com/victorhqc/tree-sitter-prisma")))
