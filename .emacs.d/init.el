@@ -366,7 +366,8 @@
          (rust-ts-mode      . eglot-ensure)
          (typescript-ts-mode . eglot-ensure)
          (tsx-ts-mode        . eglot-ensure)
-         (terraform-mode     . eglot-ensure)))
+         (terraform-mode     . eglot-ensure)
+         (dockerfile-ts-mode . eglot-ensure)))
 
 ;; ===============================================================
 ;; Git
