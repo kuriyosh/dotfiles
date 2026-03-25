@@ -25,10 +25,11 @@ export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 export PATH="$PATH:$HOME/.cache/lm-studio/bin"
 
 # environment variables
-export EDITOR=emacs
+export EDITOR="emacsclient -nw -a ''"
 
 # aliases
-alias e='emacs -nw'
+alias e='emacsclient -nw -a ""'
+alias ekill='emacsclient -e "(kill-emacs)"'
 alias cr='cd $(git rev-parse --show-toplevel)'
 alias ccr='code $(git rev-parse --show-toplevel)'
 alias o="open"

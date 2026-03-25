@@ -20,6 +20,12 @@
 (require 'use-package)
 (setopt use-package-always-ensure t) ; use-package で自動インストール
 
+;; TODO: 必要かどうか吟味する
+;; (use-package exec-path-from-shell ; シェルの PATH を Emacs に引き継ぐ
+;;   :if (memq window-system '(mac ns))
+;;   :config
+;;   (exec-path-from-shell-initialize))
+
 ;; ===============================================================
 ;; Global Setting
 ;; ===============================================================
@@ -180,12 +186,6 @@
 ;; ===============================================================
 ;; Various Package Setting
 ;; ===============================================================
-
-(use-package hideshow ; コードブロックの折りたたみ
-  :hook (prog-mode . hs-minor-mode)    ; プログラミング時にコード折りたたみ有効化
-  :bind (("C-;"   . hs-toggle-hiding)  ; 折りたたみ切替
-         ("C-M-l" . hs-show-block)     ; 展開
-         ("C-M-h" . hs-hide-block)))   ; 折りたたむ
 
 (use-package open-junk-file ; 日付付きの一時ファイルを素早く作成
   :bind ("C-x j" . open-junk-file)
@@ -358,6 +358,22 @@
 
 (use-package terraform-mode
   :hook (terraform-mode . terraform-format-on-save-mode))
+
+(use-package hideshow ; コードブロックの折りたたみ (非 tree-sitter モード用)
+  :ensure nil
+  :hook (prog-mode . hs-minor-mode))
+
+(use-package treesit-fold ; tree-sitter ベースのコード折りたたみ
+  :hook (prog-mode . treesit-fold-mode))
+
+(defun toggle-fold ()
+  "tree-sitter モードなら treesit-fold、それ以外なら hideshow で折りたたみを切り替える。"
+  (interactive)
+  (if (and (bound-and-true-p treesit-fold-mode)
+           (treesit-node-at (point)))
+      (treesit-fold-toggle)
+    (hs-toggle-hiding)))
+(keymap-global-set "C-;" #'toggle-fold)
 
 (use-package eglot ; LSP クライアント (補完・定義ジャンプ・診断等)
   :ensure nil
