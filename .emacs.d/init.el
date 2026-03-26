@@ -331,7 +331,9 @@
      (yaml       "https://github.com/tree-sitter-grammars/tree-sitter-yaml")
      (json       "https://github.com/tree-sitter/tree-sitter-json")
      (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
-     (prisma     "https://github.com/victorhqc/tree-sitter-prisma")))
+     (prisma     "https://github.com/victorhqc/tree-sitter-prisma")
+     (vue        "https://github.com/tree-sitter-grammars/tree-sitter-vue")
+     (css        "https://github.com/tree-sitter/tree-sitter-css")))
   (major-mode-remap-alist              ; 従来モード → ts-mode へのリマップ
    '((python-mode     . python-ts-mode)
      (go-mode         . go-ts-mode)
@@ -352,6 +354,10 @@
 
 (use-package prisma-ts-mode ; Prisma schema ファイルのメジャーモード
   :mode "\\.prisma\\'")
+
+(use-package vue-ts-mode ; Vue SFC のメジャーモード (tree-sitter ベース)
+  :vc (:url "https://github.com/8uff3r/vue-ts-mode" :branch "main")
+  :mode "\\.vue\\'")
 
 (use-package markdown-mode ; Markdown ファイルのメジャーモード
   :mode ("\\.md\\'" . gfm-mode))
@@ -386,7 +392,8 @@
          (typescript-ts-mode . eglot-ensure)
          (tsx-ts-mode        . eglot-ensure)
          (terraform-mode     . eglot-ensure)
-         (dockerfile-ts-mode . eglot-ensure)))
+         (dockerfile-ts-mode . eglot-ensure)
+         (vue-ts-mode        . eglot-ensure)))
 
 ;; ===============================================================
 ;; Git
