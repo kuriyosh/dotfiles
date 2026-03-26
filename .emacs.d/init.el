@@ -32,7 +32,7 @@
 
 (use-package emacs
   :ensure nil
-  :bind (("M-d"   . kill-word-at-point)       ; カーソル上の単語を削除
+  :bind (("M-d"   . delete-word-at-point)     ; カーソル上の単語を削除 (キルリングに入れない)
          ("M-g"   . goto-line)                ; 指定行へジャンプ
          ("C-h"   . delete-backward-char)     ; Backspace として使用
          ("C-:"   . toggle-truncate-lines)    ; 行の折り返し切替
@@ -44,7 +44,7 @@
          ("C-q f"   . project-find-file)      ; プロジェクト横断ファイル名検索
          :map minibuffer-local-completion-map
          ("C-w" . backward-kill-word))        ; ミニバッファで前方単語削除
-  :bind* (("M-h" . backward-kill-word))       ; 前方の単語を削除 (全モード優先)
+  :bind* (("M-h" . backward-delete-word))     ; 前方の単語を削除 (キルリングに入れない, 全モード優先)
   :init
   (add-to-list 'load-path (locate-user-emacs-file "elisp")) ; 自作 elisp の読み込みパス
   (make-directory (locate-user-emacs-file "backup/") t)      ; バックアップ用ディレクトリを作成
@@ -459,14 +459,29 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
                      "\n")))
   (end-of-line))
 
-(defun kill-word-at-point ()
-  "単語上にカーソルがある時、その単語を削除する."
+(defun delete-word-at-point ()
+  "単語上にカーソルがある時、その単語を削除する (キルリングに入れない)."
   (interactive)
   (let ((char (char-to-string (char-after (point)))))
     (cond
      ((string= " " char) (delete-horizontal-space))
-     ((string-match "[\\t\\n -@\\[-`{-~]" char) (kill-word 1))
-     (t (forward-char) (backward-word) (kill-word 1)))))
+     ((string-match "[\\t\\n -@\\[-`{-~]" char)
+      (let ((beg (point)))
+        (forward-word 1)
+        (delete-region beg (point))))
+     (t
+      (forward-char)
+      (backward-word)
+      (let ((beg (point)))
+        (forward-word 1)
+        (delete-region beg (point)))))))
+
+(defun backward-delete-word (arg)
+  "後方の単語を削除する (キルリングに入れない)."
+  (interactive "p")
+  (let ((end (point)))
+    (backward-word arg)
+    (delete-region (point) end)))
 
 ;; defadvice → define-advice (modern advice system)
 
