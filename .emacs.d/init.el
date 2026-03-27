@@ -38,8 +38,8 @@
          ("C-:"   . toggle-truncate-lines)    ; 行の折り返し切替
          ("<f1>"  . read-only-mode)           ; 読み取り専用モード切替
          ("C-a"   . move-beginning-alt)       ; インデント考慮の行頭移動
-         ("C-z"   . undo)                     ; 元に戻す
-         ("C-/"   . undo-redo)                ; やり直し
+         ("C-z"   . undo-fu-only-undo)         ; 元に戻す
+         ("C-/"   . undo-fu-only-redo)        ; やり直し
          ("C-q C-q" . quoted-insert)          ; 制御文字の直接入力
          ("C-q f"   . project-find-file)      ; プロジェクト横断ファイル名検索
          :map minibuffer-local-completion-map
@@ -240,6 +240,8 @@
                  ?w ?e ?r ?u ?i ?o
                  ?x ?c ?v ?n ?m)))
 
+(use-package undo-fu)         ; 直線的な undo/redo
+
 (use-package undo-fu-session ; ファイルを閉じても undo 履歴を保持
   :init
   (undo-fu-session-global-mode 1))
@@ -269,7 +271,7 @@
 
 (use-package consult ; 高機能な検索・移動コマンド集
   :bind (("C-s"   . consult-line)       ; バッファ内インクリメンタル検索
-         ("C-x b" . consult-buffer)     ; バッファ切り替え (プレビュー付き)
+         ("C-x b" . consult-project-buffer) ; プロジェクト内バッファ切り替え
          ("M-y"   . consult-yank-pop)   ; kill-ring からヤンク
          ("C-q s" . consult-ripgrep))   ; プロジェクト横断テキスト検索
   )
@@ -417,7 +419,7 @@
 ;; Original Functions
 ;; ===============================================================
 
-(defun my:copy-relative-filename-with-line ()
+(defun my/copy-relative-filename-with-line ()
   "Copy the buffer's project-relative path to the kill ring.
 When a region is active, append #L<start>-L<end> line range."
   (interactive)
@@ -512,7 +514,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 ;; next-buffer / previous-buffer で不要バッファをスキップ
 (defvar skippable-buffers '("*Messages*" "*Help*" "*Shell Command Output*"))
 
-(defun my-next-buffer ()
+(defun my/next-buffer ()
   "next-buffer that skips certain buffers."
   (interactive)
   (let ((start (current-buffer)))
@@ -521,7 +523,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
                 (not (eq (current-buffer) start)))
       (next-buffer))))
 
-(defun my-previous-buffer ()
+(defun my/previous-buffer ()
   "previous-buffer that skips certain buffers."
   (interactive)
   (let ((start (current-buffer)))
@@ -530,7 +532,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
                 (not (eq (current-buffer) start)))
       (previous-buffer))))
 
-(global-set-key [remap next-buffer] #'my-next-buffer)
-(global-set-key [remap previous-buffer] #'my-previous-buffer)
+(global-set-key [remap next-buffer] #'my/next-buffer)
+(global-set-key [remap previous-buffer] #'my/previous-buffer)
 
 ;;; init.el ends here
