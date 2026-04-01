@@ -116,6 +116,11 @@
   (defvar recentf-auto-save-timer nil)
   (setq recentf-auto-save-timer (run-with-idle-timer 30 t #'recentf-save-list)) ; 30秒アイドルで自動保存
 
+  ;; Shift+Space でスペースを入力 (ターミナルで 2~ が入力される問題の修正)
+  (unless (display-graphic-p)
+    (define-key input-decode-map "\e[32;2u" [S-space]))
+  (keymap-global-set "S-<space>" (lambda () (interactive) (insert " ")))
+
   (unbind-key "C-t")   ; tmux プレフィックスと競合しないように解放
   (unbind-key "C-q")   ; プレフィックスとして解放
   (bind-key "M-n" (lambda () (interactive) (forward-line 5)))   ; 5行下へ移動
