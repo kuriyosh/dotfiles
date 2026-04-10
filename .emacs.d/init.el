@@ -486,9 +486,10 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 (defun backward-delete-word (arg)
   "後方の単語を削除する (キルリングに入れない)."
   (interactive "p")
-  (let ((end (point)))
-    (backward-word arg)
-    (delete-region (point) end)))
+  (let ((kill-ring kill-ring)
+        (kill-ring-yank-pointer kill-ring-yank-pointer)
+        (interprogram-cut-function nil))
+    (backward-kill-word arg)))
 
 ;; defadvice → define-advice (modern advice system)
 
