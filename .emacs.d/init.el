@@ -137,10 +137,16 @@
     (add-to-list 'default-frame-alist '(ns-appearance . dark))))      ; ダークモード外観
 
 ;; terminal Emacs 用のクリップボード連携 (GUI は標準で統合済み)
+;; macOS: xclip (pbcopy/pbpaste を自動検出)
 (use-package xclip
-  :unless (display-graphic-p)
+  :if (and (not (display-graphic-p)) (eq system-type 'darwin))
   :config
   (xclip-mode 1))
+
+;; SSH 接続先: OSC 52 で接続元ホストのクリップボードへコピー
+(use-package clipetty
+  :unless (or (display-graphic-p) (eq system-type 'darwin))
+  :hook (after-init . global-clipetty-mode))
 
 ;; ===============================================================
 ;; Appearance settings
