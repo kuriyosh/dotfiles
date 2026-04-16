@@ -224,19 +224,21 @@
   (show-smartparens-global-mode)   ; 対応する括弧をハイライト
   (smartparens-global-mode))       ; 全バッファで有効化
 
-(use-package treemacs ; ファイルツリー (必要時にポップアップ、ファイル選択後に自動クローズ)
-  :bind* (("C-o" . treemacs-select-window)) ; 全モードで優先
+(use-package treemacs ; ファイルツリー (C-o でトグル表示)
+  :bind* (("C-o" . my/treemacs-toggle)) ; 全モードで優先
   :custom
   (treemacs-position 'right)
   (treemacs-width 35)
   :config
   (treemacs-project-follow-mode 1) ; カレントプロジェクトに自動追従
-  ;; ファイル選択後に treemacs ウィンドウを自動で閉じる
-  (advice-add 'treemacs-visit-node-default :after
-              (lambda (&rest _)
-                (when-let* ((w (treemacs-get-local-window)))
-                  (unless (eq (selected-window) w) ; ディレクトリ展開時は閉じない
-                    (delete-window w))))))
+  (defun my/treemacs-toggle ()
+    "Treemacs にフォーカス中なら閉じ、表示中なら移動、非表示なら表示する。"
+    (interactive)
+    (if-let* ((w (treemacs-get-local-window)))
+        (if (eq (selected-window) w)
+            (delete-window w)
+          (select-window w))
+      (treemacs-select-window))))
 
 (use-package treemacs-nerd-icons ; treemacs に nerd-icons アイコンを表示
   :after treemacs
@@ -383,7 +385,14 @@
   :hook (prog-mode . hs-minor-mode))
 
 (use-package treesit-fold ; tree-sitter ベースのコード折りたたみ
-  :hook (prog-mode . treesit-fold-mode))
+  :hook (prog-mode . treesit-fold-mode)
+  :config
+  ;; tsx-ts-mode に JSX ノードの折りたたみルールを追加
+  (let ((entry (assq 'tsx-ts-mode treesit-fold-range-alist)))
+    (when entry
+      (setcdr entry (append (cdr entry)
+                            '((jsx_element     . treesit-fold-range-seq)
+                              (jsx_expression  . treesit-fold-range-seq)))))))
 
 (defun toggle-fold ()
   "tree-sitter モードなら treesit-fold、それ以外なら hideshow で折りたたみを切り替える。"
@@ -393,6 +402,9 @@
       (treesit-fold-toggle)
     (hs-toggle-hiding)))
 (keymap-global-set "C-;" #'toggle-fold)
+
+(use-package apheleia ; 保存時に非同期フォーマッタを実行
+  :init (apheleia-global-mode +1))
 
 (use-package eglot ; LSP クライアント (補完・定義ジャンプ・診断等)
   :ensure nil
