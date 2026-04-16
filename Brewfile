@@ -1,21 +1,5 @@
-# brew
-brew "colordiff"
-brew "jq"
-brew "lesspipe"
-brew "nkf"
+# brew (macOS Trash 統合のため Nix ではなく brew で管理)
 brew "trash"
-brew "source-highlight"
-brew "telnet"
-brew "ripgrep"
-brew "tree"
-brew "mas"
-brew "git-lfs"
-brew "gh"
-brew "duckdb"
-brew "awscli"
-brew "bat"
-brew "mise"
-brew "tmux"
 
 # cask
 cask "docker"

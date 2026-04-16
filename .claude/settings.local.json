@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh api:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh search issues:*)",
+      "Bash(gh issue view:*)",
+      "WebFetch(domain:carapace-sh.github.io)",
+      "WebFetch(domain:pixi.carapace.sh)",
+      "Bash(gh search code:*)",
+      "Bash(which cc:*)",
+      "Bash(cc --version)",
+      "Bash(find /Users/kuriyosh/.emacs.d -name libtree-sitter-*)",
+      "Read(//Users/kuriyosh/**)",
+      "Bash(emacs --batch --eval '\\(princ \\(documentation \\(quote treesit-install-language-grammar\\)\\)\\)')",
+      "Bash(find /Users/kuriyosh/projects/dotfiles -type f -name *.el -o -name *.elisp -o -name *config*)",
+      "Bash(command -v docker-langserver)",
+      "Bash(npm list:*)",
+      "Bash(npx docker-langserver:*)",
+      "Bash(echo:*)",
+      "WebSearch",
+      "Bash(grep -E \"\\\\.\\(el|elc\\)$\")",
+      "Bash(find /Users/kuriyosh/projects/dotfiles/.emacs.d -type f \\\\\\(-name *.el -o -name *.elc \\\\\\) ! -path */.*)",
+      "Bash(cc -shared -fPIC -o libtree-sitter-yaml.dylib src/parser.c src/scanner.c -I src)",
+      "Bash(emacs --version)",
+      "Bash(emacsclient --version)",
+      "Bash(emacs:*)",
+      "Bash(npm install:*)",
+      "Bash(claude --version)"
+    ]
+  }
+}
