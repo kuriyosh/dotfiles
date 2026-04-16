@@ -12,7 +12,7 @@
     jq
     lesspipe
     nkf
-    source-highlight
+    sourceHighlight
     inetutils
     ripgrep
     tree
@@ -21,7 +21,7 @@
     duckdb
 
     # git
-    git-lfs
+    pkgs.git-lfs
     gh
 
     # cloud
