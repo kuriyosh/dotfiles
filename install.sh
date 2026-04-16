@@ -19,21 +19,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
         *) exit 1;;
     esac
 
-    # brew (https://brew.sh/)
-    if ! command -v brew &> /dev/null; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    fi
-
-    # brew
-    brew bundle --file $DOTFILE_DIR/Brewfile
-
     # oh-my-zsh (https://github.com/ohmyzsh/ohmyzsh)
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-    # macOS settings
-    defaults write com.apple.dock autohide -bool true
-    defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
-    defaults -currentHost write -globalDomain NSStatusItemSelectionPadding -int 6
-    defaults -currentHost write -globalDomain NSStatusItemSpacing -int 6
-    defaults write com.apple.dock wvous-br-corner -int 0
 fi
