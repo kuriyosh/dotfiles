@@ -13,30 +13,24 @@
     let
       username = builtins.getEnv "USER";
       homeDirectory = builtins.getEnv "HOME";
-      currentSystem = builtins.currentSystem;
-      isDarwin = builtins.match ".*-darwin" currentSystem != null;
+      system = builtins.currentSystem;
+      isDarwin = builtins.match ".*-darwin" system != null;
 
       dotfilesDir =
         let dir = builtins.getEnv "DOTFILES_DIR";
         in if dir != "" then dir else "${homeDirectory}/projects/dotfiles";
-
-      mkHome = extraModules:
+    in
+    {
+      homeConfigurations.default =
         home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgs.legacyPackages.${currentSystem};
+          pkgs = nixpkgs.legacyPackages.${system};
           modules = [
             ./nix/home.nix
             ./nix/dotfiles/shared.nix
-          ] ++ extraModules;
+          ] ++ (if isDarwin then [ ./nix/dotfiles/darwin.nix ] else []);
           extraSpecialArgs = {
             inherit username homeDirectory dotfilesDir;
           };
         };
-    in
-    {
-      homeConfigurations = {
-        "${username}" = mkHome (
-          if isDarwin then [ ./nix/dotfiles/darwin.nix ] else []
-        );
-      };
     };
 }
