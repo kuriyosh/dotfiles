@@ -1,9 +1,15 @@
-{ config, dotfilesDir, ... }:
+{ config, lib, homeDirectory, dotfilesDir, ... }:
 
 let
   mkSymlink = path: config.lib.file.mkOutOfStoreSymlink "${dotfilesDir}/${path}";
 in
 {
+  home.activation.ohmyzsh = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if [ ! -d "${homeDirectory}/.oh-my-zsh" ]; then
+      run /usr/bin/git clone https://github.com/ohmyzsh/ohmyzsh.git "${homeDirectory}/.oh-my-zsh"
+    fi
+  '';
+
   home.file = {
     ".config/home-manager".source = mkSymlink "";
     ".gitconfig".source = mkSymlink "git/.gitconfig";
