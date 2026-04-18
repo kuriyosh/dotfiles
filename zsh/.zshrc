@@ -36,7 +36,7 @@ alias o="open"
 alias pull="git pull"
 alias push="git push"
 alias diff="colordiff"
-alias rm="trash"
+if command -v trash &> /dev/null; then alias rm="trash"; fi
 alias c="code"
 alias ls='eza --grid --color auto --icons --sort=type'
 alias ll='eza -la --icons --group-directories-first --git'
