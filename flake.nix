@@ -21,7 +21,7 @@
         in if dir != "" then dir else "${homeDirectory}/projects/dotfiles";
     in
     {
-      homeConfigurations.default =
+      homeConfigurations.${username} =
         home-manager.lib.homeManagerConfiguration {
           pkgs = nixpkgs.legacyPackages.${system};
           modules = [

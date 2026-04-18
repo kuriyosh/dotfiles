@@ -19,6 +19,7 @@
     bat
     eza
     duckdb
+    btop
 
     # git
     pkgs.git-lfs
