@@ -12,9 +12,6 @@ in
 
   home.file = {
     ".config/home-manager".source = mkSymlink "";
-    ".gitconfig".source = mkSymlink "git/.gitconfig";
-    ".gitmessage".source = mkSymlink "git/.gitmessage";
-    ".config/git/ignore".source = mkSymlink "git/ignore";
     ".config/starship.toml".source = mkSymlink "starship/starship.toml";
     # ".config/zed".source = mkSymlink "zed";
     ".zshrc".source = mkSymlink "zsh/.zshrc";
