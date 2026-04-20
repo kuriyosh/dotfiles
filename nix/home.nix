@@ -122,6 +122,8 @@ in
         export PATH="$HOME/.local/bin:$PATH"
         export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
         export PATH="$PATH:$HOME/.cache/lm-studio/bin"
+        export PATH="$HOME/.cargo/bin:$PATH"
+        export PATH="$PATH:$HOME/.foundry/bin"
 
         # keybindings
         bindkey -r "^G" # unbind list-expand to free ^G prefix

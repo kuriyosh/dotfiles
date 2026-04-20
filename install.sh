@@ -12,4 +12,4 @@ fi
 
 # nix home-manager
 export DOTFILES_DIR="$DOTFILE_DIR"
-nix run home-manager/master -- switch --impure --flake "$DOTFILE_DIR"
+nix run home-manager/master -- switch -b backup --impure --flake "$DOTFILE_DIR"
