@@ -8,6 +8,20 @@ result
 .DS_Store
 
 ###########################
+# Secrets
+###########################
+.env
+.env.*
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+.aws/credentials
+.kube/config
+*.p12
+*.keystore
+
+###########################
 # Emacs Local Files
 ###########################
 /.emacs.d/undohist/*
@@ -63,3 +77,8 @@ zed/conversations
 # tmux
 ###########################
 tmux/plugins
+
+###########################
+# Karabiner
+###########################
+karabiner/automatic_backups/

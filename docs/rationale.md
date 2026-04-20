@@ -1,5 +1,28 @@
 # Rationale
 
+## パッケージ管理 (Nix / mise / Homebrew の 3 層)
+
+このリポジトリではツールを 3 種類のパッケージマネージャに分けて管理する。どこに入れるか迷ったら以下の基準で判断する。
+
+### Nix (`nix/home.nix` の `home.packages`)
+
+- 対象: CLI utility 系で、バージョン固定で問題ないもの
+- 例: `jq`, `ripgrep`, `bat`, `eza`, `gh`, `awscli2`, `tmux`, `starship`, `zoxide`, `carapace`
+- 理由: 宣言的・再現可能。`home-manager switch` で全 Mac が同じ状態になる
+
+### mise (`mise.toml`)
+
+- 対象: バージョン更新が頻繁、またはプロジェクト単位でバージョンを切り替えたいもの
+- 例: `node`, `python`, `pnpm`, `gcloud`, `claude-cli`, `terraform`
+- 理由: `.tool-versions` / `mise.toml` で project-local にバージョンを上書きできる。nixpkgs の更新タイムラグの影響を受けない
+- Nix と違って `mise upgrade` だけで最新版に追従できる
+
+### Homebrew (`Brewfile`)
+
+- 対象: macOS GUI アプリ cask、および Nix で扱いづらい macOS 特化バイナリ
+- 例: Docker Desktop, 1Password, Slack, Ghostty, `trash`
+- 理由: Nix cask は Linux 寄りで macOS GUI の面倒を見る体制が薄い。cask なら GUI アプリの自動更新も brew が担当してくれる
+
 ## Terminal
 
 - **(採用)ghostty**

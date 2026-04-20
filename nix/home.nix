@@ -92,5 +92,70 @@ in
 
   home.file.".gitmessage".source = mkSymlink "git/.gitmessage";
 
+  home.sessionVariables = {
+    EDITOR = "emacsclient -nw -a ''";
+    CARAPACE_BRIDGES = "zsh,fish,bash,inshellisense";
+  };
+
+  programs.zsh = {
+    enable = true;
+    oh-my-zsh = {
+      enable = true;
+      plugins = [ "git" "z" ];
+      theme = "";
+    };
+    initContent = lib.mkMerge [
+      (lib.mkBefore ''
+        # fpath (must be before compinit)
+        fpath=($HOME/.docker/completions $fpath)
+      '')
+      ''
+        # completion (after oh-my-zsh to avoid being overwritten)
+        zmodload zsh/complist
+        zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+        source <(carapace _carapace)
+        [ -f ~/.pnpm-completion.zsh ] && source ~/.pnpm-completion.zsh
+        zstyle ':completion:*' menu select
+        bindkey '^n' menu-complete
+
+        # paths
+        export PATH="$HOME/.local/bin:$PATH"
+        export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+        export PATH="$PATH:$HOME/.cache/lm-studio/bin"
+
+        # keybindings
+        bindkey -r "^G" # unbind list-expand to free ^G prefix
+
+        # mise
+        eval "$(mise activate zsh)"
+
+        # starship
+        eval "$(starship init zsh)"
+
+        # zoxide
+        eval "$(zoxide init --cmd cd zsh)"
+      ''
+    ];
+    shellAliases = {
+      e = ''emacsclient -nw -a ""'';
+      ekill = ''emacsclient -e "(kill-emacs)"'';
+      cr = "cd $(git rev-parse --show-toplevel)";
+      ccr = "code $(git rev-parse --show-toplevel)";
+      o = "open";
+      pull = "git pull";
+      push = "git push";
+      diff = "colordiff";
+      c = "code";
+      ls = "eza --grid --color auto --icons --sort=type";
+      ll = "eza -la --icons --group-directories-first --git";
+      la = "eza --grid --all --color auto --icons --sort=type";
+      lt = "eza --tree --level=2 --icons";
+      rgf = "rg --files | rg";
+      ssh-pass = "ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no";
+    } // lib.optionalAttrs isDarwin {
+      rm = "trash";
+    };
+  };
+
   programs.home-manager.enable = true;
 }
