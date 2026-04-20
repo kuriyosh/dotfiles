@@ -1,2 +1,4 @@
 [tools]
 gcloud = "latest"
+node = "lts"
+pnpm = "latest"

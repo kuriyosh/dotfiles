@@ -1,9 +1,0 @@
-.envrc
-venv
-.kuriyosh
-mise.local.toml
-.DS_Store
-.clinerules
-**/.claude/settings.local.json
-.serena
-.wtp.yml
