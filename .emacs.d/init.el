@@ -340,6 +340,7 @@
      (go         "https://github.com/tree-sitter/tree-sitter-go")
      (gomod      "https://github.com/camdencheek/tree-sitter-go-mod")
      (rust       "https://github.com/tree-sitter/tree-sitter-rust")
+     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
      (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
      (tsx        "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
      (toml       "https://github.com/tree-sitter/tree-sitter-toml")
