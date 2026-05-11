@@ -3,6 +3,7 @@ theme = GitHub Dark High Contrast
 # Pane
 keybind = alt+h=text:\x1b\x7f
 keybind = shift+enter=text:\x1b\r
+keybind = shift+space=text:\x20
 
 # Cursor
 keybind = alt+f=esc:f
