@@ -378,7 +378,22 @@
   :mode "\\.vue\\'")
 
 (use-package markdown-mode ; Markdown ファイルのメジャーモード
-  :mode ("\\.md\\'" . gfm-mode))
+  :mode ("\\.md\\'" . gfm-mode)
+  :custom
+  (markdown-header-scaling nil)
+  :hook
+  (markdown-mode . my/markdown-flatten-heading-heights)
+  :preface
+  (defun my/markdown-flatten-heading-heights ()
+    "見出し行の高さを default face に揃え、範囲選択時の行ズレを抑える。"
+    (let ((h (face-attribute 'default :height nil 'default)))
+      (dolist (face '(markdown-header-face-1
+                      markdown-header-face-2
+                      markdown-header-face-3
+                      markdown-header-face-4
+                      markdown-header-face-5
+                      markdown-header-face-6))
+        (face-remap-add-relative face :height h)))))
 
 (use-package terraform-mode
   :hook (terraform-mode . terraform-format-on-save-mode))
