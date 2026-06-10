@@ -289,7 +289,19 @@
          ("C-x b" . consult-project-buffer) ; プロジェクト内バッファ切り替え
          ("M-y"   . consult-yank-pop)   ; kill-ring からヤンク
          ("C-q s" . consult-ripgrep))   ; プロジェクト横断テキスト検索
-  )
+  :config
+  (defvar my/consult-source-always-buffers
+    `(:name     "Always"
+      :narrow   ?a
+      :category buffer
+      :face     consult-buffer
+      :history  buffer-name-history
+      :state    ,#'consult--buffer-state
+      :items    ,(lambda ()
+                   (seq-filter #'get-buffer '("*scratch*" "*Messages*"))))
+    "consult-project-buffer に常時混ぜる固定バッファ群")
+  (add-to-list 'consult-project-buffer-sources
+               'my/consult-source-always-buffers))
 
 (use-package embark ; 補完候補に対するアクションメニュー
   :bind (("C-." . embark-act))
