@@ -363,7 +363,8 @@
      (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
      (prisma     "https://github.com/victorhqc/tree-sitter-prisma")
      (vue        "https://github.com/tree-sitter-grammars/tree-sitter-vue")
-     (css        "https://github.com/tree-sitter/tree-sitter-css")))
+     (css        "https://github.com/tree-sitter/tree-sitter-css")
+     (bash       "https://github.com/tree-sitter/tree-sitter-bash")))
   (major-mode-remap-alist              ; 従来モード → ts-mode へのリマップ
    '((python-mode     . python-ts-mode)
      (go-mode         . go-ts-mode)
@@ -380,7 +381,9 @@
       (treesit-install-language-grammar lang)))
   ;; ts/tsx は auto-mode-alist で直接設定
   (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode)))
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+  ;; .env / .env.* (.env.local, .env.production など) は bash-ts-mode で開く
+  (add-to-list 'auto-mode-alist '("\\.env\\(\\..*\\)?\\'" . bash-ts-mode)))
 
 (use-package prisma-ts-mode ; Prisma schema ファイルのメジャーモード
   :mode "\\.prisma\\'")
