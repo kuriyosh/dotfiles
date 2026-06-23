@@ -16,6 +16,10 @@ background-opacity = 0.95
 
 # General
 font-feature = -dlig
+# 端末の桁幅計算を wcswidth ベースにし、tmux/Emacs と一致させる
+# (デフォルトの unicode だと全角・曖昧幅文字で桁ズレが累積し、
+#  tmux 内 Emacs の折り返し表示行がずれるため)
+grapheme-width-method = legacy
 window-inherit-working-directory = true
 macos-titlebar-style = transparent
 macos-option-as-alt = left
