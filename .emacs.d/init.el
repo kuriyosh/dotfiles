@@ -20,6 +20,12 @@
 (require 'use-package)
 (setopt use-package-always-ensure t) ; use-package で自動インストール
 
+;; 「○○-YYYYMMDD.NNNN.tar: Not found」で起動時にインストール失敗する場合、
+;; ローカルのアーカイブキャッシュ (elpa/archives/) が古い。
+;; MELPA は各パッケージの最新ビルドしか残さないため、古いキャッシュが指す
+;; 過去ビルドの tarball は削除済みで 404 になる。
+;; 対処: M-x package-refresh-contents でアーカイブを再取得する。
+
 ;; TODO: 必要かどうか吟味する
 ;; (use-package exec-path-from-shell ; シェルの PATH を Emacs に引き継ぐ
 ;;   :if (memq window-system '(mac ns))
