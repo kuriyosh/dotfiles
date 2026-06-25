@@ -154,6 +154,18 @@
 ;; Appearance settings
 ;; ===============================================================
 
+;; CUI 利用時に端末の左右端からパディングを取る (GUI はフリンジで余白があるため不要)
+(use-package emacs
+  :ensure nil
+  :if (not (display-graphic-p))
+  :init
+  (defun my/apply-window-margins (&optional _)
+    "全ウィンドウに左右マージンを設定し、端末端からパディングを取る。"
+    (dolist (win (window-list))
+      (set-window-margins win 0 1))) ; 左0, 右1
+  :hook
+  (window-configuration-change . my/apply-window-margins))
+
 (use-package nerd-icons) ; Nerd Fonts アイコン表示
 
 (use-package nerd-icons-dired ; Dired にアイコン表示
