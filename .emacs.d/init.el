@@ -105,6 +105,7 @@
 
   (show-paren-mode -1)                   ; smartparens 側でハイライトするため無効化
   (global-display-line-numbers-mode 1)   ; 全モードで行番号表示
+  (global-visual-wrap-prefix-mode 1)     ; 折り返し行をインデント揃えで表示 (Emacs 30+)
 
   ;; scratch バッファーは削除させない
   (with-current-buffer "*scratch*"
@@ -562,6 +563,7 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
 
 ;; defadvice → define-advice (modern advice system)
 
+;; TODO: v31 に update したら消しても良さそう
 (define-advice kill-region (:around (orig-fn beg end &rest args) kill-word-or-region)
   "選択範囲がなければ backward-kill-word する."
   (if (and (called-interactively-p 'interactive)
