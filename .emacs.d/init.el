@@ -167,9 +167,9 @@
   :if (not (display-graphic-p))
   :init
   (defun my/apply-window-margins (&optional _)
-    "全ウィンドウに左右マージンを設定し、端末端からパディングを取る。"
+    "全ウィンドウに右マージンを設定し、端末右端からパディングを取る。"
     (dolist (win (window-list))
-      (set-window-margins win 0 1))) ; 左0, 右1
+      (set-window-margins win (car (window-margins win)) 1))) ; 左は diff-hl に任せ、右1
   :hook
   (window-configuration-change . my/apply-window-margins))
 
@@ -402,7 +402,8 @@
   (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
   ;; .env / .env.* (.env.local, .env.production など) は bash-ts-mode で開く
-  (add-to-list 'auto-mode-alist '("\\.env\\(\\..*\\)?\\'" . bash-ts-mode)))
+  (add-to-list 'auto-mode-alist '("\\.env\\(\\..*\\)?\\'" . bash-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.importlinter\\'" . conf-mode)))
 
 (use-package prisma-ts-mode ; Prisma schema ファイルのメジャーモード
   :mode "\\.prisma\\'")
