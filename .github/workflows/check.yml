@@ -13,9 +13,24 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: nix flake check
-        run: nix flake check --impure
+        run: nix flake check
+      - name: eval darwin configurations
+        run: |
+          nix eval '.#homeConfigurations."ci@aarch64-darwin".activationPackage.drvPath'
+          nix eval '.#homeConfigurations."ci@x86_64-darwin".activationPackage.drvPath'
       - name: statix
         run: nix run nixpkgs#statix -- check .
+
+  nix-check-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: eval linux configurations
+        run: |
+          nix eval '.#homeConfigurations."ci@x86_64-linux".activationPackage.drvPath'
+          nix eval '.#homeConfigurations."ci@aarch64-linux".activationPackage.drvPath'
 
   shellcheck:
     runs-on: ubuntu-latest

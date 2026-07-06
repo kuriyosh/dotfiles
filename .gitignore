@@ -40,21 +40,9 @@ id_ed25519*
 /.emacs.d/games
 /.emacs.d/eshell
 /.emacs.d/transient
-/.emacs.d/elpa/irony-20180519.422/server/*
-/.emacs.d/elpa/irony-20180703.1740/server/*
-.emacs.d/smex-items
-.emacs.d/projectile-bookmarks.eld
 archive-contents
 
 *.elc
-
-###########################
-# Fish config
-###########################
-fish/fish_variables
-fish/fishd*
-fish/conf.d
-fish/functions
 
 ###########################
 # Scripts
@@ -65,7 +53,6 @@ fish/functions
 # Emacs
 ###########################
 .emacs.d/elpa
-.emacs.d/auto-save-list
 
 ###########################
 # zed

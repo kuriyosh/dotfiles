@@ -31,7 +31,7 @@ if ! command -v nix &> /dev/null; then
 fi
 
 # nix home-manager
-export DOTFILES_DIR="$DOTFILE_DIR"
+# username を $USER から解決するため --impure が必要
 nix run home-manager/master -- switch -b backup --impure --flake "$DOTFILE_DIR"
 
 # homebrew (macOS only)
@@ -44,9 +44,9 @@ if [ "$(uname -s)" = "Darwin" ]; then
     fi
 fi
 
-# mise
+# mise (グローバル設定 ~/.config/mise/config.toml は home-manager が symlink 済み)
 if mise_bin="$(find_executable mise "$HOME/.nix-profile/bin/mise" "/etc/profiles/per-user/$USER/bin/mise")"; then
-    (cd "$DOTFILE_DIR" && "$mise_bin" install)
+    "$mise_bin" install
 else
     echo "mise command not found after Home Manager activation" >&2
     exit 1

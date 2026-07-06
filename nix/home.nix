@@ -26,7 +26,6 @@ in
     btop
 
     # git
-    pkgs.git-lfs
     gh
 
     # cloud
@@ -70,7 +69,8 @@ in
       };
       core = {
         quotepath = false;
-        editor = "emacs";
+        # commit message 編集は server/client を使わず、軽量設定 (cli.el) のみで起動する
+        editor = "emacs -nw -q -l ~/.emacs.d/cli.el";
         ignorecase = false;
       };
       init.defaultBranch = "main";
@@ -97,11 +97,18 @@ in
     CARAPACE_BRIDGES = "zsh,fish,bash,inshellisense";
   };
 
+  home.sessionPath = [
+    "${homeDirectory}/.local/bin"
+    "${homeDirectory}/.cargo/bin"
+    "${homeDirectory}/.cache/lm-studio/bin"
+    "${homeDirectory}/.foundry/bin"
+  ];
+
   programs.zsh = {
     enable = true;
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" "z" ];
+      plugins = [ "git" ];
       theme = "";
     };
     initContent = lib.mkMerge [
@@ -117,13 +124,6 @@ in
         [ -f ~/.pnpm-completion.zsh ] && source ~/.pnpm-completion.zsh
         zstyle ':completion:*' menu select
         bindkey '^n' menu-complete
-
-        # paths
-        export PATH="$HOME/.local/bin:$PATH"
-        export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
-        export PATH="$PATH:$HOME/.cache/lm-studio/bin"
-        export PATH="$HOME/.cargo/bin:$PATH"
-        export PATH="$PATH:$HOME/.foundry/bin"
 
         # keybindings
         bindkey -r "^G" # unbind list-expand to free ^G prefix
