@@ -1,10 +1,8 @@
 [tools]
 claude = "latest"
 codex = "latest"
-gcloud = "latest"
 node = "latest"
-postgres = "17"
-python = "3.8"
+python = "latest"
 uv = "latest"
 # pnpm 11.9+ は macOS 単体バイナリを配布しないため aqua backend では入らない。npm backend を使う
 "npm:pnpm" = "latest"
