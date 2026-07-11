@@ -39,7 +39,8 @@ cd ~/projects/dotfiles
    - macOS のみ: Homebrew のインストール、macOS defaults の適用 (Dock / メニューバー等)、ghostty 等の macOS 固有設定
 
 3. (macOS のみ) `brew bundle` で `Brewfile` の GUI アプリを入れる
-4. `mise install` で mise 管理のツールを入れる
+4. (Linux のみ) Nix の zsh を `/etc/shells` に登録し、`chsh` でログインシェルにする (sudo が必要)
+5. `mise install` で mise 管理のツールを入れる
 
 ## 日常的な更新
 

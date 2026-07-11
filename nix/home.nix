@@ -41,6 +41,8 @@ in
     mise
   ] ++ lib.optionals isDarwin [
     mas
+  ] ++ lib.optionals (!isDarwin) [
+    emacs-nox
   ];
 
   programs.git = {

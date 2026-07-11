@@ -44,6 +44,27 @@ if [ "$(uname -s)" = "Darwin" ]; then
     fi
 fi
 
+# login shell を Nix の zsh にする (Linux only。macOS はデフォルトで zsh)
+if [ "$(uname -s)" = "Linux" ]; then
+    zsh_bin=""
+    for candidate in "$HOME/.nix-profile/bin/zsh" "/etc/profiles/per-user/$USER/bin/zsh"; do
+        if [ -x "$candidate" ]; then
+            zsh_bin="$candidate"
+            break
+        fi
+    done
+    if [ -z "$zsh_bin" ]; then
+        echo "zsh not found after Home Manager activation" >&2
+        exit 1
+    fi
+    if ! grep -qx "$zsh_bin" /etc/shells; then
+        echo "$zsh_bin" | sudo tee -a /etc/shells > /dev/null
+    fi
+    if [ "$(getent passwd "$USER" | cut -d: -f7)" != "$zsh_bin" ]; then
+        sudo chsh -s "$zsh_bin" "$USER"
+    fi
+fi
+
 # mise (グローバル設定 ~/.config/mise/config.toml は home-manager が symlink 済み)
 if mise_bin="$(find_executable mise "$HOME/.nix-profile/bin/mise" "/etc/profiles/per-user/$USER/bin/mise")"; then
     "$mise_bin" install
