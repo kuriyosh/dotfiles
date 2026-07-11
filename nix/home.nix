@@ -155,6 +155,7 @@ in
       la = "eza --grid --all --color auto --icons --sort=type";
       lt = "eza --tree --level=2 --icons";
       rgf = "rg --files | rg";
+      mise-local = "mise use -p ~/.config/mise/config.local.toml";
       ssh-pass = "ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no";
     } // lib.optionalAttrs isDarwin {
       rm = "trash";

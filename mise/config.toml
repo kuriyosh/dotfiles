@@ -6,7 +6,7 @@ node = "latest"
 postgres = "17"
 python = "3.8"
 uv = "latest"
-# npm packages
+# pnpm 11.9+ は macOS 単体バイナリを配布しないため aqua backend では入らない。npm backend を使う
 "npm:pnpm" = "latest"
 "npm:typescript" = "latest"
 "npm:typescript-language-server" = "latest"
