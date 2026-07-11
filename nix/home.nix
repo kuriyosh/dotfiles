@@ -89,6 +89,7 @@ in
       "**/.claude/settings.local.json"
       ".serena"
       ".wtp.yml"
+      ".symphony-prompt.md"
     ];
   };
 
