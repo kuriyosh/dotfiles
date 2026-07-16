@@ -479,6 +479,13 @@
 
 (use-package magit ; Git の操作を Emacs 内で完結させる
   :bind ("C-x g" . magit-status)
+  :defer 2 ; 起動 2 秒後のアイドル時に先読みし、初回 C-x g のロード待ちをなくす
+  :custom
+  ;; /usr/bin/git は Command Line Tools へのシムで 1 呼び出しごとに遅い。
+  ;; Nix の git があればフルパスで直接使う
+  (magit-git-executable
+   (let ((nix-git (expand-file-name "~/.nix-profile/bin/git")))
+     (if (file-executable-p nix-git) nix-git "git")))
   :config
   (bind-key "C-h" 'transient-help transient-map)) ; transient 内では C-h をヘルプに戻す
 
