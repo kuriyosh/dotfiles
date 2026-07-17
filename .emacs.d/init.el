@@ -390,17 +390,24 @@
      (rust-mode       . rust-ts-mode)
      (typescript-mode . typescript-ts-mode)
      (json-mode       . json-ts-mode)
+     (js-json-mode    . json-ts-mode)
      (yaml-mode       . yaml-ts-mode)
      (toml-mode       . toml-ts-mode)
+     (conf-toml-mode  . toml-ts-mode)
      (dockerfile-mode . dockerfile-ts-mode)))
   :config
   ;; 未インストールの grammar を自動インストール
   (dolist (lang (mapcar #'car treesit-language-source-alist))
     (unless (treesit-language-available-p lang)
       (treesit-install-language-grammar lang)))
-  ;; ts/tsx は auto-mode-alist で直接設定
+  ;; 組み込みの auto-mode-alist に関連付けがない拡張子は直接設定
+  ;; (rust-ts-mode 等の登録は require 時にしか走らず、remap も効かない)
   (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
+  (add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode))
+  (add-to-list 'auto-mode-alist '("/Dockerfile\\(\\..*\\)?\\'" . dockerfile-ts-mode))
   ;; .env / .env.* (.env.local, .env.production など) は bash-ts-mode で開く
   (add-to-list 'auto-mode-alist '("\\.env\\(\\..*\\)?\\'" . bash-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.importlinter\\'" . conf-mode)))
