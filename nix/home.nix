@@ -90,6 +90,7 @@ in
       ".serena"
       ".wtp.yml"
       ".symphony-prompt.md"
+      "**/.claude/worktrees/"
     ];
   };
 
