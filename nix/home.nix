@@ -120,6 +120,16 @@ in
         # fpath (must be before compinit)
         fpath=($HOME/.docker/completions $fpath)
       '')
+      (lib.optionalString (!isDarwin) ''
+        # SSH agent socket を固定パスに張り替える
+        # tmux 再接続後も新しいソケットを参照でき、鍵取得の失敗を防ぐ
+        if [ -n "$SSH_CONNECTION" ]; then
+          if [ -S "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh_auth_sock" ]; then
+            ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh_auth_sock"
+          fi
+          export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
+        fi
+      '')
       ''
         # completion (after oh-my-zsh to avoid being overwritten)
         zmodload zsh/complist
