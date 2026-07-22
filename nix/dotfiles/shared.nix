@@ -11,6 +11,8 @@ in
     ".emacs.d/early-init.el".source = mkSymlink ".emacs.d/early-init.el";
     ".emacs.d/cli.el".source = mkSymlink ".emacs.d/cli.el";
     ".config/tmux".source = mkSymlink "tmux";
+    # herdr はログ・ソケットを ~/.config/herdr/ に書くため config.toml のみ symlink する
+    ".config/herdr/config.toml".source = mkSymlink "herdr/config.toml";
     ".config/mise/config.toml".source = mkSymlink "mise/config.toml";
   };
 }

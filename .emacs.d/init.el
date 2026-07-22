@@ -493,6 +493,8 @@
   (magit-git-executable
    (let ((nix-git (expand-file-name "~/.nix-profile/bin/git")))
      (if (file-executable-p nix-git) nix-git "git")))
+  ;; magit-status 時に未保存バッファの保存確認をしない
+  (magit-save-repository-buffers nil)
   :config
   (bind-key "C-h" 'transient-help transient-map)) ; transient 内では C-h をヘルプに戻す
 

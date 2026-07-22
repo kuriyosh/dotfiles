@@ -1,0 +1,12 @@
+onboarding = false
+
+[theme]
+name = "gruvbox"
+
+[keys]
+prefix = "ctrl+t"
+split_vertical = "prefix+|"
+split_horizontal = "prefix+minus"
+
+[ui]
+prompt_new_tab_name = false
