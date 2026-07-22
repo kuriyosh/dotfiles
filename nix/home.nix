@@ -96,6 +96,11 @@ in
 
   home.file.".gitmessage".source = mkSymlink "git/.gitmessage";
 
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
   home.sessionVariables = {
     EDITOR = "emacsclient -nw -a ''";
     CARAPACE_BRIDGES = "zsh,fish,bash,inshellisense";
@@ -150,6 +155,40 @@ in
 
         # zoxide
         eval "$(zoxide init --cmd cd zsh)"
+
+        # git worktree を fzf で選んで移動 (Enter) / 削除 (Ctrl-D)
+        # 現在いる worktree には * が付く
+        wt() {
+          local cur out key line dir ans
+          cur=$(git rev-parse --show-toplevel 2>/dev/null) || {
+            echo "wt: not in a git repository" >&2
+            return 1
+          }
+          out=$(git worktree list | awk -v cur="$cur" -v home="$HOME" '{
+            disp = $0; sub("^" home, "~", disp)
+            mark = ($1 == cur) ? "*" : " "
+            printf "%s\t%s %s\n", $1, mark, disp
+          }' | fzf --delimiter '\t' --with-nth 2 \
+                --header 'Enter: 移動 / Ctrl-D: 削除' \
+                --expect ctrl-d \
+                --preview 'git -C {1} status --short --branch; echo; git -C {1} log --oneline --color=always -15' \
+                --preview-window 'right,55%') || return
+          key=''${out%%$'\n'*}
+          line=''${out#*$'\n'}
+          dir=''${line%%$'\t'*}
+          [ -n "$dir" ] || return
+          if [ "$key" = ctrl-d ]; then
+            if [ "$dir" = "$cur" ]; then
+              echo "wt: 今いる worktree は削除できない" >&2
+              return 1
+            fi
+            printf 'remove %s? [y/N] ' "$dir"
+            read -r ans
+            [ "$ans" = y ] && git worktree remove "$dir"
+          else
+            cd "$dir"
+          fi
+        }
       ''
     ];
     shellAliases = {
