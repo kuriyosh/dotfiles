@@ -195,12 +195,10 @@ in
       e = ''emacsclient -nw -a ""'';
       ekill = ''emacsclient -e "(kill-emacs)"'';
       cr = "cd $(git rev-parse --show-toplevel)";
-      ccr = "code $(git rev-parse --show-toplevel)";
       o = "open";
       pull = "git pull";
       push = "git push";
       diff = "colordiff";
-      c = "code";
       ls = "eza --grid --color auto --icons --sort=type";
       ll = "eza -la --icons --group-directories-first --git";
       la = "eza --grid --all --color auto --icons --sort=type";
