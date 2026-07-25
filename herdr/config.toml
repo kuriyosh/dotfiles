@@ -7,10 +7,14 @@ name = "gruvbox"
 prefix = "ctrl+t"
 split_vertical = "prefix+|"
 split_horizontal = "prefix+minus"
-navigate_workspace_down = "j"
-navigate_workspace_up = "k"
-navigate_pane_down = "ctrl+j"
-navigate_pane_up = "ctrl+k"
+# prefix+j/k, prefix+shift+j/k は pane の focus/swap がデフォルトで使うため避ける
+next_workspace = "prefix+ctrl+j"
+previous_workspace = "prefix+ctrl+k"
+next_agent = "prefix+alt+j"
+previous_agent = "prefix+alt+k"
+# switch_tab は prefix+1..9 がデフォルトなので、workspace/agent は ctrl/alt で揃える
+switch_workspace = "prefix+ctrl+1..9"
+focus_agent = "prefix+alt+1..9"
 
 [ui]
 prompt_new_tab_name = false

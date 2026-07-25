@@ -96,6 +96,12 @@ in
 
   home.file.".gitmessage".source = mkSymlink "git/.gitmessage";
 
+  # ~/.zprofile は Nix 管理外にする。
+  # 各種インストーラ (Homebrew / OrbStack / Kiro CLI など) が直接追記するため、
+  # store の読み取り専用 symlink にすると書き込みに失敗する。
+  # 新しい home-manager は profileExtra が空でも .zprofile を生成するので明示的に無効化する。
+  home.file."./.zprofile".enable = false;
+
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
@@ -120,6 +126,14 @@ in
       plugins = [ "git" ];
       theme = "";
     };
+    # 新しい home-manager は login シェル用のセッション変数を .zprofile に置き、
+    # .zshenv 側は `[[ ! -o login ]]` で除外する。
+    # .zprofile を Nix 管理外にしているため、login シェル分を .zshenv で補う。
+    envExtra = ''
+      if [[ -o login ]]; then
+        . "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh"
+      fi
+    '';
     initContent = lib.mkMerge [
       (lib.mkBefore ''
         # fpath (must be before compinit)
