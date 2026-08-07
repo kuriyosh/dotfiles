@@ -454,14 +454,34 @@
                             '((jsx_element     . treesit-fold-range-seq)
                               (jsx_expression  . treesit-fold-range-seq)))))))
 
+(defun toggle-fold--treesit-p ()
+  "現在のバッファで treesit-fold が使えるなら非 nil。"
+  (and (bound-and-true-p treesit-fold-mode)
+       (treesit-node-at (point))))
+
 (defun toggle-fold ()
   "tree-sitter モードなら treesit-fold、それ以外なら hideshow で折りたたみを切り替える。"
   (interactive)
-  (if (and (bound-and-true-p treesit-fold-mode)
-           (treesit-node-at (point)))
+  (if (toggle-fold--treesit-p)
       (treesit-fold-toggle)
     (hs-toggle-hiding)))
-(keymap-global-set "C-;" #'toggle-fold)
+;; C-; は端末 (herdr) が修飾を落として素の ; を送るため届かない。
+;; ASCII 制御文字で表せる C-q プレフィックスに載せる。
+(keymap-global-set "C-q ;" #'toggle-fold)
+
+(defvar-local toggle-fold-all--folded nil
+  "非 nil ならバッファ全体が折りたたまれている。")
+
+(defun toggle-fold-all ()
+  "バッファ全体の折りたたみを切り替える。
+`toggle-fold' と同じく tree-sitter モードなら treesit-fold、
+それ以外なら hideshow を使う。"
+  (interactive)
+  (if toggle-fold-all--folded
+      (if (toggle-fold--treesit-p) (treesit-fold-open-all) (hs-show-all))
+    (if (toggle-fold--treesit-p) (treesit-fold-close-all) (hs-hide-all)))
+  (setq toggle-fold-all--folded (not toggle-fold-all--folded)))
+(keymap-global-set "C-q :" #'toggle-fold-all)
 
 (use-package apheleia ; 保存時に非同期フォーマッタを実行
   :init (apheleia-global-mode +1))
