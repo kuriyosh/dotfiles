@@ -14,5 +14,12 @@ in
     # herdr はログ・ソケットを ~/.config/herdr/ に書くため config.toml のみ symlink する
     ".config/herdr/config.toml".source = mkSymlink "herdr/config.toml";
     ".config/mise/config.toml".source = mkSymlink "mise/config.toml";
+    ".terraformrc".source = mkSymlink "terraform/.terraformrc";
   };
+
+  # plugin_cache_dir は terraform 側で自動作成されない。
+  # 存在しないと警告だけ出してキャッシュが無効になるため、事前に掘っておく
+  home.activation.terraformPluginCache = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    run mkdir -p "${config.home.homeDirectory}/.terraform.d/plugin-cache"
+  '';
 }

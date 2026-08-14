@@ -174,6 +174,9 @@ in
         # mise
         eval "$(mise activate zsh)"
 
+        # direnv
+        eval "$(direnv hook zsh)"
+
         # starship
         eval "$(starship init zsh)"
 
