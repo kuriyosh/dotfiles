@@ -176,8 +176,6 @@
     "javascript.updateImportsOnFileMove.enabled": "never",
     "debug.disassemblyView.showSourceCode": false,
     "claudeCode.preferredLocation": "sidebar",
-    "gitlens.ai.model": "vscode",
-    "gitlens.ai.vscode.model": "copilot:gpt-4.1",
     "workbench.activityBar.location": "bottom",
     "jump.display.backgroundColor": "#c9d1d9",
     "jump.display.color": "⁠#0d1117",
@@ -190,5 +188,13 @@
         "https://json-schema.org/": true,
         "https://biomejs.dev": true,
         "https://unpkg.com": true
-    }
+    },
+    "yaml.disableSchemaDetection": [
+        "**/.github/workflows/*.yml",
+        "**/.github/workflows/*.yaml",
+        "**/.gitea/workflows/*.yml",
+        "**/.gitea/workflows/*.yaml",
+        "**/.forgejo/workflows/*.yml",
+        "**/.forgejo/workflows/*.yaml"
+    ]
 }

@@ -440,6 +440,13 @@
 (use-package terraform-mode
   :hook (terraform-mode . terraform-format-on-save-mode))
 
+(use-package haskell-mode ; 自作 daml-mode の派生元 (Daml は Haskell 方言)
+  :defer t)
+
+(use-package daml-mode ; Daml のメジャーモード (elisp/daml-mode.el)
+  :ensure nil
+  :mode "\\.daml\\'")
+
 (use-package hideshow ; コードブロックの折りたたみ (非 tree-sitter モード用)
   :ensure nil
   :hook (prog-mode . hs-minor-mode))
@@ -498,7 +505,8 @@
          (tsx-ts-mode        . eglot-ensure)
          (terraform-mode     . eglot-ensure)
          (dockerfile-ts-mode . eglot-ensure)
-         (vue-ts-mode        . eglot-ensure)))
+         (vue-ts-mode        . eglot-ensure)
+         (daml-mode          . eglot-ensure)))
 
 ;; ===============================================================
 ;; Git
