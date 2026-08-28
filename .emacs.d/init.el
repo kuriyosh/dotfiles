@@ -52,7 +52,6 @@
          ("C-w" . backward-kill-word))        ; ミニバッファで前方単語削除
   :bind* (("M-h" . backward-delete-word))     ; 前方の単語を削除 (キルリングに入れない, 全モード優先)
   :init
-  (add-to-list 'load-path (locate-user-emacs-file "elisp")) ; 自作 elisp の読み込みパス
   (make-directory (locate-user-emacs-file "backup/") t)      ; バックアップ用ディレクトリを作成
 
   (setq default-directory "~/")
@@ -345,12 +344,6 @@
   :config
   (global-corfu-mode 1))
 
-(use-package corfu-terminal ; ターミナル Emacs で Corfu ポップアップを表示
-  :unless (display-graphic-p)
-  :after corfu
-  :config
-  (corfu-terminal-mode 1))
-
 (use-package cape ; 補完ソースの拡張 (ファイルパス、dabbrev 等)
   :init
   (add-to-list 'completion-at-point-functions #'cape-file)    ; ファイルパス補完
@@ -383,7 +376,10 @@
      (prisma     "https://github.com/victorhqc/tree-sitter-prisma")
      (vue        "https://github.com/tree-sitter-grammars/tree-sitter-vue")
      (css        "https://github.com/tree-sitter/tree-sitter-css")
-     (bash       "https://github.com/tree-sitter/tree-sitter-bash")))
+     (bash       "https://github.com/tree-sitter/tree-sitter-bash")
+     ;; v0.25 以降は "end" が匿名ノードから外れ、scala-ts-mode の font-lock query が
+     ;; treesit-query-error になるためタグ固定
+     (scala      "https://github.com/tree-sitter/tree-sitter-scala" "v0.24.1")))
   (major-mode-remap-alist              ; 従来モード → ts-mode へのリマップ
    '((python-mode     . python-ts-mode)
      (go-mode         . go-ts-mode)
@@ -440,10 +436,14 @@
 (use-package terraform-mode
   :hook (terraform-mode . terraform-format-on-save-mode))
 
+(use-package scala-ts-mode ; Scala のメジャーモード (tree-sitter ベース)
+  ;; Canton のブートストラップスクリプト (.canton) は Scala
+  :mode ("\\.canton\\'" . scala-ts-mode))
+
 (use-package haskell-mode ; 自作 daml-mode の派生元 (Daml は Haskell 方言)
   :defer t)
 
-(use-package daml-mode ; Daml のメジャーモード (elisp/daml-mode.el)
+(use-package daml-mode ; Daml のメジャーモード (user-lisp/daml-mode.el)
   :ensure nil
   :mode "\\.daml\\'")
 
@@ -547,7 +547,7 @@ When a region is active, append #L<start>-L<end> line range."
                        default-directory
                      (buffer-file-name)))
          (root (when filename
-                 (if-let ((proj (project-current)))
+                 (if-let* ((proj (project-current)))
                      (project-root proj)
                    (file-name-directory filename))))
          (relpath (when filename

@@ -42,7 +42,7 @@ in
   ] ++ lib.optionals isDarwin [
     mas
   ] ++ lib.optionals (!isDarwin) [
-    emacs-nox
+    emacs31-nox
   ];
 
   programs.delta = {

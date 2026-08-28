@@ -40,6 +40,7 @@ id_ed25519*
 /.emacs.d/games
 /.emacs.d/eshell
 /.emacs.d/transient
+/.emacs.d/user-lisp/.user-lisp-autoloads.el
 archive-contents
 
 *.elc

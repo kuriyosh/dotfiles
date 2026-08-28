@@ -5,7 +5,7 @@ tap "d12frosted/emacs-plus"
 brew "trash"
 
 # emacs-plus (native-comp はデフォルト有効。GUI 不要のため without-cocoa。更新頻度が高いため Nix ではなく brew で管理)
-brew "emacs-plus@30", args: ["without-cocoa"]
+brew "emacs-plus@31", args: ["without-cocoa"]
 
 # cask
 cask "docker"
