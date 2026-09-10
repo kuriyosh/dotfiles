@@ -1,8 +1,9 @@
 onboarding = false
 
 [theme]
-name = "gruvbox"
+name = "dracula"
 
+auto_switch = false
 [keys]
 prefix = "ctrl+t"
 split_vertical = "prefix+|"
