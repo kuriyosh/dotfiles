@@ -16,7 +16,8 @@
         '(("gnu"    . "https://elpa.gnu.org/packages/")
           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
           ("melpa"  . "https://melpa.org/packages/")))
-(package-initialize)
+;; パッケージの activate は起動時 (package-enable-at-startup) に済んでいる。
+;; ここで package-initialize を呼ぶと Emacs 27+ で警告が出る。
 (require 'use-package)
 (setopt use-package-always-ensure t) ; use-package で自動インストール
 
