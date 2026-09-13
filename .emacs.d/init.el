@@ -1,4 +1,4 @@
-;;; init.el --- Emacs 30.x  -*- lexical-binding: t; -*-
+;;; init.el --- Emacs 31.x  -*- lexical-binding: t; -*-
 
 ;; ===============================================================
 ;; Custom file
@@ -21,11 +21,22 @@
 (require 'use-package)
 (setopt use-package-always-ensure t) ; use-package で自動インストール
 
-;; 「○○-YYYYMMDD.NNNN.tar: Not found」で起動時にインストール失敗する場合、
-;; ローカルのアーカイブキャッシュ (elpa/archives/) が古い。
-;; MELPA は各パッケージの最新ビルドしか残さないため、古いキャッシュが指す
-;; 過去ビルドの tarball は削除済みで 404 になる。
-;; 対処: M-x package-refresh-contents でアーカイブを再取得する。
+(defvar my/package-archives-refreshed nil
+  "このセッションで `package-refresh-contents' を失敗時に実行済みなら non-nil。")
+
+(define-advice package-install (:around (fn pkg &rest rest) refresh-on-failure)
+  "インストール失敗時にアーカイブを再取得して一度だけやり直す。
+MELPA は各パッケージの最新ビルドしか残さないため、ローカルの archive-contents が
+古いと削除済みの tarball を指して 404 になる。use-package は該当エントリが
+キャッシュに存在すれば refresh せずに `package-install' を呼ぶので、ここで補う。"
+  (condition-case err
+      (apply fn pkg rest)
+    (error
+     (when my/package-archives-refreshed
+       (signal (car err) (cdr err)))
+     (setq my/package-archives-refreshed t)
+     (package-refresh-contents)
+     (apply fn pkg rest))))
 
 ;; TODO: 必要かどうか吟味する
 ;; (use-package exec-path-from-shell ; シェルの PATH を Emacs に引き継ぐ
