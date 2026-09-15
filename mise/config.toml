@@ -11,3 +11,7 @@ uv = "latest"
 herdr = "latest"
 direnv = "latest"
 java = "temurin-25"
+
+[settings]
+# mise-versions.jdx.dev の一覧が更新停止することがあり、latest が古いまま止まる。GitHub Releases を直接参照する
+use_versions_host = false
