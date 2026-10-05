@@ -518,7 +518,10 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
          (terraform-mode     . eglot-ensure)
          (dockerfile-ts-mode . eglot-ensure)
          (vue-ts-mode        . eglot-ensure)
-         (daml-mode          . eglot-ensure)))
+         (daml-mode          . eglot-ensure))
+  :config
+  (add-to-list 'eglot-server-programs
+               '((rust-ts-mode rust-mode) "mise" "exec" "--" "rust-analyzer")))
 
 ;; ===============================================================
 ;; Git
