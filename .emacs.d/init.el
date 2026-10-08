@@ -373,49 +373,22 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
 (use-package treesit ; tree-sitter grammar の管理・モード切り替え
   :ensure nil
   :custom
-  (treesit-language-source-alist
-   '((python     "https://github.com/tree-sitter/tree-sitter-python")
-     (go         "https://github.com/tree-sitter/tree-sitter-go")
-     (gomod      "https://github.com/camdencheek/tree-sitter-go-mod")
-     (rust       "https://github.com/tree-sitter/tree-sitter-rust")
-     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-     (tsx        "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-     (toml       "https://github.com/tree-sitter/tree-sitter-toml")
-     (yaml       "https://github.com/tree-sitter-grammars/tree-sitter-yaml")
-     (json       "https://github.com/tree-sitter/tree-sitter-json")
-     (dockerfile "https://github.com/camdencheek/tree-sitter-dockerfile")
-     (prisma     "https://github.com/victorhqc/tree-sitter-prisma")
-     (vue        "https://github.com/tree-sitter-grammars/tree-sitter-vue")
-     (css        "https://github.com/tree-sitter/tree-sitter-css")
-     (bash       "https://github.com/tree-sitter/tree-sitter-bash")
-     ;; v0.25 以降は "end" が匿名ノードから外れ、scala-ts-mode の font-lock query が
-     ;; treesit-query-error になるためタグ固定
-     (scala      "https://github.com/tree-sitter/tree-sitter-scala" "v0.24.1")))
-  (major-mode-remap-alist              ; 従来モード → ts-mode へのリマップ
-   '((python-mode     . python-ts-mode)
-     (go-mode         . go-ts-mode)
-     (rust-mode       . rust-ts-mode)
-     (typescript-mode . typescript-ts-mode)
-     (json-mode       . json-ts-mode)
-     (js-json-mode    . json-ts-mode)
-     (yaml-mode       . yaml-ts-mode)
-     (toml-mode       . toml-ts-mode)
-     (conf-toml-mode  . toml-ts-mode)
-     (dockerfile-mode . dockerfile-ts-mode)))
+  (treesit-enabled-modes t)              ; 組み込みの ts-mode をすべて有効化
+  (treesit-auto-install-grammar 'always) ; 組み込み ts-mode の起動時に grammar を自動インストール
   :config
-  ;; 未インストールの grammar を自動インストール
-  (dolist (lang (mapcar #'car treesit-language-source-alist))
-    (unless (treesit-language-available-p lang)
-      (treesit-install-language-grammar lang)))
-  ;; 組み込みの auto-mode-alist に関連付けがない拡張子は直接設定
-  ;; (rust-ts-mode 等の登録は require 時にしか走らず、remap も効かない)
-  (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
-  (add-to-list 'auto-mode-alist '("/go\\.mod\\'" . go-mod-ts-mode))
-  (add-to-list 'auto-mode-alist '("/Dockerfile\\(\\..*\\)?\\'" . dockerfile-ts-mode))
+  ;; 組み込み ts-mode は Emacs 31 から commit 固定のレシピを自分で登録する。
+  ;; ここではレシピを登録しないサードパーティのモード分だけ足す。
+  ;; これらは treesit-ensure-installed を呼ばないため、起動時にインストールする
+  (dolist (recipe
+           '((prisma "https://github.com/victorhqc/tree-sitter-prisma")
+             (vue    "https://github.com/tree-sitter-grammars/tree-sitter-vue")
+             (nix    "https://github.com/nix-community/tree-sitter-nix")
+             ;; v0.25 以降は "end" が匿名ノードから外れ、scala-ts-mode の font-lock query が
+             ;; treesit-query-error になるためタグ固定
+             (scala  "https://github.com/tree-sitter/tree-sitter-scala" "v0.24.1")))
+    (add-to-list 'treesit-language-source-alist recipe)
+    (unless (treesit-language-available-p (car recipe))
+      (treesit-install-language-grammar (car recipe))))
   ;; .env / .env.* (.env.local, .env.production など) は bash-ts-mode で開く
   (add-to-list 'auto-mode-alist '("\\.env\\(\\..*\\)?\\'" . bash-ts-mode))
   (add-to-list 'auto-mode-alist '("\\.importlinter\\'" . conf-mode)))
@@ -447,6 +420,9 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
 
 (use-package terraform-mode
   :hook (terraform-mode . terraform-format-on-save-mode))
+
+(use-package nix-ts-mode ; Nix のメジャーモード (tree-sitter ベース)
+  :mode "\\.nix\\'")
 
 (use-package scala-ts-mode ; Scala のメジャーモード (tree-sitter ベース)
   ;; Canton のブートストラップスクリプト (.canton) は Scala

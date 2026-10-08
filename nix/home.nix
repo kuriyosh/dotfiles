@@ -88,6 +88,11 @@ in
       init.defaultBranch = "main";
       push.default = "current";
       commit.template = "~/.gitmessage";
+      rerere.enabled = true;
+      rebase = {
+        autoSquash = true;
+        autoStash = true;
+      };
     };
     ignores = [
       ".envrc"
@@ -102,6 +107,9 @@ in
       ".symphony-prompt.md"
       "**/.claude/worktrees/"
     ];
+    # 環境ごとの上書き用。git は存在しない include.path を黙って無視するので、
+    # ファイルが無いマシンでもそのまま動く
+    includes = [{ path = "~/.config/git/local.gitconfig"; }];
   };
 
   home.file.".gitmessage".source = mkSymlink "git/.gitmessage";

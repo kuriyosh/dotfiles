@@ -16,6 +16,9 @@ previous_agent = "prefix+alt+k"
 # switch_tab は prefix+1..9 がデフォルトなので、workspace/agent は ctrl/alt で揃える
 switch_workspace = "prefix+ctrl+1..9"
 focus_agent = "prefix+alt+1..9"
+# prefix+w の Navigate モード内だけで効く。Navigate 中は通常バインドより優先される
+navigate_workspace_down = "ctrl+n"
+navigate_workspace_up = "ctrl+p"
 
 [ui]
 prompt_new_tab_name = false
