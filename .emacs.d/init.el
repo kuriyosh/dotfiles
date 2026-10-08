@@ -16,10 +16,7 @@
         '(("gnu"    . "https://elpa.gnu.org/packages/")
           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
           ("melpa"  . "https://melpa.org/packages/")))
-;; パッケージの activate は起動時 (package-enable-at-startup) に済んでいる。
-;; ここで package-initialize を呼ぶと Emacs 27+ で警告が出る。
-(require 'use-package)
-(setopt use-package-always-ensure t) ; use-package で自動インストール
+(setopt use-package-always-ensure t)
 
 (defvar my/package-archives-refreshed nil
   "このセッションで `package-refresh-contents' を失敗時に実行済みなら non-nil。")
@@ -56,8 +53,8 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
          ("C-:"   . toggle-truncate-lines)    ; 行の折り返し切替
          ("<f1>"  . read-only-mode)           ; 読み取り専用モード切替
          ("C-a"   . move-beginning-alt)       ; インデント考慮の行頭移動
-         ("C-z"   . undo-fu-only-undo)         ; 元に戻す
-         ("C-/"   . undo-fu-only-redo)        ; やり直し
+         ("C-z"   . undo-only)                ; 元に戻す
+         ("C-/"   . undo-redo)                ; やり直し
          ("C-q C-q" . quoted-insert)          ; 制御文字の直接入力
          ("C-q f"   . project-find-file)      ; プロジェクト横断ファイル名検索
          :map minibuffer-local-completion-map
@@ -94,13 +91,18 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
           tab-always-indent 'complete                 ; TABでまずインデント、次に補完
           completion-auto-help 'always                ; 補完候補を常に表示
           global-auto-revert-non-file-buffers t       ; Dired等の非ファイルバッファも自動更新
-          split-width-threshold nil)                  ; ウィンドウ分割を常に横割り (上下) にする
+          split-width-threshold nil                   ; ウィンドウ分割を常に横割り (上下) にする
+          recentf-autosave-interval 30                ; recentf を30秒ごとに自動保存
+          recentf-show-messages nil                   ; recentf の保存メッセージを抑制
+          kill-region-dwim 'emacs-word                ; 選択範囲がなければ C-w で前の単語を削除
+          quit-window-kill-buffer t                   ; quit-window でバッファを常に kill
+          switch-to-prev-buffer-skip-regexp           ; next/previous-buffer で飛ばすバッファ
+          (rx bos (or "*Messages*" "*Help*" "*Shell Command Output*") eos))
 
   :config
   (blink-cursor-mode -1)            ; カーソルの点滅を止める
   (menu-bar-mode -1)                ; メニューバーを非表示
-  (when (fboundp 'tool-bar-mode)
-    (tool-bar-mode -1))             ; ツールバーを非表示
+  (tool-bar-mode -1)                ; ツールバーを非表示
 
   (delete-selection-mode 1)         ; 選択範囲を上書き入力可能に
   (recentf-mode 1)                  ; 最近開いたファイルの記録を有効化
@@ -108,11 +110,8 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
   (global-auto-revert-mode 1)       ; 外部変更を自動で反映
   (winner-mode 1)                   ; ウィンドウレイアウトの undo/redo
   (repeat-mode 1)                   ; リピートキーで prefix 省略可能に
-
-  (when (fboundp 'editorconfig-mode)
-    (editorconfig-mode 1))          ; .editorconfig を自動適用 (Emacs 30+)
-  (when (fboundp 'which-key-mode)
-    (which-key-mode 1))             ; プレフィックスキーの続き候補を表示 (Emacs 30+)
+  (editorconfig-mode 1)             ; .editorconfig を自動適用
+  (which-key-mode 1)                ; プレフィックスキーの続き候補を表示
 
   (show-paren-mode -1)                   ; smartparens 側でハイライトするため無効化
   (global-display-line-numbers-mode 1)   ; 全モードで行番号表示
@@ -126,13 +125,9 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
   (add-hook 'after-save-hook
             #'executable-make-buffer-file-executable-if-script-p)
 
-  ;; recentf の保存メッセージを抑制
-  (advice-add 'recentf-cleanup   :around
+  ;; recentf-show-messages は cleanup のメッセージには効かない
+  (advice-add 'recentf-cleanup :around
               (lambda (fn &rest args) (let ((inhibit-message t)) (apply fn args))))
-  (advice-add 'recentf-save-list :around
-              (lambda (fn &rest args) (let ((inhibit-message t)) (apply fn args))))
-  (defvar recentf-auto-save-timer nil)
-  (setq recentf-auto-save-timer (run-with-idle-timer 30 t #'recentf-save-list)) ; 30秒アイドルで自動保存
 
   ;; Shift+Space を Space と等価にする (どのモードでも素の SPC と同じ振る舞い)
   ;; - 端末: kitty keyboard protocol のシーケンスを space にデコード
@@ -252,7 +247,6 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
   (sp-pair "【" "】") ; 日本語すみ付き括弧
   (sp-pair "'" "'")   ; シングルクォート
   (sp-local-pair 'org-mode "$" "$") ; Org mode で数式用
-  (with-eval-after-load 'org-mode (require 'smartparens-org))
   (show-smartparens-global-mode)   ; 対応する括弧をハイライト
   (smartparens-global-mode))       ; 全バッファで有効化
 
@@ -284,8 +278,6 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
   (avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l
                  ?w ?e ?r ?u ?i ?o
                  ?x ?c ?v ?n ?m)))
-
-(use-package undo-fu)         ; 直線的な undo/redo
 
 (use-package undo-fu-session ; ファイルを閉じても undo 履歴を保持
   :init
@@ -322,13 +314,13 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
   :config
   (defvar my/consult-source-always-buffers
     `(:name     "Always"
-      :narrow   ?a
-      :category buffer
-      :face     consult-buffer
-      :history  buffer-name-history
-      :state    ,#'consult--buffer-state
-      :items    ,(lambda ()
-                   (seq-filter #'get-buffer '("*scratch*" "*Messages*"))))
+                :narrow   ?a
+                :category buffer
+                :face     consult-buffer
+                :history  buffer-name-history
+                :state    ,#'consult--buffer-state
+                :items    ,(lambda ()
+                             (seq-filter #'get-buffer '("*scratch*" "*Messages*"))))
     "consult-project-buffer に常時混ぜる固定バッファ群")
   (add-to-list 'consult-project-buffer-sources
                'my/consult-source-always-buffers))
@@ -483,12 +475,9 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
 
 (use-package eglot ; LSP クライアント (補完・定義ジャンプ・診断等)
   :ensure nil
-  :hook ((python-mode       . eglot-ensure)
-         (python-ts-mode    . eglot-ensure)
-         (go-mode           . eglot-ensure)
-         (go-ts-mode        . eglot-ensure)
-         (rust-mode         . eglot-ensure)
-         (rust-ts-mode      . eglot-ensure)
+  :hook ((python-ts-mode     . eglot-ensure)
+         (go-ts-mode         . eglot-ensure)
+         (rust-ts-mode       . eglot-ensure)
          (typescript-ts-mode . eglot-ensure)
          (tsx-ts-mode        . eglot-ensure)
          (terraform-mode     . eglot-ensure)
@@ -597,21 +586,6 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
         (interprogram-cut-function nil))
     (backward-kill-word arg)))
 
-;; defadvice → define-advice (modern advice system)
-
-;; TODO: v31 に update したら消しても良さそう
-(define-advice kill-region (:around (orig-fn beg end &rest args) kill-word-or-region)
-  "選択範囲がなければ backward-kill-word する."
-  (if (and (called-interactively-p 'interactive)
-           transient-mark-mode
-           (not mark-active))
-      (backward-kill-word 1)
-    (apply orig-fn beg end args)))
-
-(define-advice quit-window (:around (orig-fn &optional _kill window) always-kill)
-  "quit-window 時にバッファを常に kill する."
-  (funcall orig-fn t window))
-
 (defun finder-current-dir-open ()
   "カレントバッファを Finder で開く."
   (interactive)
@@ -623,29 +597,5 @@ FORMAT-STRING is like `format', but it can have multiple %-sequences."
   (if (bolp)
       (back-to-indentation)
     (beginning-of-line)))
-
-;; next-buffer / previous-buffer で不要バッファをスキップ
-(defvar skippable-buffers '("*Messages*" "*Help*" "*Shell Command Output*"))
-
-(defun my/next-buffer ()
-  "next-buffer that skips certain buffers."
-  (interactive)
-  (let ((start (current-buffer)))
-    (next-buffer)
-    (while (and (member (buffer-name) skippable-buffers)
-                (not (eq (current-buffer) start)))
-      (next-buffer))))
-
-(defun my/previous-buffer ()
-  "previous-buffer that skips certain buffers."
-  (interactive)
-  (let ((start (current-buffer)))
-    (previous-buffer)
-    (while (and (member (buffer-name) skippable-buffers)
-                (not (eq (current-buffer) start)))
-      (previous-buffer))))
-
-(global-set-key [remap next-buffer] #'my/next-buffer)
-(global-set-key [remap previous-buffer] #'my/previous-buffer)
 
 ;;; init.el ends here
