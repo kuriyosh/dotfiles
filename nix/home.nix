@@ -43,7 +43,12 @@ in
     mas
   ] ++ lib.optionals (!isDarwin) [
     emacs31-nox
+    sarasa-gothic
+    nerd-fonts.symbols-only
+    noto-fonts-color-emoji
   ];
+
+  fonts.fontconfig.enable = !isDarwin;
 
   programs.delta = {
     enable = true;
@@ -113,6 +118,8 @@ in
   };
 
   home.file.".gitmessage".source = mkSymlink "git/.gitmessage";
+  home.file.".local/share/skk/SKK-JISYO.L".source =
+    "${pkgs.skkDictionaries.l}/share/skk/SKK-JISYO.L";
 
   # ~/.zprofile は Nix 管理外にする。
   # 各種インストーラ (Homebrew / OrbStack / Kiro CLI など) が直接追記するため、

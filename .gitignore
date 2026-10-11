@@ -40,6 +40,8 @@ id_ed25519*
 /.emacs.d/games
 /.emacs.d/eshell
 /.emacs.d/transient
+/.emacs.d/skk-jisyo
+/.emacs.d/skk-jisyo.bak
 /.emacs.d/user-lisp/.user-lisp-autoloads.el
 archive-contents
 

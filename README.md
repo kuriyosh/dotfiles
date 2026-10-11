@@ -58,6 +58,36 @@ brew bundle --file=~/projects/dotfiles/Brewfile
 mise upgrade
 ```
 
+## Emacs の日本語設定
+
+- 通常起動と Git 編集用の `cli.el` は、UTF-8 言語環境と UTF-8・LF を使う。
+- ①・※・★などの曖昧幅文字は半角幅にする。Ghostty の `legacy` 桁幅に揃える。
+- DDSKK は `C-x C-j` または `C-\` で切り替える。起動時は日本語入力を有効にしない。
+- OS の IME も使える。DDSKK を使うときは、OS の IME を英数にする。
+- `M-x skk-tutorial` で入力方法を練習できる。
+- 共有辞書は Home Manager が `~/.local/share/skk/SKK-JISYO.L` に配置する。
+- 個人辞書は UTF-8 の `~/.emacs.d/skk-jisyo`。バックアップは `skk-jisyo.bak`。
+- DDSKK の `RET` は変換候補を確定する。改行はもう一度 `RET` を押す。
+- コードでは、コメントと文字列の外で DDSKK が英字入力に切り替わる。
+- 通常入力の括弧補完は smartparens、DDSKK 入力の括弧補完は DDSKK が行う。
+
+辞書は `home-manager switch --flake ~/projects/dotfiles --impure` で反映する。
+DDSKK は通常の Emacs 起動時にパッケージをインストールする。
+Git 編集用の `cli.el` は OS の IME で入力する。
+
+フォントは macOS では `brew bundle`、Linux では Home Manager で入る。
+GUI 版 Emacs は Sarasa Term J を英字と日本語に使う。
+アイコンには Symbols Nerd Font Mono を使う。
+絵文字には macOS で Apple Color Emoji、Linux で Noto Color Emoji を使う。
+GUI フレームを後から開いた場合も設定を適用する。
+
+現在の構成は両 OS とも端末版 Emacs。
+端末版のフォントは端末アプリで指定する。
+SSH 接続では接続元の端末にフォントを入れる。
+Ghostty で字幅を揃える場合は、設定に `font-family = Sarasa Term J` を指定する。
+GUI の字幅は `M-: (list (string-pixel-width "a") (string-pixel-width "あ"))` で確認できる。
+日本語の幅が英字の幅の 2 倍になることを確認する。
+
 ## mise の運用ルール
 
 mise の設定は 2 ファイルに分ける。mise は両方を自動でマージして読む。

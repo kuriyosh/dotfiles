@@ -8,6 +8,14 @@
 (load custom-file 'noerror)
 
 ;; ===============================================================
+;; Japanese settings
+;; ===============================================================
+
+;; Japanese 言語環境は記号を全角幅にするため、Ghostty の legacy 桁幅と合わない。
+(set-language-environment "UTF-8")
+(prefer-coding-system 'utf-8-unix)
+
+;; ===============================================================
 ;; Package Setting
 ;; ===============================================================
 
@@ -40,6 +48,38 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
 ;;   :if (memq window-system '(mac ns))
 ;;   :config
 ;;   (exec-path-from-shell-initialize))
+
+(use-package skk
+  :ensure ddskk
+  :bind ("C-x C-j" . skk-mode)
+  :commands skk-tutorial
+  :preface
+  ;; MELPA 版は isearch 連携を自分で登録する必要がある。
+  ;; DDSKK はフック名に skk が含まれるかを調べるため、名前付き関数を使う。
+  (defun my/skk-isearch-setup-maybe ()
+    "SKK が有効なバッファで検索用の入力状態を準備する。"
+    (when (and (bound-and-true-p skk-mode) skk-isearch-mode-enable)
+      (require 'skk-isearch)
+      (skk-isearch-mode-setup)))
+  (defun my/skk-isearch-cleanup-maybe ()
+    "SKK で検索した場合に入力状態を戻す。"
+    (when (bound-and-true-p skk-isearch-switch)
+      (skk-isearch-mode-cleanup)))
+  :hook ((isearch-mode . my/skk-isearch-setup-maybe)
+         (isearch-mode-end . my/skk-isearch-cleanup-maybe))
+  :init
+  (setq default-input-method "japanese-skk"
+        skk-large-jisyo (expand-file-name "~/.local/share/skk/SKK-JISYO.L")
+        skk-server-host nil
+        ;; 共有辞書は EUC-JP のため、個人辞書だけ UTF-8 を指定する。
+        skk-jisyo (cons (locate-user-emacs-file "skk-jisyo") 'utf-8-unix)
+        skk-backup-jisyo (locate-user-emacs-file "skk-jisyo.bak")
+        skk-show-annotation t
+        skk-egg-like-newline t
+        ;; SKK は self-insert-command を通らず、smartparens が動かない。
+        skk-auto-insert-paren t)
+  :config
+  (require 'context-skk))
 
 ;; ===============================================================
 ;; Global Setting
@@ -167,6 +207,31 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
 ;; Appearance settings
 ;; ===============================================================
 
+(defun my/setup-japanese-fonts (frame)
+  "FRAME にインストール済みの日本語・アイコン・絵文字フォントを設定する。"
+  ;; 端末の描画は端末アプリが行うため、Emacs のフォント設定は GUI に限る。
+  (when (display-graphic-p frame)
+    (with-selected-frame frame
+      (when-let* ((font (font-spec :family "Sarasa Term J"))
+                  (_ (find-font font frame)))
+        (set-face-attribute 'default frame :family "Sarasa Term J")
+        (dolist (script '(han kana cjk-misc))
+          (set-fontset-font nil script font frame))
+        (set-fontset-font nil '(#x2000 . #x2bff) font frame))
+      (when-let* ((font (font-spec :family "Symbols Nerd Font Mono"))
+                  (_ (find-font font frame)))
+        (dolist (range '((#xe000 . #xf8ff) (#xf0000 . #xffffd)))
+          (set-fontset-font nil range font frame)))
+      (when-let* ((family (if (eq system-type 'darwin)
+                             "Apple Color Emoji"
+                           "Noto Color Emoji"))
+                  (font (font-spec :family family))
+                  (_ (find-font font frame)))
+        (set-fontset-font nil 'emoji font frame 'prepend)))))
+
+(my/setup-japanese-fonts (selected-frame))
+(add-hook 'after-make-frame-functions #'my/setup-japanese-fonts)
+
 ;; CUI 利用時に端末の左右端からパディングを取る (GUI はフリンジで余白があるため不要)
 (use-package emacs
   :ensure nil
@@ -245,6 +310,8 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
   (require 'smartparens-config)
   (sp-pair "「" "」") ; 日本語かぎ括弧
   (sp-pair "【" "】") ; 日本語すみ付き括弧
+  (sp-pair "『" "』")
+  (sp-pair "（" "）")
   (sp-pair "'" "'")   ; シングルクォート
   (sp-local-pair 'org-mode "$" "$") ; Org mode で数式用
   (show-smartparens-global-mode)   ; 対応する括弧をハイライト

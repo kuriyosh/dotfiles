@@ -10,8 +10,9 @@
 	  '((".*" . "~/.emacs.d/backup/")))
 (setq auto-save-file-name-transforms	; auto save file
 	  '((".*" "~/.emacs.d/backup/" t)))
-(set-language-environment "Japanese")	; language settings
-(prefer-coding-system 'utf-8)
+;; Japanese 言語環境は記号を全角幅にするため、Ghostty の legacy 桁幅と合わない。
+(set-language-environment "UTF-8")
+(prefer-coding-system 'utf-8-unix)
 (electric-pair-mode t)					; electric-pair-mode
 (load-theme 'misterioso t)				; dark theme
 

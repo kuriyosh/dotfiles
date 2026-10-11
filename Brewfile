@@ -8,6 +8,8 @@ brew "trash"
 brew "emacs-plus@31", args: ["without-cocoa"]
 
 # cask
+cask "font-sarasa-gothic"
+cask "font-symbols-only-nerd-font"
 cask "docker"
 cask "1password"
 cask "google-chrome"
