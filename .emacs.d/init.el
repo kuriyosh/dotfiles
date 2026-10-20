@@ -267,7 +267,24 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
   (doom-modeline-bar-width 3)
   (doom-modeline-minor-modes nil)
   (doom-modeline-enable-word-count nil)
-  (doom-modeline-buffer-file-name-style 'truncate-upto-project))
+  ;; file-name 以外では、狭いウィンドウでパスがファイル名だけに置き換わる。
+  (doom-modeline-buffer-file-name-style 'file-name)
+  :config
+  (defun my/doom-modeline-file-path (name)
+    (if-let* ((file (buffer-file-name (buffer-base-buffer))))
+        (let* ((project (project-current nil (file-name-directory file)))
+               (path (if project
+                         (file-relative-name file (project-root project))
+                       (expand-file-name file)))
+               (directory (file-name-directory path)))
+          (add-text-properties 0 (length path) (text-properties-at 0 name) path)
+          (when directory
+            (put-text-property 0 (length directory)
+                               'face 'doom-modeline-buffer-path path))
+          path)
+      name))
+  (advice-add 'doom-modeline-buffer-file-name :filter-return
+              #'my/doom-modeline-file-path))
 
 (use-package doom-themes
   :custom
