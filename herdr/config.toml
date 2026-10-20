@@ -22,3 +22,10 @@ navigate_workspace_up = "ctrl+p"
 
 [ui]
 prompt_new_tab_name = false
+
+# $num は plugins/workspace-number が報告する。`herdr plugin link` で登録が必要
+[ui.sidebar.spaces]
+rows = [
+  ["state_icon", { token = "$num", dim = true }, "workspace"],
+  ["branch", "git_status"],
+]

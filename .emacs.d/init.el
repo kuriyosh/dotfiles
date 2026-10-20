@@ -477,6 +477,9 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
                       markdown-header-face-6))
         (face-remap-add-relative face :height h)))))
 
+(use-package solidity-mode ; Solidity のメジャーモード
+  :mode "\\.sol\\'")
+
 (use-package terraform-mode
   :hook (terraform-mode . terraform-format-on-save-mode))
 
@@ -550,10 +553,28 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
          (terraform-mode     . eglot-ensure)
          (dockerfile-ts-mode . eglot-ensure)
          (vue-ts-mode        . eglot-ensure)
-         (daml-mode          . eglot-ensure))
+         (daml-mode          . eglot-ensure)
+         (solidity-mode      . eglot-ensure))
   :config
+  ;; typescript-language-server looks for the workspace TypeScript only by
+  ;; walking *up* from rootUri, so a git-root project misses node_modules in
+  ;; subdirectories and silently falls back to the bundled TypeScript.
+  ;; Use the pnpm workspace root (or nearest package.json) as the LSP root only
+  ;; while eglot is resolving it, so other project commands keep the git root.
+  ;; Returning a `vc' project keeps `project-files' on git ls-files, which
+  ;; keeps node_modules out of eglot's file watching.
+  (defun my/project-find-js-root (dir)
+    (when (and eglot-lsp-context
+               (derived-mode-p 'js-base-mode 'typescript-ts-base-mode))
+      (when-let* ((root (or (locate-dominating-file dir "pnpm-workspace.yaml")
+                            (locate-dominating-file dir "package.json"))))
+        (setq root (expand-file-name root))
+        (list 'vc (vc-responsible-backend root t) root))))
+  (add-hook 'project-find-functions #'my/project-find-js-root)
   (add-to-list 'eglot-server-programs
-               '((rust-ts-mode rust-mode) "mise" "exec" "--" "rust-analyzer")))
+               '((rust-ts-mode rust-mode) "mise" "exec" "--" "rust-analyzer"))
+  (add-to-list 'eglot-server-programs
+               '(solidity-mode "nomicfoundation-solidity-language-server" "--stdio")))
 
 ;; ===============================================================
 ;; Git

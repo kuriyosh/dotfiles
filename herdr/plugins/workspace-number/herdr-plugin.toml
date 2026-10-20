@@ -1,0 +1,25 @@
+id = "kuriyosh.workspace-number"
+name = "Workspace number"
+version = "0.1.0"
+min_herdr_version = "0.9.0"
+description = "Report each workspace's number as the $num sidebar token"
+platforms = ["linux", "macos"]
+
+[[startup]]
+command = ["sh", "report.sh"]
+
+[[events]]
+on = "workspace.created"
+command = ["sh", "report.sh"]
+
+[[events]]
+on = "workspace.closed"
+command = ["sh", "report.sh"]
+
+[[events]]
+on = "workspace.moved"
+command = ["sh", "report.sh"]
+
+[[events]]
+on = "workspace.reordered"
+command = ["sh", "report.sh"]
