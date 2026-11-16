@@ -22,6 +22,7 @@ navigate_workspace_up = "ctrl+p"
 
 [ui]
 prompt_new_tab_name = false
+tab_bar_position = "top"
 
 # $num は plugins/workspace-number が報告する。`herdr plugin link` で登録が必要
 [ui.sidebar.spaces]
