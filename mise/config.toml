@@ -1,6 +1,6 @@
 [tools]
 claude = "latest"
-codex = "latest"
+"npm:@openai/codex" = "latest"
 node = "latest"
 python = "latest"
 uv = "latest"
