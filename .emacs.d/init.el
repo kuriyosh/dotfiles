@@ -356,8 +356,8 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
   (treemacs-load-theme "nerd-icons"))
 
 (use-package avy ; 画面内の任意の位置にジャンプ
-  :bind (("C-j" . avy-goto-word-1)   ; 文字入力で候補を絞りジャンプ
-         ("M-l" . avy-goto-line))  ; 行番号でジャンプ
+  :bind* ("C-j" . avy-goto-word-1)
+  :bind ("M-l" . avy-goto-line)
   :custom
   (avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l
                  ?w ?e ?r ?u ?i ?o
@@ -495,7 +495,9 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
         (face-remap-add-relative face :height h)))))
 
 (use-package solidity-mode ; Solidity のメジャーモード
-  :mode "\\.sol\\'")
+  :mode "\\.sol\\'"
+  :bind (:map solidity-mode-map
+              ("TAB" . indent-for-tab-command)))
 
 (use-package terraform-mode
   :hook (terraform-mode . terraform-format-on-save-mode))
@@ -560,6 +562,12 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
 (use-package apheleia ; 保存時に非同期フォーマッタを実行
   :init (apheleia-global-mode +1))
 
+(use-package flymake
+  :ensure nil
+  :config
+  (custom-set-faces
+   '(flymake-error ((t (:background "#5f2020" :underline nil))))))
+
 (use-package eglot ; LSP クライアント (補完・定義ジャンプ・診断等)
   :ensure nil
   :hook ((python-ts-mode     . eglot-ensure)
@@ -571,8 +579,13 @@ MELPA は各パッケージの最新ビルドしか残さないため、ロー�
          (dockerfile-ts-mode . eglot-ensure)
          (vue-ts-mode        . eglot-ensure)
          (daml-mode          . eglot-ensure)
-         (solidity-mode      . eglot-ensure))
+         (solidity-mode      . eglot-ensure)
+         (eglot-managed-mode . my/solidity-completion-setup))
   :config
+  (defun my/solidity-completion-setup ()
+    (when (and (eglot-managed-p) (derived-mode-p 'solidity-mode))
+      ;; LSP が候補を返さない未完成の import でも相対パスを補完する。
+      (add-hook 'completion-at-point-functions #'cape-file nil t)))
   ;; typescript-language-server looks for the workspace TypeScript only by
   ;; walking *up* from rootUri, so a git-root project misses node_modules in
   ;; subdirectories and silently falls back to the bundled TypeScript.
